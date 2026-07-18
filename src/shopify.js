@@ -3,7 +3,53 @@ const path = require("path");
 const CONFIG = require("./config");
 
 const ENDPOINT = `https://${CONFIG.shopify.storeDomain}/admin/api/${CONFIG.shopify.apiVersion}/graphql.json`;
+const TOKEN_ENDPOINT = `https://${CONFIG.shopify.storeDomain}/admin/oauth/access_token`;
 const CHECKPOINT_FILE = path.join(CONFIG.paths.outputDir, ".checkpoint.json");
+
+// Nieuwe (Dev Dashboard) custom apps geven geen statisch token meer: het
+// script vraagt zelf een token op via de client credentials grant. Tokens
+// zijn 24u geldig; we cachen en vernieuwen ze met wat marge (zie
+// https://shopify.dev/docs/apps/build/authentication-authorization/access-tokens/client-credentials-grant).
+let cachedToken = null; // { accessToken, expiresAt }
+const TOKEN_REFRESH_MARGIN_MS = 5 * 60 * 1000;
+
+async function fetchClientCredentialsToken() {
+  let res;
+  try {
+    res = await fetch(TOKEN_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        grant_type: "client_credentials",
+        client_id: CONFIG.shopify.clientId,
+        client_secret: CONFIG.shopify.clientSecret,
+      }),
+    });
+  } catch (networkErr) {
+    throw new Error(`netwerkfout bij ophalen access token: ${networkErr.message}`);
+  }
+
+  const body = await res.text();
+  if (!res.ok) {
+    throw new Error(`kon geen access token ophalen (${res.status}) — controleer SHOPIFY_CLIENT_ID/SHOPIFY_CLIENT_SECRET en of de app op deze store is geïnstalleerd. Response: ${body.slice(0, 500)}`);
+  }
+
+  const json = JSON.parse(body);
+  return {
+    accessToken: json.access_token,
+    expiresAt: Date.now() + (json.expires_in || 86400) * 1000,
+  };
+}
+
+/** Geeft een geldig Admin API-token terug: statisch token (legacy apps) of via client credentials grant (nieuwe apps). */
+async function getAccessToken() {
+  if (CONFIG.shopify.accessToken) return CONFIG.shopify.accessToken;
+
+  if (!cachedToken || Date.now() > cachedToken.expiresAt - TOKEN_REFRESH_MARGIN_MS) {
+    cachedToken = await fetchClientCredentialsToken();
+  }
+  return cachedToken.accessToken;
+}
 
 const QUERY = `
 query ProductsWithIngredients($first: Int!, $cursor: String) {
@@ -54,11 +100,12 @@ function clearCheckpoint() {
 async function shopifyGraphQL(query, variables, attempt = 1) {
   let res;
   try {
+    const accessToken = await getAccessToken();
     res = await fetch(ENDPOINT, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-Shopify-Access-Token": CONFIG.shopify.accessToken,
+        "X-Shopify-Access-Token": accessToken,
       },
       body: JSON.stringify({ query, variables }),
     });
@@ -87,8 +134,12 @@ async function shopifyGraphQL(query, variables, attempt = 1) {
   }
 
   if (res.status === 401 || res.status === 403) {
+    cachedToken = null; // eventueel verlopen/ingetrokken token niet opnieuw hergebruiken
     const body = await res.text().catch(() => "");
-    throw new Error(`authenticatiefout (${res.status}) — controleer SHOPIFY_ADMIN_ACCESS_TOKEN, de 'read_products'-scope, en metafield-toegang voor namespace "custom". Response: ${body.slice(0, 500)}`);
+    const hint = CONFIG.shopify.accessToken
+      ? "controleer SHOPIFY_ADMIN_ACCESS_TOKEN"
+      : "controleer SHOPIFY_CLIENT_ID/SHOPIFY_CLIENT_SECRET en of de app op deze store is geïnstalleerd";
+    throw new Error(`authenticatiefout (${res.status}) — ${hint}, de 'read_products'-scope, en metafield-toegang voor namespace "custom". Response: ${body.slice(0, 500)}`);
   }
   if (!res.ok) {
     const body = await res.text().catch(() => "");

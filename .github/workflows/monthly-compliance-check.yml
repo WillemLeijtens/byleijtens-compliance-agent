@@ -26,6 +26,11 @@ jobs:
       - name: Sync + scan + rapport
         env:
           SHOPIFY_STORE_DOMAIN: ${{ secrets.SHOPIFY_STORE_DOMAIN }}
+          # Nieuwe (Dev Dashboard) custom apps: client credentials grant.
+          SHOPIFY_CLIENT_ID: ${{ secrets.SHOPIFY_CLIENT_ID }}
+          SHOPIFY_CLIENT_SECRET: ${{ secrets.SHOPIFY_CLIENT_SECRET }}
+          # Legacy custom apps (vóór 2026-01-01): statisch token, alleen
+          # nodig als SHOPIFY_CLIENT_ID/SHOPIFY_CLIENT_SECRET niet gezet zijn.
           SHOPIFY_ADMIN_ACCESS_TOKEN: ${{ secrets.SHOPIFY_ADMIN_ACCESS_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}

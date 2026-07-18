@@ -9,10 +9,28 @@ function required(name) {
   return v;
 }
 
+// Sinds 1 januari 2026 leveren nieuwe (Dev Dashboard) custom apps geen
+// statisch Admin API-token meer op — daarvoor is de client credentials
+// grant nodig (SHOPIFY_CLIENT_ID + SHOPIFY_CLIENT_SECRET, zie src/shopify.js).
+// Bestaande legacy custom apps (aangemaakt vóór 2026-01-01) blijven werken
+// met een statisch SHOPIFY_ADMIN_ACCESS_TOKEN. Precies één van beide moet
+// gezet zijn.
+const hasClientCredentials = !!(process.env.SHOPIFY_CLIENT_ID || process.env.SHOPIFY_CLIENT_SECRET);
+if (hasClientCredentials && (!process.env.SHOPIFY_CLIENT_ID || !process.env.SHOPIFY_CLIENT_SECRET)) {
+  console.error("FOUT: SHOPIFY_CLIENT_ID en SHOPIFY_CLIENT_SECRET moeten samen gezet zijn.");
+  process.exit(1);
+}
+if (!hasClientCredentials && !process.env.SHOPIFY_ADMIN_ACCESS_TOKEN) {
+  console.error("FOUT: stel SHOPIFY_CLIENT_ID + SHOPIFY_CLIENT_SECRET (nieuwe custom apps) of SHOPIFY_ADMIN_ACCESS_TOKEN (legacy custom apps) in.");
+  process.exit(1);
+}
+
 const CONFIG = {
   shopify: {
     storeDomain: required("SHOPIFY_STORE_DOMAIN"),
-    accessToken: required("SHOPIFY_ADMIN_ACCESS_TOKEN"),
+    clientId: process.env.SHOPIFY_CLIENT_ID || "",
+    clientSecret: process.env.SHOPIFY_CLIENT_SECRET || "",
+    accessToken: process.env.SHOPIFY_ADMIN_ACCESS_TOKEN || "",
     // Shopify versioneert per kwartaal (YYYY-01/04/07/10) en ondersteunt een
     // versie ~1 jaar. Controleer periodiek de actuele stabiele versie op
     // https://shopify.dev/docs/api/admin-graphql en werk dit bij.

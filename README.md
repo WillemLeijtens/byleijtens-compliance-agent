@@ -25,14 +25,30 @@ reports/
 
 ## Eenmalige setup
 
-### 1 · Shopify Admin API-token
+### 1 · Shopify Admin API-toegang
 
-1. Shopify admin → Instellingen → Apps en verkoopkanalen → Apps ontwikkelen → App maken
-2. Configuratie → Admin API scopes: minimaal `read_products`
-3. **Geef de app ook expliciete leestoegang tot de `custom`-metafield-namespace**
-   (zelfde scherm, "metafield access") — anders komt de Ingrediënten-waarde
-   leeg terug, ook al staat hij in de Shopify admin wél gevuld.
-4. Installeer de app → kopieer het Admin API-token (`shpat_...`)
+Sinds 1 januari 2026 maak je geen nieuwe "legacy" custom apps meer aan via
+Instellingen → Apps → Apps ontwikkelen (die route bestaat alleen nog voor
+apps van vóór die datum). Nieuwe apps maak je via de **Dev Dashboard**
+(`dev.shopify.com`), en die geven geen statisch token meer — je vraagt zelf
+een tijdelijk token op met een Client ID/Secret (client credentials grant).
+
+**Nieuwe apps (Dev Dashboard):**
+
+1. `dev.shopify.com` → **Apps bouwen in Dev Dashboard** → app maken.
+2. Onder **Versions**: stel de Admin API-scopes in, minimaal `read_products`.
+   **Geef ook expliciete leestoegang tot de `custom`-metafield-namespace** —
+   anders komt de Ingrediënten-waarde leeg terug, ook al staat hij in de
+   Shopify admin wél gevuld.
+3. Maak een versie aan en installeer de app op je store (app **Home** →
+   **Install app** → store selecteren → Install).
+4. Ga naar **Instellingen** van de app → kopieer **Klant-ID** en **Geheim**.
+   Het script vraagt hiermee zelf een token op (24u geldig, wordt automatisch
+   ververst) — er is geen "reveal token"-knop meer.
+
+**Bestaande legacy custom apps (aangemaakt vóór 2026-01-01)** blijven werken
+met het oude statische Admin API-token (`shpat_...`) via Instellingen →
+Apps → Apps ontwikkelen → jouw app → API-inloggegevens.
 
 ### 2 · Repo aanmaken op GitHub
 
@@ -52,7 +68,12 @@ Repo → Settings → Secrets and variables → Actions → New repository secre
 | Secret | Waarde |
 |---|---|
 | `SHOPIFY_STORE_DOMAIN` | `byleijtens.myshopify.com` |
-| `SHOPIFY_ADMIN_ACCESS_TOKEN` | het token uit stap 1 |
+| `SHOPIFY_CLIENT_ID` | Klant-ID uit stap 1 (nieuwe Dev Dashboard-apps) |
+| `SHOPIFY_CLIENT_SECRET` | Geheim uit stap 1 (nieuwe Dev Dashboard-apps) |
+| `SHOPIFY_ADMIN_ACCESS_TOKEN` | alleen voor legacy custom apps van vóór 2026-01-01 |
+
+Zet óf het `SHOPIFY_CLIENT_ID`/`SHOPIFY_CLIENT_SECRET`-paar, óf
+`SHOPIFY_ADMIN_ACCESS_TOKEN` — niet allebei leeg laten.
 
 `GITHUB_TOKEN` hoef je niet zelf aan te maken — die geeft GitHub Actions
 automatisch mee.
