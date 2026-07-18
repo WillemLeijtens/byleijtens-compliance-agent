@@ -1,0 +1,40 @@
+name: Maandelijkse compliance-check
+
+on:
+  schedule:
+    # Elke 1e van de maand, 06:00 UTC. Pas aan met https://crontab.guru
+    - cron: "0 6 1 * *"
+  workflow_dispatch: {} # handmatig starten via de Actions-tab in GitHub
+
+permissions:
+  contents: write # om reports/ te committen
+  issues: write # om een issue te openen bij bevindingen
+
+jobs:
+  compliance-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - run: npm ci
+
+      - name: Sync + scan + rapport
+        env:
+          SHOPIFY_STORE_DOMAIN: ${{ secrets.SHOPIFY_STORE_DOMAIN }}
+          SHOPIFY_ADMIN_ACCESS_TOKEN: ${{ secrets.SHOPIFY_ADMIN_ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: node src/index.js
+
+      - name: Commit rapport
+        run: |
+          git config user.name "compliance-bot"
+          git config user.email "compliance-bot@users.noreply.github.com"
+          git add reports/
+          git diff --staged --quiet || git commit -m "Maandelijkse compliance-scan $(date +'%Y-%m-%d')"
+          git push
