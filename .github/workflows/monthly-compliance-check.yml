@@ -48,10 +48,12 @@ jobs:
 
       - name: Prepare dashboard files
         run: |
-          mkdir -p _site
+          mkdir -p _site/reports
           cp index.html _site/
           cp dashboard.html _site/
-          cp -r reports _site/ 2>/dev/null || true
+          cp reports/*.json _site/reports/ 2>/dev/null || true
+          # Zorg dat er altijd een lege violations-latest.json is
+          test -f _site/reports/violations-latest.json || echo '{"lastScan":null,"counts":{},"violations":[]}' > _site/reports/violations-latest.json
 
       - name: Deploy dashboard naar GitHub Pages
         uses: actions/upload-pages-artifact@v3
@@ -60,3 +62,6 @@ jobs:
 
       - name: Publiceer naar GitHub Pages
         uses: actions/deploy-pages@v4
+        environment:
+          name: github-pages
+          url: ${{ steps.deployment.outputs.page_url }}
