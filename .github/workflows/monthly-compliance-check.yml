@@ -9,6 +9,8 @@ on:
 permissions:
   contents: write # om reports/ te committen
   issues: write # om een issue te openen bij bevindingen
+  pages: write # om naar GitHub Pages te deployen
+  id-token: write # voor OIDC-token voor Pages deployment
 
 jobs:
   compliance-check:
@@ -43,3 +45,11 @@ jobs:
           git add reports/
           git diff --staged --quiet || git commit -m "Maandelijkse compliance-scan $(date +'%Y-%m-%d')"
           git push
+
+      - name: Deploy dashboard naar GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "."
+
+      - name: Publiceer naar GitHub Pages
+        uses: actions/deploy-pages@v4

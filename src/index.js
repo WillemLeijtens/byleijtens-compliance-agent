@@ -20,6 +20,14 @@ async function main() {
   fs.writeFileSync(path.join(CONFIG.paths.outputDir, `products-${dateStr}.json`), JSON.stringify(products, null, 2));
   fs.writeFileSync(path.join(CONFIG.paths.outputDir, `violations-${dateStr}.json`), JSON.stringify(violations, null, 2));
 
+  // Voor dashboard: latest violations + metadata
+  const dashboardData = {
+    lastScan: new Date().toISOString(),
+    counts: { ...counts, totaal: products.length },
+    violations
+  };
+  fs.writeFileSync(path.join(CONFIG.paths.outputDir, "violations-latest.json"), JSON.stringify(dashboardData, null, 2));
+
   const markdown = buildMarkdownReport({ counts, violations, total: products.length, dateStr });
   fs.writeFileSync(path.join(CONFIG.paths.outputDir, `report-${dateStr}.md`), markdown);
   fs.writeFileSync(path.join(CONFIG.paths.outputDir, "report-latest.md"), markdown);
