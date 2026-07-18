@@ -236,47 +236,28 @@
           this.workflowSuccess = false;
 
           try {
-            const token = this.getGitHubToken();
-            if (!token) {
-              this.workflowError = 'GitHub token nodig. Zet via localStorage.setItem("github_token", token)';
-              this.workflowLoading = false;
-              return;
-            }
+            // Probeer server-side trigger (als server.js draait)
+            const response = await fetch('/api/trigger-workflow', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' }
+            });
 
-            const [owner, repo] = window.location.pathname.split('/').filter(Boolean).slice(0, 2);
-            const actualOwner = owner || 'willemleijtens';
-            const actualRepo = repo || 'byleijtens-compliance-agent';
+            const result = await response.json();
 
-            const response = await fetch(
-              `https://api.github.com/repos/${actualOwner}/${actualRepo}/actions/workflows/monthly-compliance-check.yml/dispatches`,
-              {
-                method: 'POST',
-                headers: {
-                  'Authorization': `Bearer ${token}`,
-                  'Accept': 'application/vnd.github.v3+json',
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ ref: 'main' })
-              }
-            );
-
-            if (response.ok) {
+            if (response.ok || result.status === 204) {
               this.workflowSuccess = true;
               setTimeout(() => {
                 this.workflowSuccess = false;
                 this.loadData();
               }, 3000);
             } else {
-              this.workflowError = `Fout ${response.status}`;
+              this.workflowError = result.error || `Fout ${response.status}`;
             }
           } catch (e) {
             this.workflowError = `Fout: ${e.message}`;
           } finally {
             this.workflowLoading = false;
           }
-        },
-        getGitHubToken() {
-          return localStorage.getItem('github_token') || '';
         }
       },
       mounted() {

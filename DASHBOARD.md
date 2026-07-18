@@ -2,23 +2,45 @@
 
 Een responsive Vue.js dashboard voor het bekijken van EU cosmetics compliance-bevindingen — geoptimaliseerd voor desktop, tablet en iPhone.
 
-## 🚀 Deployment
+## 🚀 Deployment / Hosting
 
-Het dashboard wordt automatisch deployed naar **GitHub Pages** na elke scan (maandelijks of handmatig via de "Update" knop).
+### Option A: Lokale server (aanbevolen voor privé repo)
 
-### URL
+**Beste voor interne use** — product data blijft privé.
+
+```bash
+npm run dashboard
+```
+
+Dashboard: `http://localhost:3000`
+
+**Voor collega's:**
+- Deploy op eigen server/VM
+- Deel URL met team
+- GitHub Token automatisch gebruikt (server-side, veilig)
+
+---
+
+### Option B: GitHub Pages (repo moet publiek zijn)
+
+Het dashboard kan automatisch naar **GitHub Pages** deployed worden na elke scan.
+
+**Vereiste**: Repo moet public zijn (GitHub Pages werkt niet met privé repos tenzij Enterprise).
+
+#### Stappen:
+
+1. Repo → **Settings** → **Visibility** → **Change to Public**
+2. Repo → **Settings** → **Pages**
+3. Source: **GitHub Actions** (standaard)
+4. Dashboard wordt automatisch gepubliceerd
+
+#### URL
 
 ```
 https://<jouw-org>.github.io/byleijtens-compliance-agent/
 ```
 
 Bijvoorbeeld: `https://willemleijtens.github.io/byleijtens-compliance-agent/`
-
-### Inschakelen
-
-1. Repo → **Settings** → **Pages**
-2. Source: **GitHub Actions** (standaard)
-3. Dashboard wordt automatisch gepubliceerd
 
 ## 📱 Features
 
@@ -33,31 +55,21 @@ Bijvoorbeeld: `https://willemleijtens.github.io/byleijtens-compliance-agent/`
 
 De "Update" knop in het dashboard kan de compliance-scan handmatig starten.
 
-### Voor collega's (met GitHub account)
+### Met lokale server (aanbevolen)
 
-```javascript
-// In browser console
-localStorage.setItem('github_token', 'ghp_xxxxx');
+Server gebruikt automatisch `GITHUB_TOKEN` environment variable:
+
+```bash
+GITHUB_TOKEN=ghp_xxxx npm run dashboard
 ```
 
-1. Maak een [Personal Access Token](https://github.com/settings/tokens) aan:
-   - Klik **Generate new token** → **Generate new token (classic)**
-   - Scopes: `repo` (alles onder "repo" aanvinken)
-   - Copy token
+"Update" knop werkt dan automatisch (geen extra setup nodig).
 
-2. In dashboard browser console:
-   ```javascript
-   localStorage.setItem('github_token', 'ghp_xxxxxxxxxxxxxxxxxxxxx');
-   ```
+### Met GitHub Pages
 
-3. Refresh pagina → "Update" knop werkt nu
+Geen extra setup nodig — workflow token is beschikbaar in GitHub Actions.
 
-### Alternatief: Workflow secrets
-
-Gebruiken in environment/secrets van GitHub Actions (standaard):
-```yaml
-GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-```
+Elke workflow run (maandelijks of handmatig) update het dashboard automatisch.
 
 ## 📊 Data Structuur
 
