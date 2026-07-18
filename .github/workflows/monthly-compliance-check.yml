@@ -46,10 +46,17 @@ jobs:
           git diff --staged --quiet || git commit -m "Maandelijkse compliance-scan $(date +'%Y-%m-%d')"
           git push
 
+      - name: Prepare dashboard files
+        run: |
+          mkdir -p _site
+          cp index.html _site/
+          cp dashboard.html _site/
+          cp -r reports _site/ 2>/dev/null || true
+
       - name: Deploy dashboard naar GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "."
+          path: "_site"
 
       - name: Publiceer naar GitHub Pages
         uses: actions/deploy-pages@v4
