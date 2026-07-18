@@ -87,9 +87,13 @@ async function shopifyGraphQL(query, variables, attempt = 1) {
   }
 
   if (res.status === 401 || res.status === 403) {
-    throw new Error(`authenticatiefout (${res.status}) — controleer SHOPIFY_ADMIN_ACCESS_TOKEN, de 'read_products'-scope, en metafield-toegang voor namespace "custom".`);
+    const body = await res.text().catch(() => "");
+    throw new Error(`authenticatiefout (${res.status}) — controleer SHOPIFY_ADMIN_ACCESS_TOKEN, de 'read_products'-scope, en metafield-toegang voor namespace "custom". Response: ${body.slice(0, 500)}`);
   }
-  if (!res.ok) throw new Error(`onverwachte HTTP-status ${res.status}`);
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    throw new Error(`onverwachte HTTP-status ${res.status}. Response: ${body.slice(0, 500)}`);
+  }
 
   const json = await res.json();
   if (json.errors?.length) throw new Error(`GraphQL-fout: ${json.errors.map((e) => e.message).join("; ")}`);
