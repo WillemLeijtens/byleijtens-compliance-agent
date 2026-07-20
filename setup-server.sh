@@ -1,98 +1,66 @@
 #!/bin/bash
-# Complete server setup script voor DigitalOcean
-# Usage: curl -sSL https://raw.githubusercontent.com/willemleijtens/byleijtens-compliance-agent/main/setup-server.sh | bash
+# Complete, fully automatic server setup voor DigitalOcean.
+# Repo is public, dus geen token/deploy key nodig — plain HTTPS clone.
+#
+# Usage (in DigitalOcean web console, als root):
+#   curl -sSL https://raw.githubusercontent.com/willemleijtens/byleijtens-compliance-agent/main/setup-server.sh | bash
 
 set -e
 
-echo "🚀 Starting Digital Ocean server setup..."
-echo ""
-
-# Colors
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-# Step 1: Create ubuntu user
-echo -e "${BLUE}Step 1: Creating ubuntu user...${NC}"
-if id "ubuntu" &>/dev/null; then
-    echo "Ubuntu user already exists"
-else
-    adduser --disabled-password --gecos "" ubuntu
-    echo "ubuntu:ubuntu2024" | chpasswd
-    usermod -aG sudo ubuntu
-    echo -e "${GREEN}✅ Ubuntu user created${NC}"
-fi
+echo -e "${BLUE}Step 1/7: systeem updaten...${NC}"
+apt update && apt upgrade -y
 
-# Step 2: Update system
-echo -e "${BLUE}Step 2: Updating system...${NC}"
-apt update
-apt upgrade -y
-
-# Step 3: Install Node.js
-echo -e "${BLUE}Step 3: Installing Node.js 22...${NC}"
+echo -e "${BLUE}Step 2/7: Node.js 22 installeren...${NC}"
 curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
-apt-get install -y nodejs build-essential
+apt-get install -y nodejs build-essential git nginx
 
-# Step 4: Install Nginx
-echo -e "${BLUE}Step 4: Installing Nginx...${NC}"
-apt-get install -y nginx
-
-# Step 5: Install PM2
-echo -e "${BLUE}Step 5: Installing PM2...${NC}"
+echo -e "${BLUE}Step 3/7: PM2 installeren...${NC}"
 npm install -g pm2
 
-# Step 6: Install Git
-echo -e "${BLUE}Step 6: Installing Git...${NC}"
-apt-get install -y git
+echo -e "${BLUE}Step 4/7: ubuntu-user en /apps directory...${NC}"
+id -u ubuntu &>/dev/null || adduser --disabled-password --gecos "" ubuntu
+usermod -aG sudo ubuntu
+mkdir -p /apps
+chown ubuntu:ubuntu /apps
 
-# Step 7: Setup firewall
-echo -e "${BLUE}Step 7: Setting up firewall...${NC}"
+echo -e "${BLUE}Step 5/7: firewall...${NC}"
 ufw allow 22/tcp
 ufw allow 80/tcp
 ufw allow 443/tcp
 ufw --force enable
 
-# Step 8: Create apps directory
-echo -e "${BLUE}Step 8: Creating /apps directory...${NC}"
-mkdir -p /apps
-chown ubuntu:ubuntu /apps
+echo -e "${BLUE}Step 6/7: repo clonen en app starten...${NC}"
+su - ubuntu -c "git clone https://github.com/WillemLeijtens/byleijtens-compliance-agent.git /apps/byleijtens-compliance-agent"
+su - ubuntu -c "cd /apps/byleijtens-compliance-agent && npm install"
+su - ubuntu -c "cd /apps/byleijtens-compliance-agent && pm2 start server.js --name compliance-agent"
+su - ubuntu -c "pm2 save"
+env PATH=$PATH:/usr/bin pm2 startup systemd -u ubuntu --hp /home/ubuntu | tail -1 > /root/pm2-startup-cmd.sh
+bash /root/pm2-startup-cmd.sh || true
 
-# Step 9: Setup SSH key for ubuntu user
-echo -e "${BLUE}Step 9: Generating GitHub deploy key...${NC}"
-su - ubuntu -c "ssh-keygen -t ed25519 -C 'ubuntu@server' -f ~/.ssh/github_deploy -N ''"
-echo ""
-echo -e "${GREEN}✅ GitHub Deploy Key (add to GitHub repo Deploy Keys):${NC}"
-su - ubuntu -c "cat ~/.ssh/github_deploy.pub"
-echo ""
+echo -e "${BLUE}Step 7/7: Nginx reverse proxy...${NC}"
+cat > /etc/nginx/sites-available/compliance-agent <<'NGINX'
+server {
+  listen 80 default_server;
+  server_name _;
 
-# Step 10: Configure SSH
-echo -e "${BLUE}Step 10: Configuring SSH...${NC}"
-su - ubuntu -c "cat > ~/.ssh/config << 'EOF'
-Host github.com
-  HostName github.com
-  User git
-  IdentityFile ~/.ssh/github_deploy
-  AddKeysToAgent yes
-EOF"
-su - ubuntu -c "chmod 600 ~/.ssh/config"
-
-# Step 11: Setup PM2 startup
-echo -e "${BLUE}Step 11: Setting up PM2 startup...${NC}"
-su - ubuntu -c "pm2 startup"
+  location / {
+    proxy_pass http://localhost:3000;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_cache_bypass $http_upgrade;
+  }
+}
+NGINX
+rm -f /etc/nginx/sites-enabled/default
+ln -sf /etc/nginx/sites-available/compliance-agent /etc/nginx/sites-enabled/compliance-agent
+nginx -t && systemctl restart nginx
 
 echo ""
-echo -e "${GREEN}✅ Server setup complete!${NC}"
-echo ""
-echo "📝 Next steps:"
-echo "1. Copy the GitHub Deploy Key above"
-echo "2. Go to GitHub repo → Settings → Deploy Keys → Add Deploy Key"
-echo "3. Then run this to clone and start the app:"
-echo ""
-echo "   su - ubuntu"
-echo "   cd /apps"
-echo "   git clone git@github.com:willemleijtens/byleijtens-compliance-agent.git"
-echo "   cd byleijtens-compliance-agent"
-echo "   npm install"
-echo "   pm2 start server.js --name compliance-agent"
-echo "   pm2 save"
-echo ""
+echo -e "${GREEN}✅ Setup compleet! Dashboard draait nu op http://$(curl -s ifconfig.me)${NC}"
