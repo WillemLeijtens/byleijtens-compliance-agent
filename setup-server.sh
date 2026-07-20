@@ -1,52 +1,61 @@
 #!/bin/bash
-# Complete, fully automatic server setup voor DigitalOcean.
-# Repo is public, dus geen token/deploy key nodig — plain HTTPS clone.
+# Volledig automatisch, veilig-opnieuw-te-draaien setup/herstel-script.
+# Draait alles als root (geen gebruikerswissel meer, dat gaf verwarring).
+# Kan zonder problemen meerdere keren gedraaid worden — herkent wat er al
+# staat en fixt alleen wat ontbreekt.
 #
-# Usage (in DigitalOcean web console, als root):
-#   curl -sSL https://raw.githubusercontent.com/willemleijtens/byleijtens-compliance-agent/main/setup-server.sh | bash
+# Gebruik (in DigitalOcean web console, als root):
+#   curl -sSL https://raw.githubusercontent.com/WillemLeijtens/byleijtens-compliance-agent/main/setup-server.sh | bash
 
 set -e
 
-# Voorkom interactieve dpkg-prompts (bv. "keep local sshd_config?") die de
-# web console laten hangen — behoud altijd de bestaande configbestanden.
 export DEBIAN_FRONTEND=noninteractive
 APT_OPTS="-y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold"
 
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 NC='\033[0m'
+APP_DIR=/apps/byleijtens-compliance-agent
 
-echo -e "${BLUE}Step 1/7: systeem updaten...${NC}"
-apt-get update && apt-get $APT_OPTS upgrade
+echo -e "${BLUE}[1/7] systeem + basispakketten...${NC}"
+apt-get update
+apt-get $APT_OPTS upgrade
+command -v node &>/dev/null || { curl -fsSL https://deb.nodesource.com/setup_22.x | bash -; apt-get install $APT_OPTS nodejs; }
+apt-get install $APT_OPTS build-essential git nginx
 
-echo -e "${BLUE}Step 2/7: Node.js 22 installeren...${NC}"
-curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
-apt-get install $APT_OPTS nodejs build-essential git nginx
+echo -e "${BLUE}[2/7] PM2...${NC}"
+command -v pm2 &>/dev/null || npm install -g pm2
 
-echo -e "${BLUE}Step 3/7: PM2 installeren...${NC}"
-npm install -g pm2
-
-echo -e "${BLUE}Step 4/7: ubuntu-user en /apps directory...${NC}"
-id -u ubuntu &>/dev/null || adduser --disabled-password --gecos "" ubuntu
-usermod -aG sudo ubuntu
-mkdir -p /apps
-chown ubuntu:ubuntu /apps
-
-echo -e "${BLUE}Step 5/7: firewall...${NC}"
+echo -e "${BLUE}[3/7] firewall...${NC}"
 ufw allow 22/tcp
 ufw allow 80/tcp
 ufw allow 443/tcp
 ufw --force enable
 
-echo -e "${BLUE}Step 6/7: repo clonen en app starten...${NC}"
-su - ubuntu -c "git clone https://github.com/WillemLeijtens/byleijtens-compliance-agent.git /apps/byleijtens-compliance-agent"
-su - ubuntu -c "cd /apps/byleijtens-compliance-agent && npm install"
-su - ubuntu -c "cd /apps/byleijtens-compliance-agent && pm2 start server.js --name compliance-agent"
-su - ubuntu -c "pm2 save"
-env PATH=$PATH:/usr/bin pm2 startup systemd -u ubuntu --hp /home/ubuntu | tail -1 > /root/pm2-startup-cmd.sh
-bash /root/pm2-startup-cmd.sh || true
+echo -e "${BLUE}[4/7] repo clonen/updaten...${NC}"
+mkdir -p /apps
+if [ -d "$APP_DIR/.git" ]; then
+  cd "$APP_DIR" && git pull origin main
+else
+  rm -rf "$APP_DIR"
+  git clone https://github.com/WillemLeijtens/byleijtens-compliance-agent.git "$APP_DIR"
+fi
+cd "$APP_DIR"
+npm install
 
-echo -e "${BLUE}Step 7/7: Nginx reverse proxy...${NC}"
+echo -e "${BLUE}[5/7] server (her)starten met PM2...${NC}"
+# Ruim eventuele losse "node server.js" processen op die buiten pm2 om draaiden.
+pkill -f "node .*server\.js" 2>/dev/null || true
+pm2 delete compliance-agent 2>/dev/null || true
+pm2 start server.js --name compliance-agent
+pm2 save
+
+echo -e "${BLUE}[6/7] PM2 laten overleven na reboot...${NC}"
+STARTUP_CMD=$(pm2 startup systemd -u root --hp /root | tail -1)
+eval "$STARTUP_CMD" || true
+pm2 save
+
+echo -e "${BLUE}[7/7] Nginx reverse proxy (poort 80 -> 3000)...${NC}"
 cat > /etc/nginx/sites-available/compliance-agent <<'NGINX'
 server {
   listen 80 default_server;
@@ -65,7 +74,15 @@ server {
 NGINX
 rm -f /etc/nginx/sites-enabled/default
 ln -sf /etc/nginx/sites-available/compliance-agent /etc/nginx/sites-enabled/compliance-agent
-nginx -t && systemctl restart nginx
+nginx -t
+systemctl restart nginx
+systemctl enable nginx
 
 echo ""
-echo -e "${GREEN}✅ Setup compleet! Dashboard draait nu op http://$(curl -s ifconfig.me)${NC}"
+sleep 1
+if curl -sf localhost:3000 >/dev/null; then
+  echo -e "${GREEN}✅ App draait en Nginx proxyt correct.${NC}"
+else
+  echo "⚠️  App reageert nog niet op localhost:3000 — check 'pm2 logs compliance-agent'."
+fi
+echo -e "${GREEN}Dashboard: http://$(curl -s ifconfig.me)${NC}"
