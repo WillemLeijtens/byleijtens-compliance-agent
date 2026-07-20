@@ -7,16 +7,21 @@
 
 set -e
 
+# Voorkom interactieve dpkg-prompts (bv. "keep local sshd_config?") die de
+# web console laten hangen — behoud altijd de bestaande configbestanden.
+export DEBIAN_FRONTEND=noninteractive
+APT_OPTS="-y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold"
+
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
 echo -e "${BLUE}Step 1/7: systeem updaten...${NC}"
-apt update && apt upgrade -y
+apt-get update && apt-get $APT_OPTS upgrade
 
 echo -e "${BLUE}Step 2/7: Node.js 22 installeren...${NC}"
 curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
-apt-get install -y nodejs build-essential git nginx
+apt-get install $APT_OPTS nodejs build-essential git nginx
 
 echo -e "${BLUE}Step 3/7: PM2 installeren...${NC}"
 npm install -g pm2
