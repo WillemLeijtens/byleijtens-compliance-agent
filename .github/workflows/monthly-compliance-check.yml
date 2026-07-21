@@ -65,3 +65,17 @@ jobs:
         environment:
           name: github-pages
           url: ${{ steps.deployment.outputs.page_url }}
+
+      - name: Notify Droplet (herdeploy webhook)
+        if: success()
+        env:
+          DEPLOY_WEBHOOK_URL: ${{ secrets.DEPLOY_WEBHOOK_URL }}
+          DEPLOY_WEBHOOK_SECRET: ${{ secrets.DEPLOY_WEBHOOK_SECRET }}
+        run: |
+          if [ -z "$DEPLOY_WEBHOOK_URL" ]; then
+            echo "DEPLOY_WEBHOOK_URL niet gezet — sla webhook over."
+            exit 0
+          fi
+          curl -fsS -X POST "$DEPLOY_WEBHOOK_URL" \
+            -H "X-Webhook-Secret: $DEPLOY_WEBHOOK_SECRET" \
+            --max-time 15 || echo "::warning::Webhook-aanroep naar Droplet mislukt (niet kritiek)."

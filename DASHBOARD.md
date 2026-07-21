@@ -71,6 +71,41 @@ Geen extra setup nodig — workflow token is beschikbaar in GitHub Actions.
 
 Elke workflow run (maandelijks of handmatig) update het dashboard automatisch.
 
+## 🔁 Automatische herdeploy na een run
+
+Na elke succesvolle workflow-run roept GitHub Actions een webhook aan op de
+server, die meteen `git pull` + `pm2 restart` doet. Zo hoef je na het klikken
+op "Update" niet meer zelf in te loggen op de server om de nieuwe data te
+zien — dat gebeurt binnen enkele seconden na afloop van de run.
+
+### Eenmalige setup
+
+1. **Genereer een geheim** (bijvoorbeeld met `openssl rand -hex 32`).
+2. **GitHub repo secrets** (Settings → Secrets and variables → Actions):
+   - `DEPLOY_WEBHOOK_URL` → `http://<droplet-ip>/api/webhook-deploy`
+   - `DEPLOY_WEBHOOK_SECRET` → hetzelfde geheim als hierboven
+3. **Op de server**, herstart de app met dat geheim als environment variable:
+   ```bash
+   cd /apps/byleijtens-compliance-agent
+   DEPLOY_WEBHOOK_SECRET="<zelfde geheim>" GITHUB_TOKEN="<bestaande token>" GITHUB_REPOSITORY="WillemLeijtens/byleijtens-compliance-agent" pm2 start server.js --name compliance-agent
+   pm2 save
+   ```
+   (of `pm2 restart compliance-agent --update-env` als het proces al met de
+   overige env vars draait en je alleen `DEPLOY_WEBHOOK_SECRET` toevoegt)
+
+Zonder `DEPLOY_WEBHOOK_SECRET` op de server blijft het endpoint uitgeschakeld
+(geeft altijd 404) — de rest van het dashboard blijft gewoon werken.
+
+## 📈 Status-indicatoren
+
+Het dashboard toont naast de tellingen ook:
+- **Laatste run**: tijdstip + of de laatste workflow-run succesvol was, mislukt is, of nog loopt.
+- **Shopify-koppeling**: afgeleid van de conclusie van de "Sync + scan + rapport"-stap in die laatste run — geen secret-*waarden* worden ooit gelezen, alleen of die stap slaagde of faalde.
+
+Dit komt van een nieuw `/api/status`-endpoint in `server.js`, dat de GitHub
+Actions API bevraagt met dezelfde `GITHUB_TOKEN` die ook de "Update"-knop
+gebruikt.
+
 ## 📊 Data Structuur
 
 Dashboard leest uit: `reports/violations-latest.json`

@@ -40,6 +40,24 @@
           <span v-if="workflowError" class="ml-2 text-red-600">❌ {{ workflowError }}</span>
           <span v-if="workflowSuccess" class="ml-2 text-green-600">✅ Workflow gestart!</span>
         </div>
+
+        <!-- Run + Shopify status -->
+        <div class="mt-3 flex flex-wrap gap-2 text-xs sm:text-sm">
+          <span
+            v-if="status && status.lastRun"
+            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-medium"
+            :class="runBadgeClass"
+          >
+            {{ runBadgeIcon }} Laatste run: {{ formatDate(status.lastRun.updatedAt) }} — {{ runLabel }}
+          </span>
+          <span
+            v-if="status && status.shopify"
+            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-medium"
+            :class="shopifyBadgeClass"
+          >
+            {{ shopifyBadgeIcon }} Shopify: {{ status.shopify.message }}
+          </span>
+        </div>
       </div>
     </header>
 
@@ -186,10 +204,41 @@
           workflowLoading: false,
           workflowError: '',
           workflowSuccess: false,
-          lastScanDate: null
+          lastScanDate: null,
+          status: null
         };
       },
       computed: {
+        runLabel() {
+          const r = this.status?.lastRun;
+          if (!r) return '';
+          if (r.status !== 'completed') return 'bezig...';
+          return r.conclusion === 'success' ? 'succesvol' : 'mislukt';
+        },
+        runBadgeClass() {
+          const r = this.status?.lastRun;
+          if (!r) return '';
+          if (r.status !== 'completed') return 'bg-blue-100 text-blue-800';
+          return r.conclusion === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+        },
+        runBadgeIcon() {
+          const r = this.status?.lastRun;
+          if (!r) return '';
+          if (r.status !== 'completed') return '🔵';
+          return r.conclusion === 'success' ? '🟢' : '🔴';
+        },
+        shopifyBadgeClass() {
+          const state = this.status?.shopify?.state;
+          if (state === 'ok') return 'bg-green-100 text-green-800';
+          if (state === 'fout') return 'bg-red-100 text-red-800';
+          return 'bg-gray-100 text-gray-700';
+        },
+        shopifyBadgeIcon() {
+          const state = this.status?.shopify?.state;
+          if (state === 'ok') return '🟢';
+          if (state === 'fout') return '🔴';
+          return '⚪';
+        },
         filteredViolations() {
           if (!this.data) return [];
           return this.data.violations.filter(v => {
@@ -218,6 +267,14 @@
           } catch (e) {
             console.error('Fout bij laden data:', e);
             this.data = { violations: [], counts: { verboden: 0, beperkt: 0, "geen-inci": 0, totaal: 0 } };
+          }
+        },
+        async loadStatus() {
+          try {
+            const response = await fetch('/api/status');
+            this.status = await response.json();
+          } catch (e) {
+            console.error('Fout bij laden status:', e);
           }
         },
         formatDate(date) {
@@ -249,6 +306,7 @@
               setTimeout(() => {
                 this.workflowSuccess = false;
                 this.loadData();
+                this.loadStatus();
               }, 3000);
             } else {
               let detail = result.error || result.message || '';
@@ -267,8 +325,9 @@
       },
       mounted() {
         this.loadData();
+        this.loadStatus();
         // Refresh elke 5 minuten
-        setInterval(() => this.loadData(), 5 * 60 * 1000);
+        setInterval(() => { this.loadData(); this.loadStatus(); }, 5 * 60 * 1000);
       }
     }).mount('#app');
   </script>
