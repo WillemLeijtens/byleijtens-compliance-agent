@@ -11,7 +11,7 @@ async function main() {
   const started = Date.now();
   const dateStr = new Date().toISOString().slice(0, 10);
 
-  const { products, errors } = await fetchAllProducts();
+  const { products, errors, shopifyTotalCount } = await fetchAllProducts();
 
   const prohibitedList = JSON.parse(fs.readFileSync(CONFIG.paths.prohibitedListFile, "utf8"));
   const { counts, violations, allProducts } = scanAll(products, prohibitedList);
@@ -21,11 +21,14 @@ async function main() {
   fs.writeFileSync(path.join(CONFIG.paths.outputDir, `violations-${dateStr}.json`), JSON.stringify(violations, null, 2));
 
   // Voor dashboard: latest violations + metadata + volledige productenlijst
-  // (voor filters op "totaal"/"geen-inci") + storeDomain (voor Shopify-links).
+  // (voor filters op "totaal"/"geen-inci") + storeDomain (voor Shopify-links)
+  // + shopifyTotalCount (om sync-volledigheid te tonen zonder dat het
+  // dashboard zelf Shopify-credentials nodig heeft).
   const dashboardData = {
     lastScan: new Date().toISOString(),
     counts: { ...counts, totaal: products.length },
     storeDomain: CONFIG.shopify.storeDomain,
+    shopifyTotalCount,
     violations,
     allProducts
   };
@@ -36,7 +39,7 @@ async function main() {
   fs.writeFileSync(path.join(CONFIG.paths.outputDir, "report-latest.md"), markdown);
 
   console.log(`\nKlaar in ${((Date.now() - started) / 1000).toFixed(1)}s`);
-  console.log(`  ${products.length} producten gescand`);
+  console.log(`  ${products.length} producten gescand (Shopify telt ${shopifyTotalCount ?? "onbekend"})`);
   console.log(`  ${counts.verboden} verboden (Annex II), ${counts.beperkt} beperkt (Annex III), ${counts["geen-inci"]} zonder INCI`);
 
   if (violations.length && CONFIG.github.openIssueOnViolation) {

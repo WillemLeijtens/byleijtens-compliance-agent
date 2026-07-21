@@ -51,6 +51,13 @@ async function getAccessToken() {
   return cachedToken.accessToken;
 }
 
+const COUNT_QUERY = `
+query ProductsCount {
+  productsCount {
+    count
+  }
+}`;
+
 const QUERY = `
 query ProductsWithIngredients($first: Int!, $cursor: String) {
   products(first: $first, after: $cursor) {
@@ -165,8 +172,22 @@ async function shopifyGraphQL(query, variables, attempt = 1) {
   return json.data;
 }
 
+/** Vraagt het totaal aantal producten in de store op (los van de paginering
+ * hieronder) — dient als referentiepunt om te zien of de sync alles ophaalde. */
+async function fetchShopifyProductCount() {
+  try {
+    const data = await shopifyGraphQL(COUNT_QUERY, {});
+    return data.productsCount?.count ?? null;
+  } catch (e) {
+    console.warn(`  ⚠ kon totaal aantal producten niet ophalen: ${e.message}`);
+    return null;
+  }
+}
+
 /** Haalt de volledige catalogus op (met resume vanaf checkpoint bij een eerdere mislukte run). */
 async function fetchAllProducts() {
+  const shopifyTotalCount = await fetchShopifyProductCount();
+
   const checkpoint = loadCheckpoint();
   let all = checkpoint?.products || [];
   let cursor = checkpoint?.cursor || null;
@@ -211,7 +232,7 @@ async function fetchAllProducts() {
     cursor = data.products.pageInfo.endCursor;
   }
 
-  return { products: all, errors };
+  return { products: all, errors, shopifyTotalCount };
 }
 
 module.exports = { fetchAllProducts };

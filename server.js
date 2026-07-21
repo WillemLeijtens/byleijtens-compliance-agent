@@ -3,7 +3,6 @@ const https = require("https");
 const fs = require("fs");
 const path = require("path");
 const { exec } = require("child_process");
-const { checkShopifyConnection } = require("./src/shopify-status");
 
 const PORT = process.env.PORT || 3000;
 
@@ -36,16 +35,17 @@ function githubApi(apiPath, token) {
   });
 }
 
-/** Haalt de laatste workflow-run op (tijdstip + status/conclusie). De
- * Shopify-koppelingsstatus zelf komt uit /api/shopify-status hieronder (live
- * check), dit endpoint gaat alleen over de laatste geplande/handmatige run. */
+/** Haalt de laatste workflow-run op en leidt daaruit de Shopify-koppelingsstatus
+ * af (via de conclusie van de "Sync + scan + rapport"-stap). Gebruikt alleen
+ * de GITHUB_TOKEN die de server al heeft — geen Shopify-secrets nodig op de
+ * Droplet zelf, die staan alleen in GitHub Actions. */
 async function getStatus() {
   const token = process.env.GITHUB_TOKEN;
   const repo = process.env.GITHUB_REPOSITORY || "WillemLeijtens/byleijtens-compliance-agent";
   const [owner, repoName] = repo.split("/");
 
   if (!token) {
-    return { lastRun: null };
+    return { lastRun: null, shopify: { state: "onbekend", message: "GITHUB_TOKEN niet gezet op de server" } };
   }
 
   const runsRes = await githubApi(
@@ -54,16 +54,42 @@ async function getStatus() {
   );
   const run = runsRes.body?.workflow_runs?.[0];
   if (!run) {
-    return { lastRun: null };
+    return { lastRun: null, shopify: { state: "onbekend", message: "Nog geen workflow-run gevonden" } };
+  }
+
+  const lastRun = {
+    status: run.status,
+    conclusion: run.conclusion,
+    createdAt: run.created_at,
+    updatedAt: run.updated_at,
+    url: run.html_url
+  };
+
+  if (run.status !== "completed") {
+    return { lastRun, shopify: { state: "onbekend", message: "Laatste run loopt nog" } };
+  }
+
+  // Zoek de "Sync + scan + rapport"-stap specifiek op, los van andere
+  // stappen in dezelfde run.
+  try {
+    const jobsRes = await githubApi(`/repos/${owner}/${repoName}/actions/runs/${run.id}/jobs`, token);
+    const job = jobsRes.body?.jobs?.[0];
+    const step = job?.steps?.find((s) => s.name === "Sync + scan + rapport");
+    if (step?.conclusion === "success") {
+      return { lastRun, shopify: { state: "ok", message: "Shopify-koppeling werkt" } };
+    }
+    if (step?.conclusion === "failure") {
+      return { lastRun, shopify: { state: "fout", message: "Sync mislukt — controleer SHOPIFY_*-secrets in GitHub" } };
+    }
+  } catch {
+    // val terug op algemene run-conclusie hieronder
   }
 
   return {
-    lastRun: {
-      status: run.status,
-      conclusion: run.conclusion,
-      createdAt: run.created_at,
-      updatedAt: run.updated_at,
-      url: run.html_url
+    lastRun,
+    shopify: {
+      state: run.conclusion === "success" ? "ok" : "fout",
+      message: run.conclusion === "success" ? "Shopify-koppeling werkt" : "Laatste run mislukt — check de Actions-log"
     }
   };
 }
@@ -166,15 +192,6 @@ const server = http.createServer((req, res) => {
         else console.log("Webhook-deploy geslaagd:\n", stdout);
       }
     );
-    return;
-  }
-
-  // API: Shopify-verbindingsstatus (live check)
-  if (req.method === "GET" && req.url === "/api/shopify-status") {
-    checkShopifyConnection().then((result) => {
-      res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(JSON.stringify(result));
-    });
     return;
   }
 
