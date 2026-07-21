@@ -4,7 +4,7 @@ EU Verordening (EG) 1223/2009 · Annex II & III · CosIng
 
 | Producten | Verboden (Annex II) | Beperkt (Annex III) | Zonder INCI | Conform |
 |---|---|---|---|---|
-| 5433 | 8 | 71 | 2954 | 2400 |
+| 5435 | 8 | 71 | 2956 | 2400 |
 
 ## Bevindingen (79)
 

@@ -1,13 +1,14 @@
 {
-  "lastScan": "2026-07-21T08:47:35.426Z",
+  "lastScan": "2026-07-21T19:59:38.452Z",
   "counts": {
     "verboden": 8,
     "beperkt": 71,
     "ok": 2400,
-    "geen-inci": 2954,
-    "totaal": 5433
+    "geen-inci": 2956,
+    "totaal": 5435
   },
   "storeDomain": "leijtens.myshopify.com",
+  "shopifyTotalCount": 5435,
   "violations": [
     {
       "id": "gid://shopify/Product/15246707392887",
@@ -51036,6 +51037,24 @@
       "id": "gid://shopify/Product/15512471699831",
       "sku": "",
       "title": "ALFAPARF KT LISSE DESIGN LIMITED ED. KIT Sh, Cond & Oil 2026",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15517784605047",
+      "sku": "16132",
+      "title": "Bjorn Axen Extra Matt Clay Super Strong Hold Vegan 80 ml",
+      "brand": "Bjorn Axen",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15517791224183",
+      "sku": "PP031659",
+      "title": "ALFAPARF Color Wear Chart 2025",
       "brand": "BYLEIJTENS",
       "image": null,
       "status": "geen-inci",
