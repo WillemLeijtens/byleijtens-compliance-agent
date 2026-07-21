@@ -46,7 +46,11 @@ const server = http.createServer((req, res) => {
       let data = "";
       httpsRes.on("data", (chunk) => (data += chunk));
       httpsRes.on("end", () => {
-        res.writeHead(httpsRes.statusCode, { "Content-Type": "application/json" });
+        // GitHub's 204 (No Content) mag geen response body hebben — geef die
+        // status door in de JSON-payload, niet als HTTP-statuscode, anders
+        // gooit fetch()'s response.json() in de browser op een lege body.
+        const outStatus = httpsRes.statusCode === 204 ? 200 : httpsRes.statusCode;
+        res.writeHead(outStatus, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ status: httpsRes.statusCode, message: httpsRes.statusCode === 204 ? "Workflow gestart!" : data }));
       });
     });
