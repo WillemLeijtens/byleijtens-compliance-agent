@@ -46,6 +46,25 @@ function scanProduct(product, index) {
   return { status, banned, restricted };
 }
 
+function toDashboardEntry(r) {
+  return {
+    id: r.product.id,
+    sku: r.product.sku,
+    title: r.product.title,
+    brand: r.product.brand,
+    image: r.product.image || null,
+    status: r.status,
+    hits: [...r.banned, ...r.restricted].map((h) => ({
+      inci: h.entry.inci,
+      cas: h.entry.cas || null,
+      annex: h.entry.annex,
+      ref: h.entry.ref,
+      note: h.entry.note || "",
+      via: h.via,
+    })),
+  };
+}
+
 /** Scant de volledige productenlijst tegen de verboden/beperkte-stoffenlijst. */
 function scanAll(products, prohibitedList) {
   const index = buildIndex(prohibitedList);
@@ -54,21 +73,10 @@ function scanAll(products, prohibitedList) {
   results.forEach((r) => counts[r.status]++);
   const violations = results
     .filter((r) => r.status === "verboden" || r.status === "beperkt")
-    .map((r) => ({
-      sku: r.product.sku,
-      title: r.product.title,
-      brand: r.product.brand,
-      status: r.status,
-      hits: [...r.banned, ...r.restricted].map((h) => ({
-        inci: h.entry.inci,
-        cas: h.entry.cas || null,
-        annex: h.entry.annex,
-        ref: h.entry.ref,
-        note: h.entry.note || "",
-        via: h.via,
-      })),
-    }));
-  return { results, counts, violations };
+    .map(toDashboardEntry);
+  // Alle producten (incl. conform/geen-inci) — voor dashboardfilters op elke categorie.
+  const allProducts = results.map(toDashboardEntry);
+  return { results, counts, violations, allProducts };
 }
 
 module.exports = { normalize, splitInci, buildIndex, scanProduct, scanAll };

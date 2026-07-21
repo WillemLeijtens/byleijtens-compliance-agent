@@ -3,6 +3,7 @@ const https = require("https");
 const fs = require("fs");
 const path = require("path");
 const { exec } = require("child_process");
+const { checkShopifyConnection } = require("./src/shopify-status");
 
 const PORT = process.env.PORT || 3000;
 
@@ -35,15 +36,16 @@ function githubApi(apiPath, token) {
   });
 }
 
-/** Haalt de laatste workflow-run op en leidt daaruit de Shopify-koppelingsstatus af
- * (via de conclusie van de "Sync + scan + rapport"-stap, zonder secret-waarden te lezen). */
+/** Haalt de laatste workflow-run op (tijdstip + status/conclusie). De
+ * Shopify-koppelingsstatus zelf komt uit /api/shopify-status hieronder (live
+ * check), dit endpoint gaat alleen over de laatste geplande/handmatige run. */
 async function getStatus() {
   const token = process.env.GITHUB_TOKEN;
   const repo = process.env.GITHUB_REPOSITORY || "WillemLeijtens/byleijtens-compliance-agent";
   const [owner, repoName] = repo.split("/");
 
   if (!token) {
-    return { lastRun: null, shopify: { state: "onbekend", message: "GITHUB_TOKEN niet gezet op de server" } };
+    return { lastRun: null };
   }
 
   const runsRes = await githubApi(
@@ -52,47 +54,16 @@ async function getStatus() {
   );
   const run = runsRes.body?.workflow_runs?.[0];
   if (!run) {
-    return { lastRun: null, shopify: { state: "onbekend", message: "Nog geen workflow-run gevonden" } };
-  }
-
-  const lastRun = {
-    status: run.status,
-    conclusion: run.conclusion,
-    createdAt: run.created_at,
-    updatedAt: run.updated_at,
-    url: run.html_url
-  };
-
-  if (run.status !== "completed") {
-    return { lastRun, shopify: { state: "onbekend", message: "Laatste run loopt nog" } };
-  }
-
-  // Zoek de "Sync + scan + rapport"-stap op om specifiek de Shopify-stap te beoordelen,
-  // los van bv. een falende Pages-deploy verderop in dezelfde run.
-  try {
-    const jobsRes = await githubApi(`/repos/${owner}/${repoName}/actions/runs/${run.id}/jobs`, token);
-    const job = jobsRes.body?.jobs?.[0];
-    const step = job?.steps?.find((s) => s.name === "Sync + scan + rapport");
-    if (step) {
-      if (step.conclusion === "success") {
-        return { lastRun, shopify: { state: "ok", message: "Shopify-koppeling werkt" } };
-      }
-      if (step.conclusion === "failure") {
-        return {
-          lastRun,
-          shopify: { state: "fout", message: "Sync mislukt — controleer SHOPIFY_*-secrets in GitHub" }
-        };
-      }
-    }
-  } catch {
-    // val terug op algemene run-conclusie hieronder
+    return { lastRun: null };
   }
 
   return {
-    lastRun,
-    shopify: {
-      state: run.conclusion === "success" ? "ok" : "fout",
-      message: run.conclusion === "success" ? "Shopify-koppeling werkt" : "Laatste run mislukt — check de Actions-log"
+    lastRun: {
+      status: run.status,
+      conclusion: run.conclusion,
+      createdAt: run.created_at,
+      updatedAt: run.updated_at,
+      url: run.html_url
     }
   };
 }
@@ -151,7 +122,11 @@ const server = http.createServer((req, res) => {
       let data = "";
       httpsRes.on("data", (chunk) => (data += chunk));
       httpsRes.on("end", () => {
-        res.writeHead(httpsRes.statusCode, { "Content-Type": "application/json" });
+        // GitHub's 204 (No Content) mag geen response body hebben — geef die
+        // status door in de JSON-payload, niet als HTTP-statuscode, anders
+        // gooit fetch()'s response.json() in de browser op een lege body.
+        const outStatus = httpsRes.statusCode === 204 ? 200 : httpsRes.statusCode;
+        res.writeHead(outStatus, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ status: httpsRes.statusCode, message: httpsRes.statusCode === 204 ? "Workflow gestart!" : data }));
       });
     });
@@ -191,6 +166,15 @@ const server = http.createServer((req, res) => {
         else console.log("Webhook-deploy geslaagd:\n", stdout);
       }
     );
+    return;
+  }
+
+  // API: Shopify-verbindingsstatus (live check)
+  if (req.method === "GET" && req.url === "/api/shopify-status") {
+    checkShopifyConnection().then((result) => {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify(result));
+    });
     return;
   }
 

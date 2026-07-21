@@ -61,6 +61,10 @@ query ProductsWithIngredients($first: Int!, $cursor: String) {
         vendor
         status
         descriptionHtml
+        featuredImage {
+          url
+          altText
+        }
         variants(first: 5) {
           edges { node { sku } }
         }
@@ -196,6 +200,7 @@ async function fetchAllProducts() {
         description: stripHtml(node.descriptionHtml),
         inci: node.metafield?.value || "",
         status: node.status,
+        image: node.featuredImage?.url || null,
       });
     });
     console.log(`${edges.length} producten (totaal ${all.length})`);

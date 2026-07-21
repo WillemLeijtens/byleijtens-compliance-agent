@@ -1,10 +1,10 @@
-# Compliance-scan — 2026-07-18
+# Compliance-scan — 2026-07-21
 
 EU Verordening (EG) 1223/2009 · Annex II & III · CosIng
 
 | Producten | Verboden (Annex II) | Beperkt (Annex III) | Zonder INCI | Conform |
 |---|---|---|---|---|
-| 5454 | 8 | 71 | 2975 | 2400 |
+| 5433 | 8 | 71 | 2954 | 2400 |
 
 ## Bevindingen (79)
 

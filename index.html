@@ -21,6 +21,25 @@
           <div>
             <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Compliance Dashboard</h1>
             <p class="text-sm text-gray-600 mt-1">EU Verordening (EG) 1223/2009 · Annex II & III</p>
+            <div class="flex items-center gap-2 mt-2 text-xs sm:text-sm" :title="shopifyStatus.message">
+              <span
+                class="inline-block w-2.5 h-2.5 rounded-full flex-shrink-0"
+                :class="{
+                  'bg-green-500': shopifyStatus.ok === true,
+                  'bg-red-500': shopifyStatus.ok === false,
+                  'bg-gray-300': shopifyStatus.ok === null
+                }"
+              ></span>
+              <span
+                :class="{
+                  'text-green-700': shopifyStatus.ok === true,
+                  'text-red-700': shopifyStatus.ok === false,
+                  'text-gray-500': shopifyStatus.ok === null
+                }"
+              >
+                Shopify {{ shopifyStatus.ok === null ? 'controleren…' : (shopifyStatus.ok ? 'verbonden' : 'niet verbonden') }}
+              </span>
+            </div>
           </div>
           <button
             @click="triggerWorkflow"
@@ -41,22 +60,18 @@
           <span v-if="workflowSuccess" class="ml-2 text-green-600">✅ Workflow gestart!</span>
         </div>
 
-        <!-- Run + Shopify status -->
+        <!-- Laatste run status -->
         <div class="mt-3 flex flex-wrap gap-2 text-xs sm:text-sm">
-          <span
+          <a
             v-if="status && status.lastRun"
-            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-medium"
+            :href="status.lastRun.url"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-medium hover:opacity-80"
             :class="runBadgeClass"
           >
             {{ runBadgeIcon }} Laatste run: {{ formatDate(status.lastRun.updatedAt) }} — {{ runLabel }}
-          </span>
-          <span
-            v-if="status && status.shopify"
-            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-medium"
-            :class="shopifyBadgeClass"
-          >
-            {{ shopifyBadgeIcon }} Shopify: {{ status.shopify.message }}
-          </span>
+          </a>
         </div>
       </div>
     </header>
@@ -65,22 +80,42 @@
     <main class="max-w-6xl mx-auto px-4 py-6 sm:py-8">
       <!-- Summary Cards -->
       <div v-if="data" class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-8">
-        <div class="bg-white p-4 rounded-lg border border-gray-200">
+        <button
+          type="button"
+          @click="filters.status = ''"
+          class="text-left bg-white p-4 rounded-lg border transition hover:shadow-md"
+          :class="filters.status === '' ? 'border-gray-400 ring-2 ring-gray-300' : 'border-gray-200'"
+        >
           <div class="text-sm text-gray-600 font-medium">Totaal</div>
           <div class="text-3xl font-bold text-gray-900 mt-1">{{ data.counts.totaal || 0 }}</div>
-        </div>
-        <div class="bg-white p-4 rounded-lg border border-red-200 bg-red-50">
+        </button>
+        <button
+          type="button"
+          @click="filters.status = 'verboden'"
+          class="text-left bg-red-50 p-4 rounded-lg border transition hover:shadow-md"
+          :class="filters.status === 'verboden' ? 'border-red-400 ring-2 ring-red-300' : 'border-red-200'"
+        >
           <div class="text-sm text-red-700 font-medium">Verboden (II)</div>
           <div class="text-3xl font-bold text-red-900 mt-1">{{ data.counts.verboden }}</div>
-        </div>
-        <div class="bg-white p-4 rounded-lg border border-orange-200 bg-orange-50">
+        </button>
+        <button
+          type="button"
+          @click="filters.status = 'beperkt'"
+          class="text-left bg-orange-50 p-4 rounded-lg border transition hover:shadow-md"
+          :class="filters.status === 'beperkt' ? 'border-orange-400 ring-2 ring-orange-300' : 'border-orange-200'"
+        >
           <div class="text-sm text-orange-700 font-medium">Beperkt (III)</div>
           <div class="text-3xl font-bold text-orange-900 mt-1">{{ data.counts.beperkt }}</div>
-        </div>
-        <div class="bg-white p-4 rounded-lg border border-gray-200">
+        </button>
+        <button
+          type="button"
+          @click="filters.status = 'geen-inci'"
+          class="text-left bg-white p-4 rounded-lg border transition hover:shadow-md"
+          :class="filters.status === 'geen-inci' ? 'border-gray-400 ring-2 ring-gray-300' : 'border-gray-200'"
+        >
           <div class="text-sm text-gray-600 font-medium">Geen INCI</div>
           <div class="text-3xl font-bold text-gray-900 mt-1">{{ data.counts["geen-inci"] }}</div>
-        </div>
+        </button>
       </div>
 
       <!-- Filters -->
@@ -94,9 +129,10 @@
               v-model="filters.status"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
-              <option value="">Alles</option>
+              <option value="">Alles (bevindingen)</option>
               <option value="verboden">🔴 Verboden</option>
               <option value="beperkt">🟠 Beperkt</option>
+              <option value="geen-inci">⚪ Geen INCI</option>
             </select>
           </div>
 
@@ -134,32 +170,51 @@
           v-for="(violation, idx) in filteredViolations"
           :key="idx"
           class="bg-white rounded-lg border transition hover:shadow-md"
-          :class="violation.status === 'verboden' ? 'border-red-200' : 'border-orange-200'"
+          :class="statusBorderClass(violation.status)"
         >
           <!-- Product Header -->
           <div
-            :class="violation.status === 'verboden' ? 'bg-red-50' : 'bg-orange-50'"
+            :class="statusBgClass(violation.status)"
             class="p-4 sm:p-5 border-b border-inherit"
           >
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
               <div class="flex-1 min-w-0">
-                <div class="flex items-start gap-2">
-                  <span class="text-lg flex-shrink-0">{{ violation.status === 'verboden' ? '🔴' : '🟠' }}</span>
+                <div class="flex items-start gap-3">
+                  <img
+                    v-if="violation.image"
+                    :src="violation.image"
+                    :alt="violation.title"
+                    loading="lazy"
+                    class="w-14 h-14 rounded-md object-cover flex-shrink-0 bg-white border border-gray-200"
+                  />
+                  <div v-else class="w-14 h-14 rounded-md flex-shrink-0 bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-300 text-xl">
+                    🖼️
+                  </div>
+                  <span class="text-lg flex-shrink-0">{{ statusIcon(violation.status) }}</span>
                   <div class="min-w-0">
                     <h3 class="font-semibold text-gray-900 truncate">{{ violation.title }}</h3>
                     <p class="text-sm text-gray-600 mt-1">
                       <span v-if="violation.sku">SKU: {{ violation.sku }}</span>
                       <span v-if="violation.brand" class="ml-2">Merk: {{ violation.brand }}</span>
                     </p>
+                    <a
+                      v-if="shopifyProductUrl(violation)"
+                      :href="shopifyProductUrl(violation)"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-800 mt-2"
+                    >
+                      Bekijk in Shopify ↗
+                    </a>
                   </div>
                 </div>
               </div>
               <div class="text-right flex-shrink-0">
                 <span
-                  :class="violation.status === 'verboden' ? 'bg-red-100 text-red-800' : 'bg-orange-100 text-orange-800'"
+                  :class="statusBadgeClass(violation.status)"
                   class="px-3 py-1 rounded-full text-xs font-semibold"
                 >
-                  {{ violation.status === 'verboden' ? 'VERBODEN' : 'BEPERKT' }}
+                  {{ statusLabel(violation.status) }}
                 </span>
               </div>
             </div>
@@ -205,7 +260,8 @@
           workflowError: '',
           workflowSuccess: false,
           lastScanDate: null,
-          status: null
+          status: null,
+          shopifyStatus: { ok: null, message: '' }
         };
       },
       computed: {
@@ -227,22 +283,15 @@
           if (r.status !== 'completed') return '🔵';
           return r.conclusion === 'success' ? '🟢' : '🔴';
         },
-        shopifyBadgeClass() {
-          const state = this.status?.shopify?.state;
-          if (state === 'ok') return 'bg-green-100 text-green-800';
-          if (state === 'fout') return 'bg-red-100 text-red-800';
-          return 'bg-gray-100 text-gray-700';
-        },
-        shopifyBadgeIcon() {
-          const state = this.status?.shopify?.state;
-          if (state === 'ok') return '🟢';
-          if (state === 'fout') return '🔴';
-          return '⚪';
-        },
         filteredViolations() {
           if (!this.data) return [];
-          return this.data.violations.filter(v => {
-            if (this.filters.status && v.status !== this.filters.status) return false;
+          // Zonder statusfilter: alleen bevindingen (verboden + beperkt), zoals
+          // voorheen. Met een specifieke status (incl. "geen-inci"): filter over
+          // de volledige productenlijst, want die staat niet in "violations".
+          const source = this.filters.status
+            ? (this.data.allProducts || []).filter(p => p.status === this.filters.status)
+            : (this.data.violations || []);
+          return source.filter(v => {
             if (this.filters.brand && !v.brand.toLowerCase().includes(this.filters.brand.toLowerCase())) return false;
             if (this.filters.inci) {
               const hasInci = v.hits.some(h => h.inci.toLowerCase().includes(this.filters.inci.toLowerCase()));
@@ -266,7 +315,36 @@
             }
           } catch (e) {
             console.error('Fout bij laden data:', e);
-            this.data = { violations: [], counts: { verboden: 0, beperkt: 0, "geen-inci": 0, totaal: 0 } };
+            this.data = { violations: [], allProducts: [], storeDomain: '', counts: { verboden: 0, beperkt: 0, "geen-inci": 0, totaal: 0 } };
+          }
+        },
+        statusIcon(status) {
+          return { verboden: '🔴', beperkt: '🟠', 'geen-inci': '⚪', ok: '🟢' }[status] || '⚪';
+        },
+        statusLabel(status) {
+          return { verboden: 'VERBODEN', beperkt: 'BEPERKT', 'geen-inci': 'GEEN INCI', ok: 'CONFORM' }[status] || status.toUpperCase();
+        },
+        statusBorderClass(status) {
+          return { verboden: 'border-red-200', beperkt: 'border-orange-200', 'geen-inci': 'border-gray-200', ok: 'border-green-200' }[status] || 'border-gray-200';
+        },
+        statusBgClass(status) {
+          return { verboden: 'bg-red-50', beperkt: 'bg-orange-50', 'geen-inci': 'bg-gray-50', ok: 'bg-green-50' }[status] || 'bg-gray-50';
+        },
+        statusBadgeClass(status) {
+          return { verboden: 'bg-red-100 text-red-800', beperkt: 'bg-orange-100 text-orange-800', 'geen-inci': 'bg-gray-200 text-gray-700', ok: 'bg-green-100 text-green-800' }[status] || 'bg-gray-200 text-gray-700';
+        },
+        shopifyProductUrl(product) {
+          if (!this.data?.storeDomain || !product?.id) return null;
+          const numericId = String(product.id).split('/').pop();
+          if (!numericId) return null;
+          return `https://${this.data.storeDomain}/admin/products/${numericId}`;
+        },
+        async loadShopifyStatus() {
+          try {
+            const response = await fetch('/api/shopify-status');
+            this.shopifyStatus = await response.json();
+          } catch (e) {
+            this.shopifyStatus = { ok: false, message: e.message };
           }
         },
         async loadStatus() {
@@ -307,6 +385,7 @@
                 this.workflowSuccess = false;
                 this.loadData();
                 this.loadStatus();
+                this.loadShopifyStatus();
               }, 3000);
             } else {
               let detail = result.error || result.message || '';
@@ -326,8 +405,13 @@
       mounted() {
         this.loadData();
         this.loadStatus();
+        this.loadShopifyStatus();
         // Refresh elke 5 minuten
-        setInterval(() => { this.loadData(); this.loadStatus(); }, 5 * 60 * 1000);
+        setInterval(() => {
+          this.loadData();
+          this.loadStatus();
+          this.loadShopifyStatus();
+        }, 5 * 60 * 1000);
       }
     }).mount('#app');
   </script>
