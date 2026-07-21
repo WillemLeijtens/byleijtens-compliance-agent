@@ -52,8 +52,9 @@ pm2 start server.js --name compliance-agent
 pm2 save
 
 echo -e "${BLUE}[6/7] PM2 laten overleven na reboot...${NC}"
-STARTUP_CMD=$(pm2 startup systemd -u root --hp /root | tail -1)
-eval "$STARTUP_CMD" || true
+# Als root voert pm2 de systemd-installatie meteen zelf uit (geen aparte
+# sudo-commando nodig) — dus gewoon direct aanroepen, niet parsen/evalen.
+pm2 startup systemd -u root --hp /root
 pm2 save
 
 echo -e "${BLUE}[7/7] Nginx reverse proxy (poort 80 -> 3000)...${NC}"
