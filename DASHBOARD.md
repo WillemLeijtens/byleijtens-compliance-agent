@@ -4,43 +4,24 @@ Een responsive Vue.js dashboard voor het bekijken van EU cosmetics compliance-be
 
 ## 🚀 Deployment / Hosting
 
-### Option A: Lokale server (aanbevolen voor privé repo)
+### Eigen server (DigitalOcean Droplet)
 
-**Beste voor interne use** — product data blijft privé.
+**Beste voor interne use** — product data blijft privé, geen afhankelijkheid van GitHub Pages.
 
 ```bash
 npm run dashboard
 ```
 
-Dashboard: `http://localhost:3000`
+Dashboard: `http://<droplet-ip>` (via Nginx-reverse-proxy naar poort 3000, zie `setup-server.sh`)
 
-**Voor collega's:**
-- Deploy op eigen server/VM
-- Deel URL met team
 - GitHub Token automatisch gebruikt (server-side, veilig)
+- Wordt na elke succesvolle workflow-run automatisch bijgewerkt via de
+  deploy-webhook (zie hieronder)
 
----
-
-### Option B: GitHub Pages (repo moet publiek zijn)
-
-Het dashboard kan automatisch naar **GitHub Pages** deployed worden na elke scan.
-
-**Vereiste**: Repo moet public zijn (GitHub Pages werkt niet met privé repos tenzij Enterprise).
-
-#### Stappen:
-
-1. Repo → **Settings** → **Visibility** → **Change to Public**
-2. Repo → **Settings** → **Pages**
-3. Source: **GitHub Actions** (standaard)
-4. Dashboard wordt automatisch gepubliceerd
-
-#### URL
-
-```
-https://<jouw-org>.github.io/byleijtens-compliance-agent/
-```
-
-Bijvoorbeeld: `https://willemleijtens.github.io/byleijtens-compliance-agent/`
+> **Niet meer via GitHub Pages**: dat was de eerdere hostingroute maar is
+> verwijderd uit de workflow — de Droplet + webhook is nu de enige
+> hostingmethode. Onnodige complexiteit (en een losse faalbron als Pages
+> niet correct staat ingeschakeld) is zo weg.
 
 ## 📱 Features
 
