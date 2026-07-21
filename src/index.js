@@ -14,17 +14,20 @@ async function main() {
   const { products, errors } = await fetchAllProducts();
 
   const prohibitedList = JSON.parse(fs.readFileSync(CONFIG.paths.prohibitedListFile, "utf8"));
-  const { counts, violations } = scanAll(products, prohibitedList);
+  const { counts, violations, allProducts } = scanAll(products, prohibitedList);
 
   fs.mkdirSync(CONFIG.paths.outputDir, { recursive: true });
   fs.writeFileSync(path.join(CONFIG.paths.outputDir, `products-${dateStr}.json`), JSON.stringify(products, null, 2));
   fs.writeFileSync(path.join(CONFIG.paths.outputDir, `violations-${dateStr}.json`), JSON.stringify(violations, null, 2));
 
-  // Voor dashboard: latest violations + metadata
+  // Voor dashboard: latest violations + metadata + volledige productenlijst
+  // (voor filters op "totaal"/"geen-inci") + storeDomain (voor Shopify-links).
   const dashboardData = {
     lastScan: new Date().toISOString(),
     counts: { ...counts, totaal: products.length },
-    violations
+    storeDomain: CONFIG.shopify.storeDomain,
+    violations,
+    allProducts
   };
   fs.writeFileSync(path.join(CONFIG.paths.outputDir, "violations-latest.json"), JSON.stringify(dashboardData, null, 2));
 

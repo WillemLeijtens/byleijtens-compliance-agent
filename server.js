@@ -2,6 +2,7 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const url = require("url");
+const { checkShopifyConnection } = require("./src/shopify-status");
 
 const PORT = process.env.PORT || 3000;
 
@@ -62,6 +63,15 @@ const server = http.createServer((req, res) => {
 
     httpsReq.write(JSON.stringify({ ref: "main" }));
     httpsReq.end();
+    return;
+  }
+
+  // API: Shopify-verbindingsstatus
+  if (req.method === "GET" && req.url === "/api/shopify-status") {
+    checkShopifyConnection().then((result) => {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify(result));
+    });
     return;
   }
 
