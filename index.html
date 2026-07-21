@@ -5,248 +5,321 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Compliance Agent — By Leijtens</title>
   <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
+    /* ==========================================================
+       By Leijtens — design tokens (from Compliance Agent UI-upgrade)
+       Only two background colors exist: hoofdkleur (dark) and paper
+       (light). --bl-accent is strictly for hairlines, small dot
+       indicators and labels — never buttons or large fills.
+       ========================================================== */
+    :root {
+      --bl-hoofdkleur: #0E323B;
+      --bl-paper: #F8F5F5;
+      --bl-gray-700: #7E8D92;
+      --bl-gray-400: #BAC3C8;
+      --bl-gray-200: #EAEFF1;
+      --bl-white: #FFFFFF;
+      --bl-accent: #FF914D;
+
+      --fg-1: var(--bl-hoofdkleur);
+      --fg-3: var(--bl-gray-700);
+      --fg-4: var(--bl-gray-400);
+      --border-soft: var(--bl-gray-400);
+
+      --font-display: "The Seasons", "Cormorant Garamond", "Playfair Display", Georgia, serif;
+      --font-label: "Montserrat", "Futura PT", -apple-system, Arial, sans-serif;
+      --font-body: "Montserrat", "Inter", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+      --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+      --tracking-display: 0.08em;
+      --tracking-label: 0.15em;
+      --tracking-eyebrow: 0.18em;
+
+      --shadow-1: 0 1px 2px rgba(26, 58, 56, 0.06);
+      --shadow-2: 0 4px 16px rgba(26, 58, 56, 0.08);
+    }
+
+    * { box-sizing: border-box; }
     [v-cloak] { display: none; }
-    .fade-enter-active, .fade-leave-active { transition: opacity 0.2s; }
-    .fade-enter-from, .fade-leave-to { opacity: 0; }
+
+    html, body {
+      margin: 0;
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--fg-1);
+      background: var(--bl-paper);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection { background: var(--bl-accent); color: #fff; }
+
+    .ca-wrap { max-width: 1140px; margin: 0 auto; padding: 40px 24px 64px; }
+    @media (min-width: 640px) { .ca-wrap { padding: 56px 40px 80px; } }
+
+    .ca-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 24px; flex-wrap: wrap; padding-bottom: 28px; border-bottom: 1px solid var(--border-soft);
+    }
+    .ca-eyebrow {
+      font-family: var(--font-label); font-size: 11px; font-weight: 500;
+      letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--fg-3); margin-bottom: 8px;
+    }
+    .ca-h1 {
+      font-family: var(--font-display); font-weight: 400; font-size: 30px;
+      letter-spacing: var(--tracking-display); text-transform: uppercase;
+      line-height: 1.05; color: var(--fg-1); margin: 0 0 10px;
+    }
+    @media (min-width: 640px) { .ca-h1 { font-size: 38px; } }
+    .ca-sub { font-family: var(--font-body); font-size: 13px; color: var(--fg-3); }
+
+    .ca-btn-primary {
+      font-family: var(--font-label); font-size: 12px; font-weight: 500;
+      letter-spacing: var(--tracking-label); text-transform: uppercase;
+      padding: 14px 26px; border-radius: 6px; border: 1px solid var(--bl-hoofdkleur);
+      background: var(--bl-hoofdkleur); color: var(--bl-paper); cursor: pointer;
+      transition: opacity 180ms ease; white-space: nowrap;
+    }
+    .ca-btn-primary:hover:not(:disabled) { opacity: 0.82; }
+    .ca-btn-primary:disabled { opacity: 0.6; cursor: default; }
+
+    .ca-statusrow { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; padding: 20px 0 32px; }
+    .ca-statusrow .ca-divider { width: 1px; height: 14px; background: var(--border-soft); }
+    .ca-dot { width: 6px; height: 6px; border-radius: 999px; display: inline-block; flex-shrink: 0; }
+    .ca-connlabel {
+      display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-label);
+      font-size: 11px; font-weight: 500; letter-spacing: var(--tracking-label); text-transform: uppercase;
+    }
+    .ca-meta { font-size: 13px; color: var(--fg-3); }
+    .ca-pill {
+      display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: var(--fg-1);
+      border: 1px solid var(--border-soft); border-radius: 999px; padding: 6px 14px; text-decoration: none;
+    }
+    a.ca-pill:hover { opacity: 0.75; }
+    .ca-pill .ca-dot { border-radius: 999px; width: 6px; height: 6px; }
+
+    .ca-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 32px; }
+    @media (min-width: 640px) { .ca-cards { grid-template-columns: repeat(4, 1fr); } }
+    .ca-card {
+      background: var(--bl-white); border: 1px solid var(--border-soft); border-top: 1px solid var(--border-soft);
+      border-radius: 8px; padding: 20px 22px; cursor: pointer; text-align: left; width: 100%;
+      transition: border-color 160ms ease; box-shadow: var(--shadow-1); font: inherit; color: inherit;
+    }
+    .ca-card:hover { border-color: var(--bl-hoofdkleur); }
+    .ca-card.is-active { border-color: var(--bl-hoofdkleur); border-top-color: var(--bl-accent); border-top-width: 2px; padding-top: 19px; }
+    .ca-card-label {
+      font-family: var(--font-label); font-size: 10px; letter-spacing: var(--tracking-eyebrow);
+      text-transform: uppercase; color: var(--fg-3); margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
+    }
+    .ca-card-value { font-family: var(--font-display); font-size: 30px; letter-spacing: 0.02em; }
+    @media (min-width: 640px) { .ca-card-value { font-size: 34px; } }
+
+    .ca-panel { background: var(--bl-white); border: 1px solid var(--border-soft); border-radius: 8px; padding: 22px 24px; margin-bottom: 32px; box-shadow: var(--shadow-1); }
+    @media (min-width: 640px) { .ca-panel { padding: 26px 28px; } }
+    .ca-panel-title { font-family: var(--font-label); font-size: 11px; font-weight: 500; letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--fg-3); margin-bottom: 20px; }
+    .ca-filters-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    @media (min-width: 900px) { .ca-filters-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; } }
+    .ca-field { display: flex; flex-direction: column; gap: 8px; }
+    .ca-field-label { font-family: var(--font-label); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-3); }
+    .ca-input, .ca-select {
+      font-family: var(--font-body); font-size: 14px; color: var(--fg-1); background: var(--bl-white);
+      border: 1px solid var(--border-soft); border-radius: 6px; padding: 11px 12px; outline: none; width: 100%;
+    }
+    .ca-input:focus, .ca-select:focus { border-color: var(--bl-hoofdkleur); }
+    .ca-select {
+      appearance: none; padding-right: 34px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0L5 6L10 0' fill='%230E323B'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center;
+    }
+
+    .ca-resultcount { font-size: 13px; color: var(--fg-3); margin-bottom: 16px; }
+
+    .ca-empty { background: var(--bl-white); border: 1px dashed var(--border-soft); border-radius: 8px; padding: 56px 24px; text-align: center; color: var(--fg-3); font-size: 14px; }
+
+    .ca-list { display: flex; flex-direction: column; gap: 14px; }
+    .ca-row { background: var(--bl-white); border: 1px solid var(--border-soft); border-radius: 8px; padding: 20px 22px; box-shadow: var(--shadow-1); }
+    @media (min-width: 640px) { .ca-row { padding: 22px 24px; } }
+    .ca-row-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .ca-row-main { display: flex; gap: 16px; align-items: flex-start; min-width: 0; }
+    .ca-avatar {
+      width: 48px; height: 48px; border-radius: 6px; background: var(--bl-gray-200); color: var(--fg-3);
+      display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 16px;
+      flex: none; object-fit: cover; border: 1px solid var(--border-soft);
+    }
+    .ca-row-title { font-size: 15px; font-weight: 500; color: var(--fg-1); margin-bottom: 4px; }
+    .ca-row-meta { font-size: 12.5px; color: var(--fg-3); }
+    .ca-row-link { font-size: 12.5px; color: var(--fg-1); border-bottom: 1px solid var(--bl-accent); display: inline-block; margin-top: 6px; }
+    .ca-row-link:hover { opacity: 0.7; }
+
+    .ca-badge {
+      flex: none; font-family: var(--font-label); font-size: 10px; font-weight: 500;
+      letter-spacing: var(--tracking-label); text-transform: uppercase; padding: 6px 12px; border-radius: 999px;
+    }
+    .ca-badge-verboden { background: var(--bl-hoofdkleur); color: var(--bl-paper); border: 1px solid var(--bl-hoofdkleur); }
+    .ca-badge-beperkt { background: transparent; color: var(--bl-hoofdkleur); border: 1px solid var(--bl-accent); }
+    .ca-badge-neutral { background: var(--bl-gray-200); color: var(--fg-1); border: 1px solid transparent; }
+
+    .ca-ingredient { background: var(--bl-gray-200); border-radius: 6px; padding: 16px 18px; margin-top: 16px; }
+    .ca-ingredient-name { font-size: 13.5px; font-weight: 500; color: var(--fg-1); margin-bottom: 6px; }
+    .ca-ingredient-meta { font-family: var(--font-mono); font-size: 11.5px; color: var(--fg-3); margin-bottom: 4px; }
+    .ca-ingredient-note { font-size: 12.5px; margin-bottom: 6px; }
+    .ca-ingredient-via { font-size: 11px; color: var(--fg-4); text-transform: uppercase; letter-spacing: 0.08em; }
+
+    .ca-disclaimer { font-size: 12px; color: var(--fg-3); background: var(--bl-gray-200); border-radius: 6px; padding: 12px 14px; margin-top: 12px; }
+    .ca-disclaimer a { color: var(--fg-1); border-bottom: 1px solid var(--bl-accent); }
+    .ca-disclaimer a:hover { opacity: 0.7; }
+
+    .ca-footer { text-align: center; margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border-soft); font-size: 12px; color: var(--fg-4); }
   </style>
 </head>
-<body class="bg-gray-50">
+<body>
   <div id="app" v-cloak>
-    <!-- Header -->
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
-      <div class="max-w-6xl mx-auto px-4 py-4 sm:py-6">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Compliance Agent</h1>
-            <p class="text-sm text-gray-600 mt-1">EU Verordening (EG) 1223/2009 · Annex II & III</p>
-          </div>
-          <button
-            @click="triggerWorkflow"
-            :disabled="workflowLoading"
-            class="w-full sm:w-auto px-6 py-2.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition flex items-center justify-center gap-2"
-          >
-            <span v-if="workflowLoading">⏳</span>
-            <span v-else>🔄</span>
-            {{ workflowLoading ? 'Wordt gestart...' : 'Update' }}
-          </button>
-        </div>
+    <div class="ca-wrap">
 
-        <!-- Last Scan Info -->
-        <div class="mt-4 text-xs sm:text-sm text-gray-500">
-          <span v-if="lastScanDate">Laatst gescand: <strong>{{ formatDate(lastScanDate) }}</strong></span>
-          <span v-else>Geen scans gevonden</span>
-          <span v-if="workflowError" class="ml-2 text-red-600">❌ {{ workflowError }}</span>
-          <span v-if="workflowSuccess" class="ml-2 text-green-600">✅ Workflow gestart!</span>
+      <!-- Header -->
+      <div class="ca-header">
+        <div>
+          <img src="assets/logo-dark.svg" alt="By Leijtens" style="height:18px;width:auto;margin-bottom:20px;display:block" />
+          <div class="ca-eyebrow">Compliance</div>
+          <h1 class="ca-h1">Compliance Agent</h1>
+          <div class="ca-sub">EU Verordening (EG) 1223/2009 · Annex II &amp; III</div>
         </div>
-
-        <!-- Laatste run + Shopify-koppeling + productenvergelijking -->
-        <div class="mt-3 flex flex-wrap gap-2 text-xs sm:text-sm">
-          <a
-            v-if="status && status.lastRun"
-            :href="status.lastRun.url"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-medium hover:opacity-80"
-            :class="runBadgeClass"
-          >
-            {{ runBadgeIcon }} Laatste run: {{ formatDate(status.lastRun.updatedAt) }} — {{ runLabel }}
-          </a>
-          <span
-            v-if="status && status.shopify"
-            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-medium"
-            :class="shopifyBadgeClass"
-          >
-            {{ shopifyBadgeIcon }} Shopify: {{ status.shopify.message }}
-          </span>
-          <span
-            v-if="data && data.shopifyTotalCount != null"
-            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-medium"
-            :class="productCountBadgeClass"
-            :title="'App: ' + (data.counts.totaal || 0) + ' geanalyseerd — Shopify: ' + data.shopifyTotalCount + ' op moment van laatste scan'"
-          >
-            {{ productCountBadgeIcon }} App: {{ data.counts.totaal || 0 }} / Shopify: {{ data.shopifyTotalCount }} producten
-          </span>
-        </div>
+        <button @click="triggerWorkflow" :disabled="workflowLoading" class="ca-btn-primary">
+          {{ workflowLoading ? 'Bijwerken…' : 'Update' }}
+        </button>
       </div>
-    </header>
 
-    <!-- Main Content -->
-    <main class="max-w-6xl mx-auto px-4 py-6 sm:py-8">
-      <!-- Summary Cards -->
-      <div v-if="data" class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-8">
-        <button
-          type="button"
-          @click="filters.status = ''"
-          class="text-left bg-white p-4 rounded-lg border transition hover:shadow-md"
-          :class="filters.status === '' ? 'border-gray-400 ring-2 ring-gray-300' : 'border-gray-200'"
-        >
-          <div class="text-sm text-gray-600 font-medium">Totaal</div>
-          <div class="text-3xl font-bold text-gray-900 mt-1">{{ data.counts.totaal || 0 }}</div>
+      <!-- Status row -->
+      <div class="ca-statusrow">
+        <span class="ca-connlabel" :style="{ color: connectionTextColor }">
+          <span class="ca-dot" :style="{ background: connectionDotColor }"></span>
+          {{ connectionLabel }}
+        </span>
+        <span class="ca-divider"></span>
+        <span class="ca-meta">Laatst gescand: <strong style="color:var(--fg-1);font-weight:500">{{ lastScanText }}</strong></span>
+
+        <template v-if="status && status.lastRun">
+          <span class="ca-divider"></span>
+          <a class="ca-pill" :href="status.lastRun.url" target="_blank" rel="noopener noreferrer">
+            <span class="ca-dot" :style="{ border: '1px solid ' + runDotColor, background: 'transparent' }"></span>
+            Laatste run — {{ runLabel }}
+          </a>
+        </template>
+
+        <template v-if="data && data.shopifyTotalCount != null">
+          <span class="ca-divider"></span>
+          <span class="ca-pill" :title="'App: ' + (data.counts.totaal || 0) + ' geanalyseerd — Shopify: ' + data.shopifyTotalCount + ' op moment van laatste scan'">
+            <span class="ca-dot" :style="{ border: '1px solid ' + countDotColor, background: 'transparent' }"></span>
+            {{ data.counts.totaal || 0 }} / {{ data.shopifyTotalCount }} producten
+          </span>
+        </template>
+
+        <span v-if="workflowError" class="ca-meta" style="color:var(--bl-accent)">{{ workflowError }}</span>
+        <span v-if="workflowSuccess" class="ca-meta">Workflow gestart.</span>
+      </div>
+
+      <!-- Summary cards -->
+      <div v-if="data" class="ca-cards">
+        <button type="button" @click="filters.status = ''" class="ca-card" :class="{ 'is-active': filters.status === '' }">
+          <div class="ca-card-label">Totaal</div>
+          <div class="ca-card-value">{{ data.counts.totaal || 0 }}</div>
         </button>
-        <button
-          type="button"
-          @click="filters.status = 'verboden'"
-          class="text-left bg-red-50 p-4 rounded-lg border transition hover:shadow-md"
-          :class="filters.status === 'verboden' ? 'border-red-400 ring-2 ring-red-300' : 'border-red-200'"
-        >
-          <div class="text-sm text-red-700 font-medium">Verboden (II)</div>
-          <div class="text-3xl font-bold text-red-900 mt-1">{{ data.counts.verboden }}</div>
+        <button type="button" @click="filters.status = 'verboden'" class="ca-card" :class="{ 'is-active': filters.status === 'verboden' }">
+          <div class="ca-card-label">Verboden (II)</div>
+          <div class="ca-card-value">{{ data.counts.verboden }}</div>
         </button>
-        <button
-          type="button"
-          @click="filters.status = 'beperkt'"
-          class="text-left bg-orange-50 p-4 rounded-lg border transition hover:shadow-md"
-          :class="filters.status === 'beperkt' ? 'border-orange-400 ring-2 ring-orange-300' : 'border-orange-200'"
-        >
-          <div class="text-sm text-orange-700 font-medium">Beperkt (III)</div>
-          <div class="text-3xl font-bold text-orange-900 mt-1">{{ data.counts.beperkt }}</div>
+        <button type="button" @click="filters.status = 'beperkt'" class="ca-card" :class="{ 'is-active': filters.status === 'beperkt' }">
+          <div class="ca-card-label">Beperkt (III) <span class="ca-dot" style="background:var(--bl-accent)"></span></div>
+          <div class="ca-card-value">{{ data.counts.beperkt }}</div>
         </button>
-        <button
-          type="button"
-          @click="filters.status = 'geen-inci'"
-          class="text-left bg-white p-4 rounded-lg border transition hover:shadow-md"
-          :class="filters.status === 'geen-inci' ? 'border-gray-400 ring-2 ring-gray-300' : 'border-gray-200'"
-        >
-          <div class="text-sm text-gray-600 font-medium">Geen INCI</div>
-          <div class="text-3xl font-bold text-gray-900 mt-1">{{ data.counts["geen-inci"] }}</div>
+        <button type="button" @click="filters.status = 'geen-inci'" class="ca-card" :class="{ 'is-active': filters.status === 'geen-inci' }">
+          <div class="ca-card-label">Geen INCI</div>
+          <div class="ca-card-value">{{ data.counts["geen-inci"] }}</div>
         </button>
       </div>
 
       <!-- Filters -->
-      <div class="bg-white p-4 sm:p-6 rounded-lg border border-gray-200 mb-6">
-        <h2 class="text-lg font-semibold text-gray-900 mb-4">Filters</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <!-- Status Filter -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-            <select
-              v-model="filters.status"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
+      <div class="ca-panel">
+        <div class="ca-panel-title">Filters</div>
+        <div class="ca-filters-grid">
+          <label class="ca-field">
+            <span class="ca-field-label">Status</span>
+            <select v-model="filters.status" class="ca-select">
               <option value="">Alles (bevindingen)</option>
-              <option value="verboden">🔴 Verboden</option>
-              <option value="beperkt">🟠 Beperkt</option>
-              <option value="geen-inci">⚪ Geen INCI</option>
+              <option value="verboden">Verboden</option>
+              <option value="beperkt">Beperkt</option>
+              <option value="geen-inci">Geen INCI</option>
             </select>
-          </div>
-
-          <!-- Brand Filter -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Merk</label>
-            <input
-              v-model="filters.brand"
-              type="text"
-              placeholder="Zoek merk..."
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-
-          <!-- INCI Filter -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Ingrediënt</label>
-            <input
-              v-model="filters.inci"
-              type="text"
-              placeholder="Zoek ingrediënt..."
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
+          </label>
+          <label class="ca-field">
+            <span class="ca-field-label">Merk</span>
+            <input v-model="filters.brand" type="text" placeholder="Zoek merk…" class="ca-input" />
+          </label>
+          <label class="ca-field">
+            <span class="ca-field-label">Ingrediënt</span>
+            <input v-model="filters.inci" type="text" placeholder="Zoek ingrediënt…" class="ca-input" />
+          </label>
+          <label class="ca-field">
+            <span class="ca-field-label">Sorteer op</span>
+            <select v-model="filters.sortBy" class="ca-select">
+              <option value="naam">Productnaam</option>
+              <option value="merk">Merk</option>
+              <option value="ernst">Ernst</option>
+            </select>
+          </label>
         </div>
+      </div>
+
+      <div class="ca-resultcount">{{ filteredViolations.length }} van {{ totalForCurrentFilter }} producten getoond</div>
+
+      <!-- Empty state -->
+      <div v-if="filteredViolations.length === 0" class="ca-empty">
+        Geen producten gevonden voor deze filters.
       </div>
 
       <!-- Results -->
-      <div class="space-y-4">
-        <div v-if="filteredViolations.length === 0" class="bg-white p-6 rounded-lg border border-gray-200 text-center text-gray-500">
-          Geen resultaten gevonden
-        </div>
-
-        <div
-          v-for="(violation, idx) in filteredViolations"
-          :key="idx"
-          class="bg-white rounded-lg border transition hover:shadow-md"
-          :class="statusBorderClass(violation.status)"
-        >
-          <!-- Product Header -->
-          <div
-            :class="statusBgClass(violation.status)"
-            class="p-4 sm:p-5 border-b border-inherit"
-          >
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-              <div class="flex-1 min-w-0">
-                <div class="flex items-start gap-3">
-                  <img
-                    v-if="violation.image"
-                    :src="violation.image"
-                    :alt="violation.title"
-                    loading="lazy"
-                    class="w-14 h-14 rounded-md object-cover flex-shrink-0 bg-white border border-gray-200"
-                  />
-                  <div v-else class="w-14 h-14 rounded-md flex-shrink-0 bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-300 text-xl">
-                    🖼️
-                  </div>
-                  <span class="text-lg flex-shrink-0">{{ statusIcon(violation.status) }}</span>
-                  <div class="min-w-0">
-                    <h3 class="font-semibold text-gray-900 truncate">{{ violation.title }}</h3>
-                    <p class="text-sm text-gray-600 mt-1">
-                      <span v-if="violation.sku">SKU: {{ violation.sku }}</span>
-                      <span v-if="violation.brand" class="ml-2">Merk: {{ violation.brand }}</span>
-                    </p>
-                    <a
-                      v-if="shopifyProductUrl(violation)"
-                      :href="shopifyProductUrl(violation)"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-800 mt-2"
-                    >
-                      Bekijk in Shopify ↗
-                    </a>
-                  </div>
+      <div class="ca-list">
+        <div v-for="(violation, idx) in filteredViolations" :key="idx" class="ca-row">
+          <div class="ca-row-top">
+            <div class="ca-row-main">
+              <img v-if="violation.image" :src="violation.image" :alt="violation.title" loading="lazy" class="ca-avatar" />
+              <div v-else class="ca-avatar">{{ initial(violation) }}</div>
+              <div style="min-width:0">
+                <div class="ca-row-title">{{ violation.title }}</div>
+                <div class="ca-row-meta">
+                  <span v-if="violation.sku">SKU: {{ violation.sku }}</span>
+                  <span v-if="violation.brand" style="margin-left:8px">Merk: {{ violation.brand }}</span>
                 </div>
-              </div>
-              <div class="text-right flex-shrink-0">
-                <span
-                  :class="statusBadgeClass(violation.status)"
-                  class="px-3 py-1 rounded-full text-xs font-semibold"
-                >
-                  {{ statusLabel(violation.status) }}
-                </span>
+                <a v-if="shopifyProductUrl(violation)" :href="shopifyProductUrl(violation)" target="_blank" rel="noopener noreferrer" class="ca-row-link">
+                  Bekijk in Shopify ↗
+                </a>
               </div>
             </div>
+            <span class="ca-badge" :class="statusBadgeClass(violation.status)">{{ statusLabel(violation.status) }}</span>
           </div>
 
-          <!-- Ingredients List -->
-          <div class="p-4 sm:p-5 space-y-3">
-            <div v-for="(hit, hIdx) in violation.hits" :key="hIdx" class="text-sm bg-gray-50 p-3 rounded">
-              <div class="font-medium text-gray-900">{{ hit.inci }}</div>
-              <div class="text-xs text-gray-600 mt-2 space-y-1">
-                <div v-if="hit.cas">CAS: <code class="bg-white px-1 rounded">{{ hit.cas }}</code></div>
-                <div>Annex {{ hit.annex }} · {{ hit.ref }}</div>
-                <div v-if="hit.note" class="text-yellow-700">💡 {{ hit.note }}</div>
-                <div class="text-gray-500">Match via {{ hit.via }}</div>
-              </div>
-            </div>
+          <div v-for="(hit, hIdx) in violation.hits" :key="hIdx" class="ca-ingredient">
+            <div class="ca-ingredient-name">{{ hit.inci }}</div>
+            <div class="ca-ingredient-meta" v-if="hit.cas">CAS: {{ hit.cas }} · {{ hit.annex }} · {{ hit.ref }}</div>
+            <div class="ca-ingredient-meta" v-else>{{ hit.annex }} · {{ hit.ref }}</div>
+            <div v-if="hit.note" class="ca-ingredient-note" style="color:var(--fg-1)">{{ hit.note }}</div>
+            <div class="ca-ingredient-via">Match via {{ hit.via }}</div>
+          </div>
 
-            <div
-              v-if="violation.status === 'verboden' || violation.status === 'beperkt'"
-              class="text-xs text-gray-500 bg-yellow-50 border border-yellow-200 rounded p-3"
-            >
-              ⚠️ INCI op basis van de Shopify-INCI-lijst. Controleer de INCI op het productlabel om zeker te zijn.
-              Dit is slechts een indicatie — controleer op <a href="https://ec.europa.eu/growth/tools-databases/cosing/" target="_blank" rel="noopener noreferrer" class="underline hover:text-gray-700">CosIng</a>
-              of het ingrediënt echt verboden is, alvorens contact op te nemen met de leverancier.
-            </div>
+          <div v-if="violation.status === 'verboden' || violation.status === 'beperkt'" class="ca-disclaimer">
+            INCI op basis van de Shopify-INCI-lijst. Controleer de INCI op het productlabel om zeker te zijn.
+            Dit is slechts een indicatie — controleer op <a href="https://ec.europa.eu/growth/tools-databases/cosing/" target="_blank" rel="noopener noreferrer">CosIng</a>
+            of het ingrediënt echt verboden is, alvorens contact op te nemen met de leverancier.
           </div>
         </div>
       </div>
-    </main>
 
-    <!-- Footer -->
-    <footer class="bg-gray-100 border-t border-gray-200 mt-12 py-6">
-      <div class="max-w-6xl mx-auto px-4 text-center text-sm text-gray-600">
-        <p>Dit dashboard leest gegevens van de compliance-scans. Wijzigingen starten met de "Update" knop.</p>
-      </div>
-    </footer>
+      <div class="ca-footer">Dit dashboard toont leesgegevens van de compliance-scans. Wijzigingen start u met de knop "Update".</div>
+
+    </div>
   </div>
 
   <script>
@@ -259,7 +332,8 @@
           filters: {
             status: '',
             brand: '',
-            inci: ''
+            inci: '',
+            sortBy: 'naam'
           },
           workflowLoading: false,
           workflowError: '',
@@ -269,45 +343,44 @@
         };
       },
       computed: {
+        connectionLabel() {
+          const state = this.status?.shopify?.state;
+          if (state === 'ok') return 'Shopify verbonden';
+          if (state === 'fout') return 'Shopify niet verbonden';
+          return this.status?.shopify?.message || 'Shopify status onbekend';
+        },
+        connectionTextColor() {
+          const state = this.status?.shopify?.state;
+          return state === 'ok' ? 'var(--fg-1)' : 'var(--bl-accent)';
+        },
+        connectionDotColor() {
+          const state = this.status?.shopify?.state;
+          return state === 'ok' ? 'var(--bl-hoofdkleur)' : 'var(--bl-accent)';
+        },
         runLabel() {
           const r = this.status?.lastRun;
           if (!r) return '';
-          if (r.status !== 'completed') return 'bezig...';
+          if (r.status !== 'completed') return 'bezig…';
           return r.conclusion === 'success' ? 'succesvol' : 'mislukt';
         },
-        runBadgeClass() {
+        runDotColor() {
           const r = this.status?.lastRun;
-          if (!r) return '';
-          if (r.status !== 'completed') return 'bg-blue-100 text-blue-800';
-          return r.conclusion === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+          if (!r || r.status !== 'completed') return 'var(--bl-gray-400)';
+          return r.conclusion === 'success' ? 'var(--bl-hoofdkleur)' : 'var(--bl-accent)';
         },
-        runBadgeIcon() {
-          const r = this.status?.lastRun;
-          if (!r) return '';
-          if (r.status !== 'completed') return '🔵';
-          return r.conclusion === 'success' ? '🟢' : '🔴';
-        },
-        shopifyBadgeClass() {
-          const state = this.status?.shopify?.state;
-          if (state === 'ok') return 'bg-green-100 text-green-800';
-          if (state === 'fout') return 'bg-red-100 text-red-800';
-          return 'bg-gray-100 text-gray-700';
-        },
-        shopifyBadgeIcon() {
-          const state = this.status?.shopify?.state;
-          if (state === 'ok') return '🟢';
-          if (state === 'fout') return '🔴';
-          return '⚪';
-        },
-        productCountBadgeClass() {
-          if (!this.data || this.data.shopifyTotalCount == null) return 'bg-gray-100 text-gray-700';
+        countDotColor() {
+          if (!this.data || this.data.shopifyTotalCount == null) return 'var(--bl-gray-400)';
           const scanned = this.data.counts.totaal || 0;
-          return scanned >= this.data.shopifyTotalCount ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800';
+          return scanned >= this.data.shopifyTotalCount ? 'var(--bl-hoofdkleur)' : 'var(--bl-accent)';
         },
-        productCountBadgeIcon() {
-          if (!this.data || this.data.shopifyTotalCount == null) return '⚪';
-          const scanned = this.data.counts.totaal || 0;
-          return scanned >= this.data.shopifyTotalCount ? '🟢' : '🟡';
+        lastScanText() {
+          return this.lastScanDate ? this.formatDate(this.lastScanDate) : 'geen scans gevonden';
+        },
+        totalForCurrentFilter() {
+          if (!this.data) return 0;
+          return this.filters.status
+            ? (this.data.allProducts || []).length
+            : (this.data.violations || []).length;
         },
         filteredViolations() {
           if (!this.data) return [];
@@ -317,13 +390,19 @@
           const source = this.filters.status
             ? (this.data.allProducts || []).filter(p => p.status === this.filters.status)
             : (this.data.violations || []);
-          return source.filter(v => {
+          const filtered = source.filter(v => {
             if (this.filters.brand && !v.brand.toLowerCase().includes(this.filters.brand.toLowerCase())) return false;
             if (this.filters.inci) {
               const hasInci = v.hits.some(h => h.inci.toLowerCase().includes(this.filters.inci.toLowerCase()));
               if (!hasInci) return false;
             }
             return true;
+          });
+          const severity = { verboden: 0, beperkt: 1 };
+          return filtered.slice().sort((a, b) => {
+            if (this.filters.sortBy === 'merk') return (a.brand || '').localeCompare(b.brand || '');
+            if (this.filters.sortBy === 'ernst') return (severity[a.status] ?? 2) - (severity[b.status] ?? 2);
+            return (a.title || '').localeCompare(b.title || '');
           });
         }
       },
@@ -344,20 +423,16 @@
             this.data = { violations: [], allProducts: [], storeDomain: '', shopifyTotalCount: null, counts: { verboden: 0, beperkt: 0, "geen-inci": 0, totaal: 0 } };
           }
         },
-        statusIcon(status) {
-          return { verboden: '🔴', beperkt: '🟠', 'geen-inci': '⚪', ok: '🟢' }[status] || '⚪';
+        initial(product) {
+          return (product.brand || product.title || '?').charAt(0).toUpperCase();
         },
         statusLabel(status) {
-          return { verboden: 'VERBODEN', beperkt: 'BEPERKT', 'geen-inci': 'GEEN INCI', ok: 'CONFORM' }[status] || status.toUpperCase();
-        },
-        statusBorderClass(status) {
-          return { verboden: 'border-red-200', beperkt: 'border-orange-200', 'geen-inci': 'border-gray-200', ok: 'border-green-200' }[status] || 'border-gray-200';
-        },
-        statusBgClass(status) {
-          return { verboden: 'bg-red-50', beperkt: 'bg-orange-50', 'geen-inci': 'bg-gray-50', ok: 'bg-green-50' }[status] || 'bg-gray-50';
+          return { verboden: 'Verboden', beperkt: 'Beperkt', 'geen-inci': 'Geen INCI', ok: 'Conform' }[status] || status;
         },
         statusBadgeClass(status) {
-          return { verboden: 'bg-red-100 text-red-800', beperkt: 'bg-orange-100 text-orange-800', 'geen-inci': 'bg-gray-200 text-gray-700', ok: 'bg-green-100 text-green-800' }[status] || 'bg-gray-200 text-gray-700';
+          if (status === 'verboden') return 'ca-badge-verboden';
+          if (status === 'beperkt') return 'ca-badge-beperkt';
+          return 'ca-badge-neutral';
         },
         shopifyProductUrl(product) {
           if (!this.data?.storeDomain || !product?.id) return null;
