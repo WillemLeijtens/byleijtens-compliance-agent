@@ -52,6 +52,7 @@ function toDashboardEntry(r) {
     sku: r.product.sku,
     title: r.product.title,
     brand: r.product.brand,
+    image: r.product.image || null,
     status: r.status,
     hits: [...r.banned, ...r.restricted].map((h) => ({
       inci: h.entry.inci,
