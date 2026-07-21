@@ -33,6 +33,7 @@ ufw allow 443/tcp
 ufw --force enable
 
 echo -e "${BLUE}[4/7] repo clonen/updaten...${NC}"
+git config --global --add safe.directory "$APP_DIR"
 mkdir -p /apps
 if [ -d "$APP_DIR/.git" ]; then
   cd "$APP_DIR" && git pull origin main
