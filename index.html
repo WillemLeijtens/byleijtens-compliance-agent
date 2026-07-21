@@ -7,14 +7,32 @@
   <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&display=swap" rel="stylesheet">
   <style>
     /* ==========================================================
        By Leijtens — design tokens (from Compliance Agent UI-upgrade)
        Only two background colors exist: hoofdkleur (dark) and paper
        (light). --bl-accent is strictly for hairlines, small dot
        indicators and labels — never buttons or large fills.
+
+       NOTE: "The Seasons" is intentionally NOT self-hosted here — the
+       .ttf supplied in the design handoff is a watermarked demo/trial
+       cut (renders a "DEMO" glyph inside numerals). Falls back to
+       Cormorant Garamond (Google Fonts) until a licensed copy is
+       provided. Montserrat below is the free/SIL-licensed variable
+       font and is safe to self-host.
        ========================================================== */
+
+    /* Montserrat — body & labels. */
+    @font-face {
+      font-family: "Montserrat";
+      src: url("assets/fonts/Montserrat-VariableFont_wght.ttf") format("truetype-variations"),
+           url("assets/fonts/Montserrat-VariableFont_wght.ttf") format("truetype");
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+    }
+
     :root {
       --bl-hoofdkleur: #0E323B;
       --bl-paper: #F8F5F5;
