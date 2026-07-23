@@ -40,7 +40,7 @@ function githubApi(apiPath, token) {
  * de GITHUB_TOKEN die de server al heeft — geen Shopify-secrets nodig op de
  * Droplet zelf, die staan alleen in GitHub Actions. */
 async function getStatus() {
-  const token = process.env.GITHUB_TOKEN;
+  const token = process.env.GITHUB_TOKEN?.trim();
   const repo = process.env.GITHUB_REPOSITORY || "WillemLeijtens/byleijtens-compliance-agent";
   const [owner, repoName] = repo.split("/");
 
@@ -121,7 +121,7 @@ const server = http.createServer((req, res) => {
 
   // API: workflow handmatig starten
   if (req.method === "POST" && req.url === "/api/trigger-workflow") {
-    const token = process.env.GITHUB_TOKEN;
+    const token = process.env.GITHUB_TOKEN?.trim();
     const repo = process.env.GITHUB_REPOSITORY || "WillemLeijtens/byleijtens-compliance-agent";
     const [owner, repoName] = repo.split("/");
 

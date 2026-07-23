@@ -7,11 +7,15 @@
 
 set -e
 
-TOKEN="$1"
+# Strip alle whitespace/newlines (copy-paste uit een terminal voegt soms
+# onzichtbare tekens toe, wat Node's http-client laat crashen met
+# ERR_INVALID_CHAR zodra de token in een Authorization-header komt).
+TOKEN=$(printf '%s' "$1" | tr -d '[:space:]')
 if [ -z "$TOKEN" ]; then
   echo "Gebruik: bash -s -- \"<token>\""
   exit 1
 fi
+echo "Token lengte na opschonen: ${#TOKEN} tekens"
 
 APP_DIR=/apps/byleijtens-compliance-agent
 cd "$APP_DIR"
