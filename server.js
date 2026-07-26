@@ -6,6 +6,19 @@ const { exec } = require("child_process");
 
 const PORT = process.env.PORT || 3000;
 
+/**
+ * GitHub-tokens bestaan uitsluitend uit [A-Za-z0-9_]. Copy-paste via een
+ * mobiele/webterminal sleept er soms onzichtbare tekens in mee (zero-width
+ * space, non-breaking space, CR), en die laten Node's http-client keihard
+ * crashen met ERR_INVALID_CHAR zodra ze in de Authorization-header belanden.
+ * trim() vangt dat niet af — een zero-width space telt daar niet als
+ * whitespace. Strip daarom alles wat sowieso niet in een token thuishoort.
+ */
+function sanitizeToken(raw) {
+  if (!raw) return "";
+  return String(raw).replace(/[^A-Za-z0-9_]/g, "");
+}
+
 function githubApi(apiPath, token) {
   return new Promise((resolve, reject) => {
     const options = {
@@ -40,7 +53,7 @@ function githubApi(apiPath, token) {
  * de GITHUB_TOKEN die de server al heeft — geen Shopify-secrets nodig op de
  * Droplet zelf, die staan alleen in GitHub Actions. */
 async function getStatus() {
-  const token = process.env.GITHUB_TOKEN?.trim();
+  const token = sanitizeToken(process.env.GITHUB_TOKEN);
   const repo = process.env.GITHUB_REPOSITORY || "WillemLeijtens/byleijtens-compliance-agent";
   const [owner, repoName] = repo.split("/");
 
@@ -121,7 +134,7 @@ const server = http.createServer((req, res) => {
 
   // API: workflow handmatig starten
   if (req.method === "POST" && req.url === "/api/trigger-workflow") {
-    const token = process.env.GITHUB_TOKEN?.trim();
+    const token = sanitizeToken(process.env.GITHUB_TOKEN);
     const repo = process.env.GITHUB_REPOSITORY || "WillemLeijtens/byleijtens-compliance-agent";
     const [owner, repoName] = repo.split("/");
 
@@ -144,26 +157,36 @@ const server = http.createServer((req, res) => {
       }
     };
 
-    const httpsReq = https.request(options, (httpsRes) => {
-      let data = "";
-      httpsRes.on("data", (chunk) => (data += chunk));
-      httpsRes.on("end", () => {
-        // GitHub's 204 (No Content) mag geen response body hebben — geef die
-        // status door in de JSON-payload, niet als HTTP-statuscode, anders
-        // gooit fetch()'s response.json() in de browser op een lege body.
-        const outStatus = httpsRes.statusCode === 204 ? 200 : httpsRes.statusCode;
-        res.writeHead(outStatus, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ status: httpsRes.statusCode, message: httpsRes.statusCode === 204 ? "Workflow gestart!" : data }));
+    // https.request() bouwt de headers synchroon op en gooit dus meteen als er
+    // iets ongeldigs in zit. Zonder try/catch belandt die throw in de
+    // 'request'-listener van de http-server, wat het hele proces omlegt (502
+    // voor iedereen) in plaats van één mislukte knopdruk.
+    try {
+      const httpsReq = https.request(options, (httpsRes) => {
+        let data = "";
+        httpsRes.on("data", (chunk) => (data += chunk));
+        httpsRes.on("end", () => {
+          // GitHub's 204 (No Content) mag geen response body hebben — geef die
+          // status door in de JSON-payload, niet als HTTP-statuscode, anders
+          // gooit fetch()'s response.json() in de browser op een lege body.
+          const outStatus = httpsRes.statusCode === 204 ? 200 : httpsRes.statusCode;
+          res.writeHead(outStatus, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ status: httpsRes.statusCode, message: httpsRes.statusCode === 204 ? "Workflow gestart!" : data }));
+        });
       });
-    });
 
-    httpsReq.on("error", (e) => {
+      httpsReq.on("error", (e) => {
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: e.message }));
+      });
+
+      httpsReq.write(JSON.stringify({ ref: "main" }));
+      httpsReq.end();
+    } catch (e) {
+      console.error("Kon GitHub-request niet opbouwen:", e.message);
       res.writeHead(500, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ error: e.message }));
-    });
-
-    httpsReq.write(JSON.stringify({ ref: "main" }));
-    httpsReq.end();
+      res.end(JSON.stringify({ error: `Ongeldige GITHUB_TOKEN op de server (${e.code || e.message})` }));
+    }
     return;
   }
 
@@ -221,7 +244,18 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
+  const rawToken = process.env.GITHUB_TOKEN || "";
+  const cleanToken = sanitizeToken(rawToken);
+  const stripped = rawToken.length - cleanToken.length;
+
   console.log(`\n📊 Compliance Dashboard: http://localhost:${PORT}`);
-  console.log(`GitHub Token: ${process.env.GITHUB_TOKEN ? "✅ Beschikbaar" : "❌ Niet gezet"}`);
+  if (!cleanToken) {
+    console.log("GitHub Token: ❌ Niet gezet");
+  } else {
+    console.log(`GitHub Token: ✅ ${cleanToken.length} tekens, begint met "${cleanToken.slice(0, 11)}…"`);
+    if (stripped > 0) {
+      console.log(`  ⚠ ${stripped} ongeldig(e) teken(s) uit de token verwijderd (onzichtbare copy-paste-rommel).`);
+    }
+  }
   console.log(`Deploy webhook: ${process.env.DEPLOY_WEBHOOK_SECRET ? "✅ Ingeschakeld" : "❌ Uitgeschakeld (DEPLOY_WEBHOOK_SECRET niet gezet)"}`);
 });
