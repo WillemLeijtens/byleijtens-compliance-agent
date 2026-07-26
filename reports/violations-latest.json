@@ -1,14 +1,14 @@
 {
-  "lastScan": "2026-07-21T19:59:38.452Z",
+  "lastScan": "2026-07-26T06:35:04.440Z",
   "counts": {
     "verboden": 8,
     "beperkt": 71,
-    "ok": 2400,
-    "geen-inci": 2956,
-    "totaal": 5435
+    "ok": 2391,
+    "geen-inci": 2955,
+    "totaal": 5425
   },
   "storeDomain": "leijtens.myshopify.com",
-  "shopifyTotalCount": 5435,
+  "shopifyTotalCount": 5425,
   "violations": [
     {
       "id": "gid://shopify/Product/15246707392887",
@@ -3217,15 +3217,6 @@
       "hits": []
     },
     {
-      "id": "gid://shopify/Product/15252584333687",
-      "sku": "",
-      "title": "Alessandro Hybrid Gel Polish 122, Sinful Glow 8 ml",
-      "brand": "Alessandro",
-      "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/122.jpg?v=1764855440",
-      "status": "ok",
-      "hits": []
-    },
-    {
       "id": "gid://shopify/Product/15252584366455",
       "sku": "",
       "title": "Alessandro Hybrid Gel Polish 123, Red Illusion 8 ml",
@@ -3384,15 +3375,6 @@
       "title": "Alessandro Hybrid Gel Polish 140, Blueberry Slush 8 ml",
       "brand": "Alessandro",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/140.jpg?v=1764854863",
-      "status": "ok",
-      "hits": []
-    },
-    {
-      "id": "gid://shopify/Product/15252585283959",
-      "sku": "728301",
-      "title": "Alessandro Hybrid Gel Polish Top Coat 8 ml",
-      "brand": "Alessandro",
-      "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/Hybride_Top_coat.jpg?v=1764854786",
       "status": "ok",
       "hits": []
     },
@@ -9877,15 +9859,6 @@
       "hits": []
     },
     {
-      "id": "gid://shopify/Product/15252663239031",
-      "sku": "MC230",
-      "title": "Mavala Mini Color 310, Espresso 5 ml",
-      "brand": "Mavala",
-      "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/Minicolor310espresso.jpg?v=1771428516",
-      "status": "ok",
-      "hits": []
-    },
-    {
       "id": "gid://shopify/Product/15252663271799",
       "sku": "MC232",
       "title": "Mavala Mini Color 312, Poetic Rose 5 ml",
@@ -10539,15 +10512,6 @@
       "title": "Mavala Mini Color 396, Velvet 5 ml",
       "brand": "Mavala",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/MavalaMiniColor396.jpg?v=1770028883",
-      "status": "ok",
-      "hits": []
-    },
-    {
-      "id": "gid://shopify/Product/15252670447991",
-      "sku": "MC63",
-      "title": "Mavala Mini Color 307, Makore 5 ml",
-      "brand": "Mavala",
-      "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/MavalaMiniColor307.jpg?v=1770028404",
       "status": "ok",
       "hits": []
     },
@@ -14023,15 +13987,6 @@
       "brand": "Tweezerman",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/Tweezerman_Glass_Buffer.png?v=1767017927",
       "status": "geen-inci",
-      "hits": []
-    },
-    {
-      "id": "gid://shopify/Product/15252715536759",
-      "sku": "304207",
-      "title": "Tweezerman Glass Manicure Set",
-      "brand": "Tweezerman",
-      "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/Tweezerman_Glass_Manicure_Set.png?v=1767017956",
-      "status": "ok",
       "hits": []
     },
     {
@@ -18787,15 +18742,6 @@
       "hits": []
     },
     {
-      "id": "gid://shopify/Product/15252799029623",
-      "sku": "",
-      "title": "TIGI BED HEAD Small Talk Cream 125ml",
-      "brand": "Tigi",
-      "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/TIGI-BED-HEAD-Small-Talk-Cream-125ml.png?v=1764815977",
-      "status": "ok",
-      "hits": []
-    },
-    {
       "id": "gid://shopify/Product/15252799127927",
       "sku": "8431629",
       "title": "TIGI BED HEAD Salty Not Sorry Spray 100ml",
@@ -18895,15 +18841,6 @@
       "hits": []
     },
     {
-      "id": "gid://shopify/Product/15252800045431",
-      "sku": "8431377",
-      "title": "TIGI BED HEAD Bigger the Better Foam Shampoo 200ml",
-      "brand": "Tigi",
-      "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/BedHeadBiggertheBetterFoamShampoo_2.jpg?v=1770374384",
-      "status": "ok",
-      "hits": []
-    },
-    {
       "id": "gid://shopify/Product/15252800078199",
       "sku": "8432442",
       "title": "TIGI BED HEAD Colour Goddess Conditioner 400ml",
@@ -18945,15 +18882,6 @@
       "title": "TIGI BED HEAD Down 'n Dirty Conditioner 400ml",
       "brand": "Tigi",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/BedHeadDownnDirtyConditioner.jpg?v=1770374000",
-      "status": "ok",
-      "hits": []
-    },
-    {
-      "id": "gid://shopify/Product/15252800242039",
-      "sku": "8432572",
-      "title": "TIGI BED HEAD Down 'n Dirty Shampoo 400ml",
-      "brand": "Tigi",
-      "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/BedHeadDownnDirtyShampoo.jpg?v=1770373932",
       "status": "ok",
       "hits": []
     },
@@ -19049,7 +18977,7 @@
     },
     {
       "id": "gid://shopify/Product/15252801388919",
-      "sku": "8431675",
+      "sku": "8431674",
       "title": "TIGI BED HEAD Hard Head Hairspray 385ml",
       "brand": "Tigi",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/BedHeadHardHeadHairspray.jpg?v=1770373082",
@@ -19080,15 +19008,6 @@
       "title": "TIGI BED HEAD Masterpiece Hairspray 340ml",
       "brand": "Tigi",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/BED-HEAD-Masterpiece-Hairspray-340-ml.png?v=1764816008",
-      "status": "ok",
-      "hits": []
-    },
-    {
-      "id": "gid://shopify/Product/15252801782135",
-      "sku": "",
-      "title": "TIGI BED HEAD Masterpiece Hairspray 80ml 2024",
-      "brand": "Tigi",
-      "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/BED-HEAD-Masterpiece-Hairspray-80ml.png?v=1764816008",
       "status": "ok",
       "hits": []
     },
@@ -19621,15 +19540,6 @@
       "brand": "Tweezerman",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/Tweezerman_GEAR_Teennagel_knipper.png?v=1767018618",
       "status": "ok",
-      "hits": []
-    },
-    {
-      "id": "gid://shopify/Product/15252807811447",
-      "sku": "305088",
-      "title": "Tweezerman Pedicure Stone",
-      "brand": "Tweezerman",
-      "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/Tweezerman_Pedicure_Stone.png?v=1767018593",
-      "status": "geen-inci",
       "hits": []
     },
     {
@@ -42170,17 +42080,17 @@
     },
     {
       "id": "gid://shopify/Product/15281742283127",
-      "sku": "8433692",
-      "title": "TIGI Bed Head Masterpiece Hairspray 80ml",
+      "sku": "8431766",
+      "title": "TIGI Bed Head Masterpiece Hairspray 340 ml",
       "brand": "TIGI",
-      "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/Bed_Head_Masterpiece_Hairspray_75ML.jpg?v=1770368828",
+      "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/Bed_Head_Masterpiece_Hairspray.jpg?v=1770368828",
       "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15281742315895",
-      "sku": "8431346",
-      "title": "TIGI Bed Head Small Talk",
+      "sku": "8431339",
+      "title": "TIGI Bed Head Small Talk 240 ml",
       "brand": "TIGI",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/Bed_Head_Small_Talk_Cream.jpg?v=1770368726",
       "status": "ok",
@@ -45878,7 +45788,7 @@
     },
     {
       "id": "gid://shopify/Product/15488451215735",
-      "sku": "",
+      "sku": "PSE80003",
       "title": "Roller Head Fine for 10 ml (Eyebrows)",
       "brand": "BYLEIJTENS",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/RollerHeadFinefor10ml_Eyebrows.png?v=1780057531",
