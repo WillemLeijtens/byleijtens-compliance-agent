@@ -1,14 +1,14 @@
 {
-  "lastScan": "2026-07-26T06:35:04.440Z",
+  "lastScan": "2026-07-28T20:05:38.560Z",
   "counts": {
     "verboden": 8,
     "beperkt": 71,
-    "ok": 2391,
-    "geen-inci": 2955,
-    "totaal": 5425
+    "ok": 2402,
+    "geen-inci": 2964,
+    "totaal": 5445
   },
   "storeDomain": "leijtens.myshopify.com",
-  "shopifyTotalCount": 5425,
+  "shopifyTotalCount": 5445,
   "violations": [
     {
       "id": "gid://shopify/Product/15246707392887",
@@ -19480,15 +19480,6 @@
       "hits": []
     },
     {
-      "id": "gid://shopify/Product/15252807188855",
-      "sku": "",
-      "title": "Tweezerman Slant Tweezer Blue Stone",
-      "brand": "Tweezerman",
-      "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/0038097022032.jpg?v=1764816074",
-      "status": "ok",
-      "hits": []
-    },
-    {
       "id": "gid://shopify/Product/15252807221623",
       "sku": "301217",
       "title": "Tweezerman Wide Grip Slant Stainless Steel",
@@ -20813,7 +20804,7 @@
     },
     {
       "id": "gid://shopify/Product/15252823998839",
-      "sku": "",
+      "sku": "481563",
       "title": "Debby Liquid Kisses Vinyl Lipstick 03, Pink Coral",
       "brand": "deBBY",
       "image": null,
@@ -24172,7 +24163,7 @@
       "id": "gid://shopify/Product/15259197800823",
       "sku": "",
       "title": "Xanitalia Pink Titanium Wax Refill Roll-On SMALL 100 ml",
-      "brand": "Xanitalia",
+      "brand": "BYLEIJTENS",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -24181,7 +24172,7 @@
       "id": "gid://shopify/Product/15259198095735",
       "sku": "",
       "title": "Xanitalia Pink Titanium Wax Refill Roll-On MEDIUM 100 ml",
-      "brand": "Xanitalia",
+      "brand": "BYLEIJTENS",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -24190,7 +24181,7 @@
       "id": "gid://shopify/Product/15259198357879",
       "sku": "",
       "title": "Xanitalia Pink Titanium Wax Refill Roll-On LARGE 100 ml",
-      "brand": "Xanitalia",
+      "brand": "BYLEIJTENS",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -24199,7 +24190,7 @@
       "id": "gid://shopify/Product/15259198521719",
       "sku": "",
       "title": "Xanitalia Pink Titanium Wax Refill (Small) 15 ml",
-      "brand": "Xanitalia",
+      "brand": "BYLEIJTENS",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -24208,7 +24199,7 @@
       "id": "gid://shopify/Product/15259198751095",
       "sku": "",
       "title": "Xanitalia Pink Titanium Wax Refill (Medium) 30 ml",
-      "brand": "Xanitalia",
+      "brand": "BYLEIJTENS",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -24217,7 +24208,7 @@
       "id": "gid://shopify/Product/15259198980471",
       "sku": "",
       "title": "Xanitalia Pink Titanium Wax Refill (Large) 75 ml",
-      "brand": "Xanitalia",
+      "brand": "BYLEIJTENS",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -24226,7 +24217,7 @@
       "id": "gid://shopify/Product/15259199340919",
       "sku": "",
       "title": "Xanitalia Honey (Classic) Wax Refill Roll-On SMALL 100 ml",
-      "brand": "Xanitalia",
+      "brand": "BYLEIJTENS",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -24235,7 +24226,7 @@
       "id": "gid://shopify/Product/15259199471991",
       "sku": "",
       "title": "Xanitalia Honey (Classic) Wax Refill Roll-On MEDIUM 100 ml",
-      "brand": "Xanitalia",
+      "brand": "BYLEIJTENS",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -24244,7 +24235,7 @@
       "id": "gid://shopify/Product/15259199603063",
       "sku": "",
       "title": "Xanitalia Honey (Classic) Wax Refill Roll-On LARGE 100 ml",
-      "brand": "Xanitalia",
+      "brand": "BYLEIJTENS",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -24253,7 +24244,7 @@
       "id": "gid://shopify/Product/15259199668599",
       "sku": "",
       "title": "Xanitalia Honey (Classic) Wax Refill 75 ml",
-      "brand": "Xanitalia",
+      "brand": "BYLEIJTENS",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -24262,7 +24253,7 @@
       "id": "gid://shopify/Product/15259199865207",
       "sku": "",
       "title": "Xanitalia Honey (Classic) Wax Refill 30 ml",
-      "brand": "Xanitalia",
+      "brand": "BYLEIJTENS",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -24271,7 +24262,7 @@
       "id": "gid://shopify/Product/15259199963511",
       "sku": "",
       "title": "Xanitalia Honey (Classic) Wax Refill 15 ml",
-      "brand": "Xanitalia",
+      "brand": "BYLEIJTENS",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -39076,7 +39067,7 @@
       "id": "gid://shopify/Product/15279869722999",
       "sku": "485462",
       "title": "PURA TESTER Perfecting Serum Foundation Bio 05",
-      "brand": "BYLEIJTENS",
+      "brand": "Formula Pura",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -41722,7 +41713,7 @@
       "id": "gid://shopify/Product/15281739956599",
       "sku": "433371",
       "title": "PURA BB Cream Bio",
-      "brand": "Deborah Milano Pura",
+      "brand": "Formula Pura",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/PURA_BB_Cream_Bio_01_Light_Rose_020c42c6-f9f4-40cb-bb14-ae787e815919.jpg?v=1766573960",
       "status": "ok",
       "hits": []
@@ -41731,7 +41722,7 @@
       "id": "gid://shopify/Product/15281739989367",
       "sku": "433951",
       "title": "PURA Bronzer & Blush Bio",
-      "brand": "Deborah Milano Pura",
+      "brand": "Formula Pura",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/PURA_Bronzer_Blush_Bio_01_Light.jpg?v=1766574207",
       "status": "ok",
       "hits": []
@@ -41740,7 +41731,7 @@
       "id": "gid://shopify/Product/15281740054903",
       "sku": "437195",
       "title": "PURA Concealer Stick Bio",
-      "brand": "Deborah Milano Pura",
+      "brand": "Formula Pura",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/PURA_Concealer_Stick_Bio_4.jpg?v=1766574258",
       "status": "ok",
       "hits": []
@@ -41749,7 +41740,7 @@
       "id": "gid://shopify/Product/15281740087671",
       "sku": "452495",
       "title": "PURA Eyebrow Pencil Bio",
-      "brand": "Deborah Milano Pura",
+      "brand": "Formula Pura",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/PURA_Eyebrow_Pencil_Bio_02.jpg?v=1766574474",
       "status": "ok",
       "hits": []
@@ -41758,7 +41749,7 @@
       "id": "gid://shopify/Product/15281740120439",
       "sku": "450897",
       "title": "PURA Eyeliner Bio",
-      "brand": "Deborah Milano Pura",
+      "brand": "Formula Pura",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/PURA_Eyeliner_Bio_Black.jpg?v=1766574513",
       "status": "ok",
       "hits": []
@@ -41767,7 +41758,7 @@
       "id": "gid://shopify/Product/15281740153207",
       "sku": "409895",
       "title": "PURA Eyepencil Bio",
-      "brand": "Deborah Milano Pura",
+      "brand": "Formula Pura",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/PURA_Eyepencil_Bio_1_Black.jpg?v=1766574651",
       "status": "ok",
       "hits": []
@@ -41776,7 +41767,7 @@
       "id": "gid://shopify/Product/15281740218743",
       "sku": "415711",
       "title": "PURA Eyeshadow Bio",
-      "brand": "Deborah Milano Pura",
+      "brand": "Formula Pura",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/PURA_Eyeshadow_Bio_09_Mat_Grey_Brown.jpg?v=1766574729",
       "status": "ok",
       "hits": []
@@ -41785,7 +41776,7 @@
       "id": "gid://shopify/Product/15281740284279",
       "sku": "397000",
       "title": "PURA Face Powder Bio",
-      "brand": "Deborah Milano Pura",
+      "brand": "Formula Pura",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/PURA_Face_Powder_Bio_1_Fair.jpg?v=1766575100",
       "status": "ok",
       "hits": []
@@ -41794,7 +41785,7 @@
       "id": "gid://shopify/Product/15281740317047",
       "sku": "467352",
       "title": "PURA Fluid Concealer Bio",
-      "brand": "Deborah Milano Pura",
+      "brand": "Formula Pura",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/PURA_Fluid_Concealer_Bio_04_Amber.jpg?v=1766575135",
       "status": "ok",
       "hits": []
@@ -41803,7 +41794,7 @@
       "id": "gid://shopify/Product/15281740349815",
       "sku": "462319",
       "title": "PURA Foundation Long Lasting Bio",
-      "brand": "Deborah Milano Pura",
+      "brand": "Formula Pura",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/PURA_Foundation_Long_Lasting_Bio_01.jpg?v=1766575373",
       "status": "ok",
       "hits": []
@@ -41812,7 +41803,7 @@
       "id": "gid://shopify/Product/15281740611959",
       "sku": "410266",
       "title": "PURA Kajal Pencil Bio",
-      "brand": "Deborah Milano Pura",
+      "brand": "Formula Pura",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/PURA_Kajal_Pencil_Bio_4_White.jpg?v=1766578165",
       "status": "ok",
       "hits": []
@@ -41821,7 +41812,7 @@
       "id": "gid://shopify/Product/15281740644727",
       "sku": "408874",
       "title": "PURA Lip Balm Bio",
-      "brand": "Deborah Milano Pura",
+      "brand": "Formula Pura",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/PURA_Lip_Balm_Bio_9_Mauve.jpg?v=1766578278",
       "status": "ok",
       "hits": []
@@ -41830,7 +41821,7 @@
       "id": "gid://shopify/Product/15281740677495",
       "sku": "433685",
       "title": "PURA Lip Gloss Bio",
-      "brand": "Deborah Milano Pura",
+      "brand": "Formula Pura",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/PURA_Lip_Gloss_Bio_05_Peach.jpg?v=1766578437",
       "status": "ok",
       "hits": []
@@ -41839,7 +41830,7 @@
       "id": "gid://shopify/Product/15281740710263",
       "sku": "468489",
       "title": "PURA Lip Oil Bio",
-      "brand": "Deborah Milano Pura",
+      "brand": "Formula Pura",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/PURA_Lip_Oil_Bio_02_Strawberry_Rose.jpg?v=1766578523",
       "status": "ok",
       "hits": []
@@ -41848,7 +41839,7 @@
       "id": "gid://shopify/Product/15281740808567",
       "sku": "411171",
       "title": "PURA Lip Pencil Bio",
-      "brand": "Deborah Milano Pura",
+      "brand": "Formula Pura",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/PURA_Lip_Pencil_Bio_8_Rosewood.jpg?v=1766578609",
       "status": "ok",
       "hits": []
@@ -41857,7 +41848,7 @@
       "id": "gid://shopify/Product/15281740874103",
       "sku": "457490",
       "title": "PURA Lipstick Bio",
-      "brand": "Deborah Milano Pura",
+      "brand": "Formula Pura",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/PURA_Lipstick_Bio_05_Brick.jpg?v=1766578731",
       "status": "geen-inci",
       "hits": []
@@ -41866,7 +41857,7 @@
       "id": "gid://shopify/Product/15281740906871",
       "sku": "437003",
       "title": "PURA Mascara Volume Bio",
-      "brand": "Deborah Milano Pura",
+      "brand": "Formula Pura",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/PURA_Mascara_Volume_Brown_Bio.jpg?v=1766578875",
       "status": "ok",
       "hits": []
@@ -41875,7 +41866,7 @@
       "id": "gid://shopify/Product/15281740939639",
       "sku": "444490",
       "title": "PURA Nude Skin Effect Foundation",
-      "brand": "Deborah Milano Pura",
+      "brand": "Formula Pura",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/PURA_Nude_Skin_Effect_Foundation_Bio_01_Ivory.jpg?v=1766579111",
       "status": "ok",
       "hits": []
@@ -41884,7 +41875,7 @@
       "id": "gid://shopify/Product/15281741005175",
       "sku": "448818",
       "title": "PURA Vegan Nail Polish",
-      "brand": "Deborah Milano Pura",
+      "brand": "Formula Pura",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/PURA_Vegan_Nail_Polish_01_White.jpg?v=1766579369",
       "status": "ok",
       "hits": []
@@ -41893,7 +41884,7 @@
       "id": "gid://shopify/Product/15281741037943",
       "sku": "485370",
       "title": "PURA Perfecting Serum Foundation Bio SPF20",
-      "brand": "Deborah Milano Pura",
+      "brand": "Formula Pura",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/PURA_organic_serum_foundation_01_38b748df-5412-4f14-afb3-0b35c1fab614.jpg?v=1770993133",
       "status": "ok",
       "hits": []
@@ -43027,7 +43018,7 @@
       "id": "gid://shopify/Product/15418852606327",
       "sku": "872786",
       "title": "PURA 1/2 COUVETTE Lip Gloss & Fluid Mat Lipstick Bio",
-      "brand": "BYLEIJTENS",
+      "brand": "Formula Pura",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -43729,7 +43720,7 @@
       "id": "gid://shopify/Product/15421116023159",
       "sku": "507867",
       "title": "Debby 1/2 COUVETTE Cover Crush - Stick Concealers",
-      "brand": "BYLEIJTENS",
+      "brand": "Debby",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -45511,7 +45502,7 @@
       "id": "gid://shopify/Product/15487341494647",
       "sku": "443783",
       "title": "Pura 1/2 COUVETTE Lipstick Jumbo + Debby Eyepencil Eyeshadow",
-      "brand": "BYLEIJTENS",
+      "brand": "Formula Pura",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -45565,7 +45556,7 @@
       "id": "gid://shopify/Product/15487363350903",
       "sku": "300077",
       "title": "PURA STRIP 1/2 Couvette Lipstick Jumbo Bio",
-      "brand": "BYLEIJTENS",
+      "brand": "Formula Pura",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -45979,7 +45970,7 @@
       "id": "gid://shopify/Product/15490149089655",
       "sku": "496956",
       "title": "PURA Lipstick Jumbo Bio",
-      "brand": "Deborah Milano Pura",
+      "brand": "Formula Pura",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/1_300dd8eb-e353-41bc-bb2e-9a9d2be1b1ca.png?v=1780410700",
       "status": "geen-inci",
       "hits": []
@@ -45988,7 +45979,7 @@
       "id": "gid://shopify/Product/15490163343735",
       "sku": "502152",
       "title": "PURA TESTER Lipstick Jumbo Bio",
-      "brand": "Deborah Milano",
+      "brand": "Formula Pura",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/1_287d1ca4-db52-4570-a5a0-cda0740d780d.png?v=1780491705",
       "status": "geen-inci",
       "hits": []
@@ -47273,7 +47264,7 @@
     },
     {
       "id": "gid://shopify/Product/15509512520055",
-      "sku": "24732",
+      "sku": "",
       "title": "Collistar Anti-Pollution BB Cream 1 Light 50 ml",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -47282,7 +47273,7 @@
     },
     {
       "id": "gid://shopify/Product/15509512552823",
-      "sku": "24733",
+      "sku": "",
       "title": "Collistar Anti-Pollution BB Cream 2 Medium 50 ml",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -47291,7 +47282,7 @@
     },
     {
       "id": "gid://shopify/Product/15509512618359",
-      "sku": "24734",
+      "sku": "",
       "title": "Collistar Anti-Pollution BB Cream 3 Deep 50 ml",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48506,7 +48497,7 @@
     },
     {
       "id": "gid://shopify/Product/15509525102967",
-      "sku": "14000",
+      "sku": "",
       "title": "Collistar LIFT HD+ Smoothing Lifting Concealer 0 - Avorio",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48515,7 +48506,7 @@
     },
     {
       "id": "gid://shopify/Product/15509525135735",
-      "sku": "14001",
+      "sku": "",
       "title": "Collistar LIFT HD+ Smoothing Lifting Concealer 1 - Beige",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48524,7 +48515,7 @@
     },
     {
       "id": "gid://shopify/Product/15509525168503",
-      "sku": "14002",
+      "sku": "",
       "title": "Collistar LIFT HD+ Smoothing Lifting Concealer 2 - Dorato",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48533,7 +48524,7 @@
     },
     {
       "id": "gid://shopify/Product/15509525201271",
-      "sku": "14003",
+      "sku": "",
       "title": "Collistar LIFT HD+ Smoothing Lifting Concealer 3 - Naturale",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48542,7 +48533,7 @@
     },
     {
       "id": "gid://shopify/Product/15509525266807",
-      "sku": "14004",
+      "sku": "",
       "title": "Collistar LIFT HD+ Smoothing Lifting Concealer 4 - Rosato",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48551,7 +48542,7 @@
     },
     {
       "id": "gid://shopify/Product/15509525365111",
-      "sku": "14005",
+      "sku": "",
       "title": "Collistar LIFT HD+ Smoothing Lifting Concealer 5 - Sabbia",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48560,7 +48551,7 @@
     },
     {
       "id": "gid://shopify/Product/15509525430647",
-      "sku": "13000",
+      "sku": "",
       "title": "Collistar Stick Concealer Impeccable 1",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48569,7 +48560,7 @@
     },
     {
       "id": "gid://shopify/Product/15509525463415",
-      "sku": "13001",
+      "sku": "",
       "title": "Collistar Stick Concealer Impeccable 1.5",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48578,7 +48569,7 @@
     },
     {
       "id": "gid://shopify/Product/15509525496183",
-      "sku": "13002",
+      "sku": "",
       "title": "Collistar Stick Concealer Impeccable 2",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48587,7 +48578,7 @@
     },
     {
       "id": "gid://shopify/Product/15509525528951",
-      "sku": "13003",
+      "sku": "",
       "title": "Collistar Stick Concealer Impeccable 2.5",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48596,7 +48587,7 @@
     },
     {
       "id": "gid://shopify/Product/15509525660023",
-      "sku": "13004",
+      "sku": "",
       "title": "Collistar Stick Concealer Impeccable 3",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48605,7 +48596,7 @@
     },
     {
       "id": "gid://shopify/Product/15509526249847",
-      "sku": "13005",
+      "sku": "",
       "title": "Collistar Stick Concealer Impeccable 4",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48614,7 +48605,7 @@
     },
     {
       "id": "gid://shopify/Product/15509526282615",
-      "sku": "13006",
+      "sku": "",
       "title": "Collistar Stick Concealer Impeccable 5",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48623,7 +48614,7 @@
     },
     {
       "id": "gid://shopify/Product/15509526315383",
-      "sku": "13204",
+      "sku": "",
       "title": "Collistar Long Wear Foundation Impeccable 2N",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48632,7 +48623,7 @@
     },
     {
       "id": "gid://shopify/Product/15509526380919",
-      "sku": "13206",
+      "sku": "",
       "title": "Collistar Long Wear Foundation Impeccable 3R",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48641,7 +48632,7 @@
     },
     {
       "id": "gid://shopify/Product/15509526479223",
-      "sku": "13207",
+      "sku": "",
       "title": "Collistar Long Wear Foundation Impeccable 3N",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48650,7 +48641,7 @@
     },
     {
       "id": "gid://shopify/Product/15509526577527",
-      "sku": "13209",
+      "sku": "",
       "title": "Collistar Long Wear Foundation Impeccable 4R",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48659,7 +48650,7 @@
     },
     {
       "id": "gid://shopify/Product/15509526610295",
-      "sku": "13210",
+      "sku": "",
       "title": "Collistar Long Wear Foundation Impeccable 4N",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48668,7 +48659,7 @@
     },
     {
       "id": "gid://shopify/Product/15509526643063",
-      "sku": "13212",
+      "sku": "",
       "title": "Collistar Long Wear Foundation Impeccable 5N",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48677,7 +48668,7 @@
     },
     {
       "id": "gid://shopify/Product/15509526675831",
-      "sku": "7007171",
+      "sku": "",
       "title": "Collistar Lift Hd+ Foundation 1N",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48686,7 +48677,7 @@
     },
     {
       "id": "gid://shopify/Product/15509526741367",
-      "sku": "7007172",
+      "sku": "",
       "title": "Collistar Lift Hd+ Foundation 2N",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48695,7 +48686,7 @@
     },
     {
       "id": "gid://shopify/Product/15509526806903",
-      "sku": "7007173",
+      "sku": "",
       "title": "Collistar Lift Hd+ Foundation 2G",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48704,7 +48695,7 @@
     },
     {
       "id": "gid://shopify/Product/15509526905207",
-      "sku": "7007174",
+      "sku": "",
       "title": "Collistar Lift Hd+ Foundation 3R",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48713,7 +48704,7 @@
     },
     {
       "id": "gid://shopify/Product/15509526970743",
-      "sku": "7007175",
+      "sku": "",
       "title": "Collistar Lift Hd+ Foundation 3N",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48722,7 +48713,7 @@
     },
     {
       "id": "gid://shopify/Product/15509527003511",
-      "sku": "7007176",
+      "sku": "",
       "title": "Collistar Lift Hd+ Foundation 3G",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48731,7 +48722,7 @@
     },
     {
       "id": "gid://shopify/Product/15509527036279",
-      "sku": "7007177",
+      "sku": "",
       "title": "Collistar Lift Hd+ Foundation 4R",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48740,7 +48731,7 @@
     },
     {
       "id": "gid://shopify/Product/15509527069047",
-      "sku": "7007180",
+      "sku": "",
       "title": "Collistar Lift Hd+ Foundation 4N",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48749,7 +48740,7 @@
     },
     {
       "id": "gid://shopify/Product/15509527134583",
-      "sku": "7007181",
+      "sku": "",
       "title": "Collistar Lift Hd+ Foundation 5N",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48803,7 +48794,7 @@
     },
     {
       "id": "gid://shopify/Product/15509527429495",
-      "sku": "7003638",
+      "sku": "",
       "title": "Collistar Nudo Second Skin Foundation 1N - Avorio",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48812,7 +48803,7 @@
     },
     {
       "id": "gid://shopify/Product/15509527462263",
-      "sku": "7003641",
+      "sku": "",
       "title": "Collistar Nudo Second Skin Foundation 2R - Beige Rosato",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48821,7 +48812,7 @@
     },
     {
       "id": "gid://shopify/Product/15509527560567",
-      "sku": "7003646",
+      "sku": "",
       "title": "Collistar Nudo Second Skin Foundation 2N - Beige",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48830,7 +48821,7 @@
     },
     {
       "id": "gid://shopify/Product/15509527593335",
-      "sku": "7003647",
+      "sku": "",
       "title": "Collistar Nudo Second Skin Foundation 2G - Beige Dorato",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48839,7 +48830,7 @@
     },
     {
       "id": "gid://shopify/Product/15509527626103",
-      "sku": "7003671",
+      "sku": "",
       "title": "Collistar Nudo Second Skin Foundation 3R - Naturale Rosato",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48848,7 +48839,7 @@
     },
     {
       "id": "gid://shopify/Product/15509527757175",
-      "sku": "7003672",
+      "sku": "",
       "title": "Collistar Nudo Second Skin Foundation 3N - Naturale",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48857,7 +48848,7 @@
     },
     {
       "id": "gid://shopify/Product/15509527822711",
-      "sku": "7003673",
+      "sku": "",
       "title": "Collistar Nudo Second Skin Foundation 3G - Naturale Dorato",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48866,7 +48857,7 @@
     },
     {
       "id": "gid://shopify/Product/15509527855479",
-      "sku": "7003674",
+      "sku": "",
       "title": "Collistar Nudo Second Skin Foundation 4N - Sabbia",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48875,7 +48866,7 @@
     },
     {
       "id": "gid://shopify/Product/15509527986551",
-      "sku": "7003675",
+      "sku": "",
       "title": "Collistar Nudo Second Skin Foundation 5N - Ambra",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48893,7 +48884,7 @@
     },
     {
       "id": "gid://shopify/Product/15509528150391",
-      "sku": "7007039",
+      "sku": "",
       "title": "Collistar Impeccabile Compact Powder 10N - Ivory",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48902,7 +48893,7 @@
     },
     {
       "id": "gid://shopify/Product/15509528248695",
-      "sku": "7007040",
+      "sku": "",
       "title": "Collistar Impeccabile Compact Powder 20G - Natural",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48911,7 +48902,7 @@
     },
     {
       "id": "gid://shopify/Product/15509528281463",
-      "sku": "7007041",
+      "sku": "",
       "title": "Collistar Impeccabile Compact Powder 30G - Honey",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48920,7 +48911,7 @@
     },
     {
       "id": "gid://shopify/Product/15509528346999",
-      "sku": "7007042",
+      "sku": "",
       "title": "Collistar Impeccabile Compact Powder 40R - Warm Rose",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48929,7 +48920,7 @@
     },
     {
       "id": "gid://shopify/Product/15509528478071",
-      "sku": "7007043",
+      "sku": "",
       "title": "Collistar Impeccabile Compact Powder 50N - Cameo",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48938,7 +48929,7 @@
     },
     {
       "id": "gid://shopify/Product/15509528707447",
-      "sku": "7007044",
+      "sku": "",
       "title": "Collistar Impeccabile Compact Powder 60G - Cappuccino",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48965,7 +48956,7 @@
     },
     {
       "id": "gid://shopify/Product/15509529952631",
-      "sku": "7008065",
+      "sku": "",
       "title": "Collistar Magica Bronzing Powder 1.1 - Positano",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48974,7 +48965,7 @@
     },
     {
       "id": "gid://shopify/Product/15509529985399",
-      "sku": "7008066",
+      "sku": "",
       "title": "Collistar Magica Bronzing Powder 2.2 - Bellagio",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48983,7 +48974,7 @@
     },
     {
       "id": "gid://shopify/Product/15509530018167",
-      "sku": "7008067",
+      "sku": "",
       "title": "Collistar Magica Bronzing Powder 3.3 - Taormina",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48992,7 +48983,7 @@
     },
     {
       "id": "gid://shopify/Product/15509530050935",
-      "sku": "7008063",
+      "sku": "",
       "title": "Collistar Magica Bronzing Powder 4.4 - Portofino",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49001,7 +48992,7 @@
     },
     {
       "id": "gid://shopify/Product/15509530149239",
-      "sku": "7008068",
+      "sku": "",
       "title": "Collistar Magica Bronzing Powder 09 - Cristalli Di Sole",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49037,7 +49028,7 @@
     },
     {
       "id": "gid://shopify/Product/15509530313079",
-      "sku": "7005572",
+      "sku": "",
       "title": "Collistar Impeccabile Maxi Blush 03 - Terracotta",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49046,7 +49037,7 @@
     },
     {
       "id": "gid://shopify/Product/15509530345847",
-      "sku": "7005576",
+      "sku": "",
       "title": "Collistar Impeccabile Maxi Blush 04 - Confetto",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49055,7 +49046,7 @@
     },
     {
       "id": "gid://shopify/Product/15509530411383",
-      "sku": "7005577",
+      "sku": "",
       "title": "Collistar Impeccabile Maxi Blush 05 - Canyon",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49064,7 +49055,7 @@
     },
     {
       "id": "gid://shopify/Product/15509530542455",
-      "sku": "7005580",
+      "sku": "",
       "title": "Collistar Impeccabile Maxi Blush 08 - Henne",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49073,7 +49064,7 @@
     },
     {
       "id": "gid://shopify/Product/15509530607991",
-      "sku": "7005582",
+      "sku": "",
       "title": "Collistar Impeccabile Maxi Blush 09 - Sienna",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49082,7 +49073,7 @@
     },
     {
       "id": "gid://shopify/Product/15509530640759",
-      "sku": "7005583",
+      "sku": "",
       "title": "Collistar Impeccabile Maxi Blush 10 - Marsala",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49145,7 +49136,7 @@
     },
     {
       "id": "gid://shopify/Product/15509531591031",
-      "sku": "15830",
+      "sku": "",
       "title": "Collistar Professional Eye Pencil 1 - Nero",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49154,7 +49145,7 @@
     },
     {
       "id": "gid://shopify/Product/15509531656567",
-      "sku": "15831",
+      "sku": "",
       "title": "Collistar Professional Eye Pencil 2 - Quercia",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49163,7 +49154,7 @@
     },
     {
       "id": "gid://shopify/Product/15509531787639",
-      "sku": "15832",
+      "sku": "",
       "title": "Collistar Professional Eye Pencil 3 - Acciaio",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49172,7 +49163,7 @@
     },
     {
       "id": "gid://shopify/Product/15509531853175",
-      "sku": "15833",
+      "sku": "",
       "title": "Collistar Professional Eye Pencil 4 - Blu Notte",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49181,7 +49172,7 @@
     },
     {
       "id": "gid://shopify/Product/15509531918711",
-      "sku": "15835",
+      "sku": "",
       "title": "Collistar Professional Eye Pencil 6 - Verde Foresta",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49190,7 +49181,7 @@
     },
     {
       "id": "gid://shopify/Product/15509531984247",
-      "sku": "15836",
+      "sku": "",
       "title": "Collistar Professional Eye Pencil 7 - Marrone Dorato",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49199,7 +49190,7 @@
     },
     {
       "id": "gid://shopify/Product/15509532049783",
-      "sku": "15837",
+      "sku": "",
       "title": "Collistar Professional Eye Pencil 8 - Azzuro Cobalto",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49208,7 +49199,7 @@
     },
     {
       "id": "gid://shopify/Product/15509532115319",
-      "sku": "15838",
+      "sku": "",
       "title": "Collistar Professional Eye Pencil 10 - Verde Metallo",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49217,7 +49208,7 @@
     },
     {
       "id": "gid://shopify/Product/15509532148087",
-      "sku": "15839",
+      "sku": "",
       "title": "Collistar Professional Eye Pencil 11 - Blu Metallo",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49226,7 +49217,7 @@
     },
     {
       "id": "gid://shopify/Product/15509532246391",
-      "sku": "15840",
+      "sku": "",
       "title": "Collistar Professional Eye Pencil 12 - Viola Metallo",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49235,7 +49226,7 @@
     },
     {
       "id": "gid://shopify/Product/15509532344695",
-      "sku": "15841",
+      "sku": "",
       "title": "Collistar Professional Eye Pencil 16 - Blu Shangai",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49244,7 +49235,7 @@
     },
     {
       "id": "gid://shopify/Product/15509532377463",
-      "sku": "15843",
+      "sku": "",
       "title": "Collistar Professional Eye Pencil 25 - Acquamarina",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49253,7 +49244,7 @@
     },
     {
       "id": "gid://shopify/Product/15509532442999",
-      "sku": "15844",
+      "sku": "",
       "title": "Collistar Professional Eye Pencil 26 - Bronzo",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49262,7 +49253,7 @@
     },
     {
       "id": "gid://shopify/Product/15509532475767",
-      "sku": "15834",
+      "sku": "",
       "title": "Collistar Professional Eye Pencil 27 - Borgogna",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49397,7 +49388,7 @@
     },
     {
       "id": "gid://shopify/Product/15509533163895",
-      "sku": "7006898",
+      "sku": "",
       "title": "Collistar Professional Brow Pencil 1 - Bionda",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49406,7 +49397,7 @@
     },
     {
       "id": "gid://shopify/Product/15509533229431",
-      "sku": "7006899",
+      "sku": "",
       "title": "Collistar Professional Brow Pencil 2 - Tortora",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49415,7 +49406,7 @@
     },
     {
       "id": "gid://shopify/Product/15509533294967",
-      "sku": "7006900",
+      "sku": "",
       "title": "Collistar Professional Brow Pencil 3 - Marrone",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49424,7 +49415,7 @@
     },
     {
       "id": "gid://shopify/Product/15509533360503",
-      "sku": "7006901",
+      "sku": "",
       "title": "Collistar Professional Brow Pencil 4 - Moka",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49469,7 +49460,7 @@
     },
     {
       "id": "gid://shopify/Product/15509533622647",
-      "sku": "7005876",
+      "sku": "",
       "title": "Collistar Infinito Eye Marker Black",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49478,7 +49469,7 @@
     },
     {
       "id": "gid://shopify/Product/15509533655415",
-      "sku": "7005877",
+      "sku": "",
       "title": "Collistar Infinito Eye Marker Brown",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49487,7 +49478,7 @@
     },
     {
       "id": "gid://shopify/Product/15509533720951",
-      "sku": "7005878",
+      "sku": "",
       "title": "Collistar Infinito Eye Marker Blue",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49496,7 +49487,7 @@
     },
     {
       "id": "gid://shopify/Product/15509533753719",
-      "sku": "7005879",
+      "sku": "",
       "title": "Collistar Infinito Eye Marker Green",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49505,7 +49496,7 @@
     },
     {
       "id": "gid://shopify/Product/15509533786487",
-      "sku": "7005680",
+      "sku": "",
       "title": "Collistar Impeccabile Eye Liner Extra Black",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49514,7 +49505,7 @@
     },
     {
       "id": "gid://shopify/Product/15509533852023",
-      "sku": "7005681",
+      "sku": "",
       "title": "Collistar Impeccabile Eye Liner Brown",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49523,7 +49514,7 @@
     },
     {
       "id": "gid://shopify/Product/15509533950327",
-      "sku": "7005682",
+      "sku": "",
       "title": "Collistar Impeccabile Eye Liner Burgundy",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49532,7 +49523,7 @@
     },
     {
       "id": "gid://shopify/Product/15509534015863",
-      "sku": "7002912",
+      "sku": "",
       "title": "Collistar Infinito Mascara Refillable Extra Black",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49541,7 +49532,7 @@
     },
     {
       "id": "gid://shopify/Product/15509534048631",
-      "sku": "7002914",
+      "sku": "",
       "title": "Collistar Infinito Mascara Refillable Brown",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49550,7 +49541,7 @@
     },
     {
       "id": "gid://shopify/Product/15509534081399",
-      "sku": "7002915",
+      "sku": "",
       "title": "Collistar Infinito Mascara Refill Extra Black",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49559,7 +49550,7 @@
     },
     {
       "id": "gid://shopify/Product/15509534146935",
-      "sku": "7002916",
+      "sku": "",
       "title": "Collistar Infinito Mascara Refill Brown",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49613,7 +49604,7 @@
     },
     {
       "id": "gid://shopify/Product/15509534835063",
-      "sku": "7007077",
+      "sku": "",
       "title": "Collistar Impeccabile Compact Eyeshadow 400 - Cipria Matte",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49622,7 +49613,7 @@
     },
     {
       "id": "gid://shopify/Product/15509534998903",
-      "sku": "7007078",
+      "sku": "",
       "title": "Collistar Impeccabile Compact Eyeshadow 405 - Petalo Matte",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49631,7 +49622,7 @@
     },
     {
       "id": "gid://shopify/Product/15509535064439",
-      "sku": "7007079",
+      "sku": "",
       "title": "Collistar Impeccabile Compact Eyeshadow 410 - Greige Matte",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49640,7 +49631,7 @@
     },
     {
       "id": "gid://shopify/Product/15509535162743",
-      "sku": "7007080",
+      "sku": "",
       "title": "Collistar Impeccabile Compact Eyeshadow 415 - Mocha Matte",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49649,7 +49640,7 @@
     },
     {
       "id": "gid://shopify/Product/15509535818103",
-      "sku": "7007083",
+      "sku": "",
       "title": "Collistar Impeccabile Compact Eyeshadow 420 - Cacao Matte",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49658,7 +49649,7 @@
     },
     {
       "id": "gid://shopify/Product/15509535850871",
-      "sku": "7007084",
+      "sku": "",
       "title": "Collistar Impeccabile Compact Eyeshadow 425 - Champagne Sat.",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49667,7 +49658,7 @@
     },
     {
       "id": "gid://shopify/Product/15509535883639",
-      "sku": "7007085",
+      "sku": "",
       "title": "Collistar Impeccabile Compact Eyeshadow 430 - Brunito Shim.",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49676,7 +49667,7 @@
     },
     {
       "id": "gid://shopify/Product/15509535981943",
-      "sku": "7007086",
+      "sku": "",
       "title": "Collistar Impeccabile Compact Eyeshadow 435 - Chifon Satin",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49685,7 +49676,7 @@
     },
     {
       "id": "gid://shopify/Product/15509536407927",
-      "sku": "7007087",
+      "sku": "",
       "title": "Collistar Impeccabile Compact Eyeshadow 500 - Avorio Satin",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49694,7 +49685,7 @@
     },
     {
       "id": "gid://shopify/Product/15509536440695",
-      "sku": "7007088",
+      "sku": "",
       "title": "Collistar Impeccabile Compact Eyeshadow 505 - Bronzo Shimmer",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49703,7 +49694,7 @@
     },
     {
       "id": "gid://shopify/Product/15509536473463",
-      "sku": "7007089",
+      "sku": "",
       "title": "Collistar Impeccabile Compact Eyeshadow 510 - Caramello Sat.",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49712,7 +49703,7 @@
     },
     {
       "id": "gid://shopify/Product/15509536506231",
-      "sku": "7007090",
+      "sku": "",
       "title": "Collistar Impeccabile Compact Eyeshadow 515 - Argento Shim.",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49721,7 +49712,7 @@
     },
     {
       "id": "gid://shopify/Product/15509536538999",
-      "sku": "7007092",
+      "sku": "",
       "title": "Collistar Impeccabile Compact Eyeshadow 520 - Eden Shimmer",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49730,7 +49721,7 @@
     },
     {
       "id": "gid://shopify/Product/15509536571767",
-      "sku": "7007093",
+      "sku": "",
       "title": "Collistar Impeccabile Compact Eyeshadow 525 - Ottanio Satin",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49739,7 +49730,7 @@
     },
     {
       "id": "gid://shopify/Product/15509536604535",
-      "sku": "7007094",
+      "sku": "",
       "title": "Collistar Impeccabile Compact Eyeshadow 530 - Malva Shimmer",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49748,7 +49739,7 @@
     },
     {
       "id": "gid://shopify/Product/15509536637303",
-      "sku": "7007095",
+      "sku": "",
       "title": "Collistar Impeccabile Compact Eyeshadow 535 - Indigo Shimmer",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49982,7 +49973,7 @@
     },
     {
       "id": "gid://shopify/Product/15509537882487",
-      "sku": "12001",
+      "sku": "",
       "title": "Collistar Puro Lipstick 100 - Terra Di Siena",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49991,7 +49982,7 @@
     },
     {
       "id": "gid://shopify/Product/15509537915255",
-      "sku": "12002",
+      "sku": "",
       "title": "Collistar Puro Lipstick 21 -  Rosa Selvatica",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50000,7 +49991,7 @@
     },
     {
       "id": "gid://shopify/Product/15509537980791",
-      "sku": "12003",
+      "sku": "",
       "title": "Collistar Puro Lipstick 101 - Blooming Almond",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50009,7 +50000,7 @@
     },
     {
       "id": "gid://shopify/Product/15509538013559",
-      "sku": "12004",
+      "sku": "",
       "title": "Collistar Puro Lipstick 102 - Rosa Antico",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50018,7 +50009,7 @@
     },
     {
       "id": "gid://shopify/Product/15509538111863",
-      "sku": "12005",
+      "sku": "",
       "title": "Collistar Puro Lipstick 25 - Rosa Perla",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50027,7 +50018,7 @@
     },
     {
       "id": "gid://shopify/Product/15509538144631",
-      "sku": "12006",
+      "sku": "",
       "title": "Collistar Puro Lipstick 26 -  Rosa Metallo",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50036,7 +50027,7 @@
     },
     {
       "id": "gid://shopify/Product/15509538210167",
-      "sku": "12007",
+      "sku": "",
       "title": "Collistar Puro Lipstick 103 - Fucsia Petunia",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50045,7 +50036,7 @@
     },
     {
       "id": "gid://shopify/Product/15509538374007",
-      "sku": "12008",
+      "sku": "",
       "title": "Collistar Puro Lipstick 104 - Rosa Lampone",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50054,7 +50045,7 @@
     },
     {
       "id": "gid://shopify/Product/15509538472311",
-      "sku": "12009",
+      "sku": "",
       "title": "Collistar Puro Lipstick 105 - Fragola Dolce",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50063,7 +50054,7 @@
     },
     {
       "id": "gid://shopify/Product/15509538603383",
-      "sku": "12010",
+      "sku": "",
       "title": "Collistar Puro Lipstick 40 - Mandarino",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50072,7 +50063,7 @@
     },
     {
       "id": "gid://shopify/Product/15509538701687",
-      "sku": "12011",
+      "sku": "",
       "title": "Collistar Puro Lipstick 106 - Bright Orange",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50081,7 +50072,7 @@
     },
     {
       "id": "gid://shopify/Product/15509538767223",
-      "sku": "12012",
+      "sku": "",
       "title": "Collistar Puro Lipstick 28 - Rosa Pesca",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50090,7 +50081,7 @@
     },
     {
       "id": "gid://shopify/Product/15509538832759",
-      "sku": "12013",
+      "sku": "",
       "title": "Collistar Puro Lipstick 107 - Peony Tattoo",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50099,7 +50090,7 @@
     },
     {
       "id": "gid://shopify/Product/15509538865527",
-      "sku": "12014",
+      "sku": "",
       "title": "Collistar Puro Lipstick 108 - Melagrana",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50108,7 +50099,7 @@
     },
     {
       "id": "gid://shopify/Product/15509538898295",
-      "sku": "12015",
+      "sku": "",
       "title": "Collistar Puro Lipstick 109 - Papavero Ipnotico",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50117,7 +50108,7 @@
     },
     {
       "id": "gid://shopify/Product/15509538963831",
-      "sku": "12016",
+      "sku": "",
       "title": "Collistar Puro Lipstick 110 - Bacio",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50126,7 +50117,7 @@
     },
     {
       "id": "gid://shopify/Product/15509539029367",
-      "sku": "12017",
+      "sku": "",
       "title": "Collistar Puro Lipstick 111 - Rosso Milano",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50135,7 +50126,7 @@
     },
     {
       "id": "gid://shopify/Product/15509539062135",
-      "sku": "12018",
+      "sku": "",
       "title": "Collistar Puro Lipstick 112 -  Iris Fiorentino",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50144,7 +50135,7 @@
     },
     {
       "id": "gid://shopify/Product/15509539094903",
-      "sku": "12019",
+      "sku": "",
       "title": "Collistar Puro Lipstick 113 - Autumn Berry",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50153,7 +50144,7 @@
     },
     {
       "id": "gid://shopify/Product/15509539127671",
-      "sku": "12020",
+      "sku": "",
       "title": "Collistar Puro Lipstick 114 - Warm Mauve",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50162,7 +50153,7 @@
     },
     {
       "id": "gid://shopify/Product/15509539160439",
-      "sku": "12031",
+      "sku": "",
       "title": "Collistar Puro Lipstick Matte 28 - Rosa Pesca",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50171,7 +50162,7 @@
     },
     {
       "id": "gid://shopify/Product/15509539193207",
-      "sku": "12032",
+      "sku": "",
       "title": "Collistar Puro Lipstick Matte 102 - Rosa Antico",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50180,7 +50171,7 @@
     },
     {
       "id": "gid://shopify/Product/15509539258743",
-      "sku": "12033",
+      "sku": "",
       "title": "Collistar Puro Lipstick Matte 103 - Fucsia Petunia",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50189,7 +50180,7 @@
     },
     {
       "id": "gid://shopify/Product/15509539291511",
-      "sku": "12034",
+      "sku": "",
       "title": "Collistar Puro Lipstick Matte 40 - Mandarino",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50198,7 +50189,7 @@
     },
     {
       "id": "gid://shopify/Product/15509539357047",
-      "sku": "12035",
+      "sku": "",
       "title": "Collistar Puro Lipstick Matte 109 - Papavero Ipnotico",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50207,7 +50198,7 @@
     },
     {
       "id": "gid://shopify/Product/15509539389815",
-      "sku": "12036",
+      "sku": "",
       "title": "Collistar Puro Lipstick Matte 112 - Iris Fiorentino",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50216,7 +50207,7 @@
     },
     {
       "id": "gid://shopify/Product/15509539422583",
-      "sku": "12037",
+      "sku": "",
       "title": "Collistar Puro Lipstick Matte 111 - Rosso Milano",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50225,7 +50216,7 @@
     },
     {
       "id": "gid://shopify/Product/15509539979639",
-      "sku": "12038",
+      "sku": "",
       "title": "Collistar Puro Lipstick Matte 113 - Autumn Berry",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50234,7 +50225,7 @@
     },
     {
       "id": "gid://shopify/Product/15509540012407",
-      "sku": "12039",
+      "sku": "",
       "title": "Collistar Puro Lipstick Matte 114 - Warm Mauve",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50243,7 +50234,7 @@
     },
     {
       "id": "gid://shopify/Product/15509540077943",
-      "sku": "7004684",
+      "sku": "",
       "title": "Collistar Puro Gioiello Lipstick 160 - Morganite",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50252,7 +50243,7 @@
     },
     {
       "id": "gid://shopify/Product/15509540110711",
-      "sku": "7004687",
+      "sku": "",
       "title": "Collistar Puro Gioiello Lipstick 161 - Perla Rosa",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50261,7 +50252,7 @@
     },
     {
       "id": "gid://shopify/Product/15509540143479",
-      "sku": "7004682",
+      "sku": "",
       "title": "Collistar Puro Gioiello Lipstick  162 - Zircone Cannella",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50270,7 +50261,7 @@
     },
     {
       "id": "gid://shopify/Product/15509540176247",
-      "sku": "7004689",
+      "sku": "",
       "title": "Collistar Puro Gioiello Lipstick 163 - Opale Rosa",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50279,7 +50270,7 @@
     },
     {
       "id": "gid://shopify/Product/15509540241783",
-      "sku": "7004690",
+      "sku": "",
       "title": "Collistar Puro Gioiello Lipstick 164 - Quarzo Rosa",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50288,7 +50279,7 @@
     },
     {
       "id": "gid://shopify/Product/15509540274551",
-      "sku": "7004686",
+      "sku": "",
       "title": "Collistar Puro Gioiello Lipstick 165 - Rubellite",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50297,7 +50288,7 @@
     },
     {
       "id": "gid://shopify/Product/15509540307319",
-      "sku": "7004695",
+      "sku": "",
       "title": "Collistar Puro Gioiello Lipstick 166 - Zaffiro Rosa",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50306,7 +50297,7 @@
     },
     {
       "id": "gid://shopify/Product/15509540372855",
-      "sku": "7004696",
+      "sku": "",
       "title": "Collistar Puro Gioiello Lipstick 167 - Tormalina Rossa",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50315,7 +50306,7 @@
     },
     {
       "id": "gid://shopify/Product/15509540405623",
-      "sku": "7004688",
+      "sku": "",
       "title": "Collistar Puro Gioiello Lipstick 168 - Agata Rossa",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50324,7 +50315,7 @@
     },
     {
       "id": "gid://shopify/Product/15509540438391",
-      "sku": "7004691",
+      "sku": "",
       "title": "Collistar Puro Gioiello Lipstick 169 - Corallo Rosa",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50333,7 +50324,7 @@
     },
     {
       "id": "gid://shopify/Product/15509540471159",
-      "sku": "7004692",
+      "sku": "",
       "title": "Collistar Puro Gioiello Lipstick 170 - Diamante Rosso",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50342,7 +50333,7 @@
     },
     {
       "id": "gid://shopify/Product/15509540503927",
-      "sku": "7004693",
+      "sku": "",
       "title": "Collistar Puro Gioiello Lipstick 171 - Granato Rosso",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50351,7 +50342,7 @@
     },
     {
       "id": "gid://shopify/Product/15509540602231",
-      "sku": "7004694",
+      "sku": "",
       "title": "Collistar Puro Gioiello Lipstick 172 - Zircone Rosa",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50360,7 +50351,7 @@
     },
     {
       "id": "gid://shopify/Product/15509540667767",
-      "sku": "7004697",
+      "sku": "",
       "title": "Collistar Puro Gioiello Lipstick 173 - Agata Rosa",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50369,7 +50360,7 @@
     },
     {
       "id": "gid://shopify/Product/15509540733303",
-      "sku": "7004698",
+      "sku": "",
       "title": "Collistar Puro Gioiello Lipstick 174 - Topazio Rosa",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50378,7 +50369,7 @@
     },
     {
       "id": "gid://shopify/Product/15509540798839",
-      "sku": "7004699",
+      "sku": "",
       "title": "Collistar Puro Gioiello Lipstick 175 - Rubino Rosso",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50387,7 +50378,7 @@
     },
     {
       "id": "gid://shopify/Product/15509540831607",
-      "sku": "7007491",
+      "sku": "",
       "title": "Collistar Puro Gioiello Lipstick Luminous 176 - Nude",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50396,7 +50387,7 @@
     },
     {
       "id": "gid://shopify/Product/15509540897143",
-      "sku": "7007492",
+      "sku": "",
       "title": "Collistar Puro Gioiello Lipstick Luminous 177 - Nude Rosa",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50405,7 +50396,7 @@
     },
     {
       "id": "gid://shopify/Product/15509540995447",
-      "sku": "7007493",
+      "sku": "",
       "title": "Collistar Puro Gioiello Lipstick Luminous 178 - Nude Malva",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50414,7 +50405,7 @@
     },
     {
       "id": "gid://shopify/Product/15509541028215",
-      "sku": "7007500",
+      "sku": "",
       "title": "Collistar Puro Gioiello Lipstick Luminous 179 - Rosa",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50423,7 +50414,7 @@
     },
     {
       "id": "gid://shopify/Product/15509541093751",
-      "sku": "7007501",
+      "sku": "",
       "title": "Collistar Puro Gioiello Lipstick Luminous 180 - Malva",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50432,7 +50423,7 @@
     },
     {
       "id": "gid://shopify/Product/15509541159287",
-      "sku": "7007504",
+      "sku": "",
       "title": "Collistar Puro Gioiello Lipstick Luminous 181 - Corallo",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50441,7 +50432,7 @@
     },
     {
       "id": "gid://shopify/Product/15509541224823",
-      "sku": "7007506",
+      "sku": "",
       "title": "Collistar Puro Gioiello Lipstick Luminous 182 - Rosso",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50450,7 +50441,7 @@
     },
     {
       "id": "gid://shopify/Product/15509541290359",
-      "sku": "7007507",
+      "sku": "",
       "title": "Collistar Puro Gioiello Lipstick Luminous 183 - Porpora",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50459,7 +50450,7 @@
     },
     {
       "id": "gid://shopify/Product/15509541355895",
-      "sku": "7007502",
+      "sku": "",
       "title": "Collistar Puro Gioiello Lipstick Luminous 184 - Notte Scala",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50540,7 +50531,7 @@
     },
     {
       "id": "gid://shopify/Product/15509541814647",
-      "sku": "10751",
+      "sku": "",
       "title": "Collistar Puro Nail Lacquer 301 - Cristallo Puro",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50549,7 +50540,7 @@
     },
     {
       "id": "gid://shopify/Product/15509541880183",
-      "sku": "10752",
+      "sku": "",
       "title": "Collistar Puro Nail Lacquer 303 - Rosa Cipria",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50558,7 +50549,7 @@
     },
     {
       "id": "gid://shopify/Product/15509541912951",
-      "sku": "10753",
+      "sku": "",
       "title": "Collistar Puro Nail Lacquer 919 - Porcellana Beige",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50567,7 +50558,7 @@
     },
     {
       "id": "gid://shopify/Product/15509541945719",
-      "sku": "10754",
+      "sku": "",
       "title": "Collistar Puro Nail Lacquer 513 - Neutro French",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50576,7 +50567,7 @@
     },
     {
       "id": "gid://shopify/Product/15509541978487",
-      "sku": "10755",
+      "sku": "",
       "title": "Collistar Puro Nail Lacquer 700 - Tortora",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50585,7 +50576,7 @@
     },
     {
       "id": "gid://shopify/Product/15509542011255",
-      "sku": "10756",
+      "sku": "",
       "title": "Collistar Puro Nail Lacquer 102 - Rosa Antico",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50594,7 +50585,7 @@
     },
     {
       "id": "gid://shopify/Product/15509542044023",
-      "sku": "10757",
+      "sku": "",
       "title": "Collistar Puro Nail Lacquer 40 - Mandarino",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50603,7 +50594,7 @@
     },
     {
       "id": "gid://shopify/Product/15509542142327",
-      "sku": "10758",
+      "sku": "",
       "title": "Collistar Puro Nail Lacquer 551 - Fucsia",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50612,7 +50603,7 @@
     },
     {
       "id": "gid://shopify/Product/15509542175095",
-      "sku": "10759",
+      "sku": "",
       "title": "Collistar Puro Nail Lacquer 313 - Nero Intenso",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50621,7 +50612,7 @@
     },
     {
       "id": "gid://shopify/Product/15509542207863",
-      "sku": "10760",
+      "sku": "",
       "title": "Collistar Puro Nail Lacquer 109 - Papavero Ipnotico",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50630,7 +50621,7 @@
     },
     {
       "id": "gid://shopify/Product/15509542273399",
-      "sku": "10761",
+      "sku": "",
       "title": "Collistar Puro Nail Lacquer 114 - Warm Mauve",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50639,7 +50630,7 @@
     },
     {
       "id": "gid://shopify/Product/15509542306167",
-      "sku": "10762",
+      "sku": "",
       "title": "Collistar Puro Nail Lacquer 111 - Rosso Milano",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50648,7 +50639,7 @@
     },
     {
       "id": "gid://shopify/Product/15509542371703",
-      "sku": "10763",
+      "sku": "",
       "title": "Collistar Puro Nail Lacquer 581 - Rossonero",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50659,14 +50650,14 @@
       "id": "gid://shopify/Product/15509542437239",
       "sku": "10764",
       "title": "Collistar Puro Nail Lacquer 3In1",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
       "status": "geen-inci",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509542470007",
-      "sku": "7002856",
+      "sku": "",
       "title": "Collistar Puro Nail Lacquer 922 - Porcellana Bianca",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50675,7 +50666,7 @@
     },
     {
       "id": "gid://shopify/Product/15509542502775",
-      "sku": "7002858",
+      "sku": "",
       "title": "Collistar Puro Nail Lacquer 923 - Porcellana Champagne",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50684,7 +50675,7 @@
     },
     {
       "id": "gid://shopify/Product/15509542535543",
-      "sku": "7002859",
+      "sku": "",
       "title": "Collistar Puro Nail Lacquer 924 - Porcellana Fucsia",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50693,7 +50684,7 @@
     },
     {
       "id": "gid://shopify/Product/15509542633847",
-      "sku": "7002866",
+      "sku": "",
       "title": "Collistar Puro Nail Lacquer 701 - Quarzo Rosa",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50966,6 +50957,195 @@
       "sku": "PP031659",
       "title": "ALFAPARF Color Wear Chart 2025",
       "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15519868715383",
+      "sku": "10757",
+      "title": "Collistar Puro Nail Lacquer",
+      "brand": "Collistar",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15519897190775",
+      "sku": "12002",
+      "title": "Collistar Puro Lipstick",
+      "brand": "Collistar",
+      "image": null,
+      "status": "ok",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15519901221239",
+      "sku": "",
+      "title": "Collistar Puro Lipstick Matte",
+      "brand": "Collistar",
+      "image": null,
+      "status": "ok",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15519908954487",
+      "sku": "7004684",
+      "title": "Collistar Puro Gioiello Lipstick",
+      "brand": "Collistar",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15519915704695",
+      "sku": "7007491",
+      "title": "Collistar Puro Gioiello Lipstick Luminous",
+      "brand": "Collistar",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520183157111",
+      "sku": "13000",
+      "title": "Collistar Stick Concealer Impeccable",
+      "brand": "Collistar",
+      "image": null,
+      "status": "ok",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520185155959",
+      "sku": "7003638",
+      "title": "Collistar Nudo Second Skin Foundation",
+      "brand": "Collistar",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520188170615",
+      "sku": "24732",
+      "title": "Collistar Anti-Pollution BB Cream",
+      "brand": "Collistar",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520188662135",
+      "sku": "7007077",
+      "title": "Collistar Impeccabile Compact Eyeshadow",
+      "brand": "Collistar",
+      "image": null,
+      "status": "ok",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520194036087",
+      "sku": "7007039",
+      "title": "Collistar Impeccabile Compact Powder",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "ok",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520199737719",
+      "sku": "7005680",
+      "title": "Collistar Impeccabile Eye Liner",
+      "brand": "Collistar",
+      "image": null,
+      "status": "ok",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520200753527",
+      "sku": "7005572",
+      "title": "Collistar Impeccabile Maxi Blush",
+      "brand": "Collistar",
+      "image": null,
+      "status": "ok",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520283525495",
+      "sku": "7005876",
+      "title": "Collistar Infinito Eye Marker",
+      "brand": "Collistar",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520285458807",
+      "sku": "7002915",
+      "title": "Collistar Infinito Mascara Refill",
+      "brand": "Collistar",
+      "image": null,
+      "status": "ok",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520290406775",
+      "sku": "7002912",
+      "title": "Collistar Infinito Mascara Refillable",
+      "brand": "Collistar",
+      "image": null,
+      "status": "ok",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520293650807",
+      "sku": "7007171",
+      "title": "Collistar Lift Hd+ Foundation",
+      "brand": "Collistar",
+      "image": null,
+      "status": "ok",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520294109559",
+      "sku": "14000",
+      "title": "Collistar LIFT HD+ Smoothing Lifting Concealer",
+      "brand": "Collistar",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520296141175",
+      "sku": "13204",
+      "title": "Collistar Long Wear Foundation Impeccable",
+      "brand": "Collistar",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520312557943",
+      "sku": "7008065",
+      "title": "Collistar Magica Bronzing Powder",
+      "brand": "Collistar",
+      "image": null,
+      "status": "ok",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520315081079",
+      "sku": "7006898",
+      "title": "Collistar Professional Brow Pencil",
+      "brand": "Collistar",
+      "image": null,
+      "status": "ok",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520316293495",
+      "sku": "15830",
+      "title": "Collistar Professional Eye Pencil",
+      "brand": "Collistar",
       "image": null,
       "status": "geen-inci",
       "hits": []
