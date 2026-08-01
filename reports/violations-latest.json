@@ -1,14 +1,14 @@
 {
-  "lastScan": "2026-07-28T20:05:38.560Z",
+  "lastScan": "2026-08-01T08:01:12.296Z",
   "counts": {
     "verboden": 8,
-    "beperkt": 71,
-    "ok": 2402,
-    "geen-inci": 2964,
-    "totaal": 5445
+    "beperkt": 77,
+    "ok": 2519,
+    "geen-inci": 2858,
+    "totaal": 5462
   },
   "storeDomain": "leijtens.myshopify.com",
-  "shopifyTotalCount": 5445,
+  "shopifyTotalCount": 5462,
   "violations": [
     {
       "id": "gid://shopify/Product/15246707392887",
@@ -1428,6 +1428,114 @@
           "annex": "III",
           "ref": "(EU) 2017/1224",
           "note": "Alleen rinse-off, max 0,0015%",
+          "via": "INCI"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Product/15509511504247",
+      "sku": "21886",
+      "title": "Collistar Salicylic Acid + Niacinamide Lotion 100 ml",
+      "brand": "Collistar",
+      "image": null,
+      "status": "beperkt",
+      "hits": [
+        {
+          "inci": "Salicylic Acid",
+          "cas": "69-72-7",
+          "annex": "III",
+          "ref": "(EU) 2022/1176",
+          "note": "Beperkt — max. conc. per producttype",
+          "via": "INCI"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Product/15509511668087",
+      "sku": "21887",
+      "title": "Collistar Salicylic Acid + Succinic Acid  (drops) 30 ml",
+      "brand": "Collistar",
+      "image": null,
+      "status": "beperkt",
+      "hits": [
+        {
+          "inci": "Salicylic Acid",
+          "cas": "69-72-7",
+          "annex": "III",
+          "ref": "(EU) 2022/1176",
+          "note": "Beperkt — max. conc. per producttype",
+          "via": "INCI"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Product/15509511766391",
+      "sku": "21888",
+      "title": "Collistar Salicylic Acid + Niacinamide Cream 50 ml",
+      "brand": "Collistar",
+      "image": null,
+      "status": "beperkt",
+      "hits": [
+        {
+          "inci": "Salicylic Acid",
+          "cas": "69-72-7",
+          "annex": "III",
+          "ref": "(EU) 2022/1176",
+          "note": "Beperkt — max. conc. per producttype",
+          "via": "INCI"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Product/15509512126839",
+      "sku": "7004491",
+      "title": "Collistar Salicylic Acid + Zinc Pca Clay Mask 75 ml",
+      "brand": "Collistar",
+      "image": null,
+      "status": "beperkt",
+      "hits": [
+        {
+          "inci": "Salicylic Acid",
+          "cas": "69-72-7",
+          "annex": "III",
+          "ref": "(EU) 2022/1176",
+          "note": "Beperkt — max. conc. per producttype",
+          "via": "INCI"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Product/15509522317687",
+      "sku": "28559",
+      "title": "Collistar Uomo Cleansing Scrub Face and Beard 100 ml",
+      "brand": "Collistar",
+      "image": null,
+      "status": "beperkt",
+      "hits": [
+        {
+          "inci": "Salicylic Acid",
+          "cas": "69-72-7",
+          "annex": "III",
+          "ref": "(EU) 2022/1176",
+          "note": "Beperkt — max. conc. per producttype",
+          "via": "INCI"
+        }
+      ]
+    },
+    {
+      "id": "gid://shopify/Product/15509522579831",
+      "sku": "7002591",
+      "title": "Collistar Uomo Men Anti-Age Mattifying Cream-Gel 50 ml",
+      "brand": "Collistar",
+      "image": null,
+      "status": "beperkt",
+      "hits": [
+        {
+          "inci": "Salicylic Acid",
+          "cas": "69-72-7",
+          "annex": "III",
+          "ref": "(EU) 2022/1176",
+          "note": "Beperkt — max. conc. per producttype",
           "via": "INCI"
         }
       ]
@@ -16817,7 +16925,7 @@
     },
     {
       "id": "gid://shopify/Product/15252770849143",
-      "sku": "311034",
+      "sku": "",
       "title": "Tweezerman Bell Bottom Blue Classic Lash Curler",
       "brand": "Tweezerman",
       "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/Tweezerman_Bell_Bottom_Blue_Classic_Lash_Curler.jpg?v=1767017209",
@@ -29375,7 +29483,7 @@
       "sku": "1070227",
       "title": "DR IE P227 Active Peel Cream 200 ml",
       "brand": "Dr Irena Eris PROSYSTEM",
-      "image": null,
+      "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/p227.jpg?v=1785308588",
       "status": "ok",
       "hits": []
     },
@@ -44555,7 +44663,7 @@
     },
     {
       "id": "gid://shopify/Product/15454488363383",
-      "sku": "301035",
+      "sku": "",
       "title": "Tweezerman Classic Lash Curler Rose Gold",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -46978,7 +47086,7 @@
       "id": "gid://shopify/Product/15509508587895",
       "sku": "21923",
       "title": "Collistar Two-Phase Make-Up Removing Solution 200 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -46987,7 +47095,7 @@
       "id": "gid://shopify/Product/15509508751735",
       "sku": "21924",
       "title": "Collistar Make-Up Removing Micellar Water 250 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -46996,7 +47104,7 @@
       "id": "gid://shopify/Product/15509508915575",
       "sku": "21929",
       "title": "Collistar Make-Up Removing Micellar Milk 250 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -47005,52 +47113,52 @@
       "id": "gid://shopify/Product/15509509046647",
       "sku": "21930",
       "title": "Collistar Soothing Cleansing Foam 180 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509509177719",
       "sku": "21931",
       "title": "Collistar Gentle Gel Scrub 100 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509509308791",
       "sku": "21932",
       "title": "Collistar Purifying Cleansing Gel 200 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509509472631",
       "sku": "21933",
       "title": "Collistar Anti-Age Cleansing Milk 200 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509509603703",
       "sku": "21934",
       "title": "Collistar Anti-Age Toning Lotion 250 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509509800311",
       "sku": "21926",
       "title": "Collistar Make-Up Removing Cleansing Balm 100 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -47059,81 +47167,81 @@
       "id": "gid://shopify/Product/15509509964151",
       "sku": "7006164",
       "title": "Collistar Gentle Make-up Removing Oil 150 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509510095223",
       "sku": "7006176",
       "title": "Collistar Cleansing Cream To Mousse 125 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509510226295",
       "sku": "21875",
       "title": "Collistar Hyaluronic Acid + Polyglutamic Moist. Lifting 30ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509510357367",
       "sku": "21876",
       "title": "Collistar Hyaluronic Acid + Ceramides Aquagel 50 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509510488439",
       "sku": "21877",
       "title": "Collistar Collagen + Glycogen Anti-Wrinkle Firming 30 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509510586743",
       "sku": "21878",
       "title": "Collistar Collagen + Malachite Cream Balm 50 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509510717815",
       "sku": "21834",
       "title": "Collistar Hyaluronic Acid Molecular Spray 100 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509510816119",
       "sku": "21935",
       "title": "Collistar Retinol + Penthenol Drops 30 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509511012727",
       "sku": "21936",
       "title": "Collistar Retinol + Phlorentin Cream 30 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
@@ -47149,88 +47257,124 @@
       "id": "gid://shopify/Product/15509511274871",
       "sku": "21869",
       "title": "Collistar Vitamin C + Alpha-Arbutin 30 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509511405943",
       "sku": "21870",
       "title": "Collistar Vitamin C + Ferulic Acid Cream 50 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509511504247",
       "sku": "21886",
       "title": "Collistar Salicylic Acid + Niacinamide Lotion 100 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
-      "hits": []
+      "status": "beperkt",
+      "hits": [
+        {
+          "inci": "Salicylic Acid",
+          "cas": "69-72-7",
+          "annex": "III",
+          "ref": "(EU) 2022/1176",
+          "note": "Beperkt — max. conc. per producttype",
+          "via": "INCI"
+        }
+      ]
     },
     {
       "id": "gid://shopify/Product/15509511668087",
       "sku": "21887",
       "title": "Collistar Salicylic Acid + Succinic Acid  (drops) 30 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
-      "hits": []
+      "status": "beperkt",
+      "hits": [
+        {
+          "inci": "Salicylic Acid",
+          "cas": "69-72-7",
+          "annex": "III",
+          "ref": "(EU) 2022/1176",
+          "note": "Beperkt — max. conc. per producttype",
+          "via": "INCI"
+        }
+      ]
     },
     {
       "id": "gid://shopify/Product/15509511766391",
       "sku": "21888",
       "title": "Collistar Salicylic Acid + Niacinamide Cream 50 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
-      "hits": []
+      "status": "beperkt",
+      "hits": [
+        {
+          "inci": "Salicylic Acid",
+          "cas": "69-72-7",
+          "annex": "III",
+          "ref": "(EU) 2022/1176",
+          "note": "Beperkt — max. conc. per producttype",
+          "via": "INCI"
+        }
+      ]
     },
     {
       "id": "gid://shopify/Product/15509511897463",
       "sku": "7004488",
       "title": "Collistar Hyaluronic Acid + Madecassoside Cica-Mask 75ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509512061303",
       "sku": "7004490",
       "title": "Collistar Vitamine C + Plyhydroxy Acid Gel-Mask 75 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509512126839",
       "sku": "7004491",
       "title": "Collistar Salicylic Acid + Zinc Pca Clay Mask 75 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
-      "hits": []
+      "status": "beperkt",
+      "hits": [
+        {
+          "inci": "Salicylic Acid",
+          "cas": "69-72-7",
+          "annex": "III",
+          "ref": "(EU) 2022/1176",
+          "note": "Beperkt — max. conc. per producttype",
+          "via": "INCI"
+        }
+      ]
     },
     {
       "id": "gid://shopify/Product/15509512257911",
       "sku": "24727",
       "title": "Collistar Deep Moisturizing Cream 50 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509512323447",
       "sku": "24728",
       "title": "Collistar Fresh Moisturizing Water Cream 50 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -47248,7 +47392,7 @@
       "id": "gid://shopify/Product/15509512454519",
       "sku": "24730",
       "title": "Collistar Matte Moisturizing Sorbet 50 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -47257,7 +47401,7 @@
       "id": "gid://shopify/Product/15509512487287",
       "sku": "24731",
       "title": "Collistar Eye Hydro-Gel 15 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -47293,63 +47437,63 @@
       "id": "gid://shopify/Product/15509512651127",
       "sku": "7008282",
       "title": "Collistar Rigenera Smoothing Anti-Wrinkle Eye Contour 15 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509512716663",
       "sku": "7008329",
       "title": "Collistar Rigenera Anti-Wrinkle Repairing Night Cream 50 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509512749431",
       "sku": "7008319",
       "title": "Collistar Rigenera Anti-Wrinkle Plumping Lip Treatment  15ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509512814967",
       "sku": "7008318",
       "title": "Collistar Rigenera Anti-Wrinkle Glow Treatment 50 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509512847735",
       "sku": "7008330",
       "title": "Collistar Rigenera Smoot. Anti-Wrinkle Nourishing Cream 50ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509512880503",
       "sku": "7008281",
       "title": "Collistar Rigenera Smoothing Anti-Wrinkle Cream 50 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509512946039",
       "sku": "7008323",
       "title": "Collistar Lift HD+ Lifting Firming Cream 50 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
@@ -47374,97 +47518,97 @@
       "id": "gid://shopify/Product/15509513044343",
       "sku": "7008322",
       "title": "Collistar Lift Hd+ Lifting Remodeling Serum 30 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509513077111",
       "sku": "7008315",
       "title": "Collistar Lift Hd+ Lifting Eye And Lip Contour Cream 15 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509513109879",
       "sku": "7008325",
       "title": "Collistar Lift Hd+ Lifting Vials Tensor Effect 7 x 1,5 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509513142647",
       "sku": "7008341",
       "title": "Collistar Futura Revitalizing Brightening Cream 50 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509513175415",
       "sku": "7008285",
       "title": "Collistar Futura Revitalizing Repairing Night Cream 50 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509513208183",
       "sku": "7008286",
       "title": "Collistar Futura Revitalizing Eye & Lip Contour Cream 15 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509513240951",
       "sku": "7006439",
       "title": "Collistar Unica Even Finish Redensifying Essence 200 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509513273719",
       "sku": "7006445",
       "title": "Collistar Unica Even Finish Redensifying Cream 50 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509513339255",
       "sku": "7006565",
       "title": "Collistar Unica Redens. Depuffing Eye Contour Cream 15 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509513372023",
       "sku": "7006657",
       "title": "Collistar Unica Redens. Cream Décolleté & Hands SPF30 75 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509513404791",
       "sku": "7008253",
       "title": "Collistar Protective Drops SPF 50 30 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -47500,54 +47644,54 @@
       "id": "gid://shopify/Product/15509513666935",
       "sku": "29724",
       "title": "Collistar Vitamin C Shampoo 250 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509513699703",
       "sku": "29725",
       "title": "Collistar Vitamin C Mask 200 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509515534711",
       "sku": "29726",
       "title": "Collistar Vitamin C Gloss Spray 100 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509515600247",
       "sku": "29728",
       "title": "Collistar Collagen Conditioner 200 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509515633015",
       "sku": "29731",
       "title": "Collistar Hyaluronic Acid Liquid Conditioner 200 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509515665783",
       "sku": "29732",
       "title": "Collistar Niacinamide Scrub 250 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
@@ -47563,45 +47707,45 @@
       "id": "gid://shopify/Product/15509515829623",
       "sku": "7007817",
       "title": "Collistar Anti-Water Thermal Talasso-Shower Oil 400 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509515862391",
       "sku": "7007828",
       "title": "Collistar Anti-Water Thermal Talasso-Scrub 600 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509515960695",
       "sku": "7007827",
       "title": "Collistar Cryoactive Talasso-Scrub 600 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509516026231",
       "sku": "7007809",
       "title": "Collistar Anticellulite Draining Thermal Superserum 200 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509516157303",
       "sku": "7007842",
       "title": "Collistar Anticellulite Firming Thermal Cream 400 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
@@ -47617,9 +47761,9 @@
       "id": "gid://shopify/Product/15509516222839",
       "sku": "7007850",
       "title": "Collistar Anticellulite Concentrate Cryo Body Casp. 14 st.",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
@@ -47635,27 +47779,27 @@
       "id": "gid://shopify/Product/15509516288375",
       "sku": "7007825",
       "title": "Collistar Elasticizing Firming Talasso Shower Oil 400 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509516321143",
       "sku": "7007829",
       "title": "Collistar Elasticizing Firming Talasso-Scrub 600 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509516353911",
       "sku": "7007810",
       "title": "Collistar Elasticizing Intensive Firming Superserum 200 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
@@ -47671,18 +47815,18 @@
       "id": "gid://shopify/Product/15509516484983",
       "sku": "7007845",
       "title": "Collistar Firming Anti-Aging Lifting Cream 200 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509516517751",
       "sku": "7007846",
       "title": "Collistar Firming Reshaping Abdomen And Hips Cream 200 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
@@ -47725,9 +47869,9 @@
       "id": "gid://shopify/Product/15509516845431",
       "sku": "7009054",
       "title": "Collistar Deep Moisturizing Fluid 400 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
@@ -47752,131 +47896,131 @@
       "id": "gid://shopify/Product/15509517009271",
       "sku": "7007851",
       "title": "Collistar Multi-Active Deodorant Spray 24H Hypersens. Skin",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509517042039",
       "sku": "7007852",
-      "title": "Multi-Active Deodorant Spray 24H Natural Prebiotic",
-      "brand": "BYLEIJTENS",
+      "title": "Collistar Multi-Active Deodorant Spray 24H Natural Prebiotic",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509517140343",
       "sku": "7007853",
-      "title": "Multi-Active Deodorant Cream 48H Nourishing Rice Milk",
-      "brand": "BYLEIJTENS",
+      "title": "Collistar Multi-Active Deodorant Cream 48H Nourishing Rice Milk",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509517205879",
       "sku": "7007854",
-      "title": "Multi-Active Deodorant Roll-On 48H Soothing Oat Milk",
-      "brand": "BYLEIJTENS",
+      "title": "Collistar Multi-Active Deodorant Roll-On 48H Soothing Oat Milk",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509517238647",
       "sku": "7003167",
       "title": "Collistar Benessere Body Frag. Neroli & Helichrysum 100ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509517304183",
       "sku": "7003169",
       "title": "Collistar Benessere Shower Gel-Mousse Neroli & Helichrysum",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509517336951",
       "sku": "7003170",
       "title": "Collistar Benessere Body Scrub Neroli & Helichrysum 250 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509517369719",
       "sku": "7003998",
       "title": "Collistar Benessere Body Cream Neroli & Helichrysum 200 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509517435255",
       "sku": "7003173",
       "title": "Collistar Benessere Shower Milk-Cream Fig & Wisteria 250 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509517533559",
       "sku": "7003174",
       "title": "Collistar Benessere Body Fragrance Fig & Wisteria 100 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509517566327",
       "sku": "7003175",
       "title": "Collistar Benessere Liquid Body Butter Fig & Wisteria 200 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509517664631",
       "sku": "7003176",
       "title": "Collistar Benessere Melting Body Butter Fig & Wisteria 200ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509517697399",
       "sku": "26051",
       "title": "Collistar Ultra Protection Tanning Cream SPF 30 150 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509517762935",
       "sku": "26059",
       "title": "Global Anti-Age Protection Tanning Face Cream SPF 30 50 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509517828471",
-      "sku": "26070",
+      "sku": "",
       "title": "Collistar Moisturizing Tanning Spray SPF 10 200 ml",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -47885,7 +48029,7 @@
     },
     {
       "id": "gid://shopify/Product/15509517894007",
-      "sku": "26071",
+      "sku": "",
       "title": "Collistar Moisturizing Tanning Spray SPF 20 200 ml",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -47894,7 +48038,7 @@
     },
     {
       "id": "gid://shopify/Product/15509517926775",
-      "sku": "26072",
+      "sku": "",
       "title": "Collistar Moisturizing Tanning Spray SPF 30 200 ml",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -47903,7 +48047,7 @@
     },
     {
       "id": "gid://shopify/Product/15509517992311",
-      "sku": "26034",
+      "sku": "",
       "title": "Collistar Supertanning Moisturizing Dry Oil SPF 6 200 ml",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -47912,7 +48056,7 @@
     },
     {
       "id": "gid://shopify/Product/15509518090615",
-      "sku": "26061",
+      "sku": "",
       "title": "Collistar Supertanning Moisturizing Dry Oil SPF 15 200 ml",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -47921,7 +48065,7 @@
     },
     {
       "id": "gid://shopify/Product/15509518123383",
-      "sku": "26250",
+      "sku": "",
       "title": "Collistar Supertanning Moisturizing Dry Oil SPF 30 200 ml",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -47932,7 +48076,7 @@
       "id": "gid://shopify/Product/15509518156151",
       "sku": "7008568",
       "title": "Collistar Sun Stick SPF 50",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -47941,27 +48085,27 @@
       "id": "gid://shopify/Product/15509518221687",
       "sku": "26208",
       "title": "Collistar Supertanning Water Moisturizing Anti-Salt 400 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509518254455",
       "sku": "26040",
       "title": "Collistar Moisturizing Restructuring After Sun Balm 400 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509518319991",
       "sku": "26045",
       "title": "Collistar Supermoist. Regenerating After Sun Cream 200 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
@@ -47977,14 +48121,14 @@
       "id": "gid://shopify/Product/15509518385527",
       "sku": "26223",
       "title": "Collistar Ultra-Rapid Supertanning Treatment SPF 20 200 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509518451063",
-      "sku": "26243",
+      "sku": "",
       "title": "Collistar Tanning Moisturizing Milk Spray SPF 20 200 ml",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -47993,7 +48137,7 @@
     },
     {
       "id": "gid://shopify/Product/15509518549367",
-      "sku": "26244",
+      "sku": "",
       "title": "Collistar Tanning Moisturizing Milk Spray SPF 30 200 ml",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48002,7 +48146,7 @@
     },
     {
       "id": "gid://shopify/Product/15509518614903",
-      "sku": "7005233",
+      "sku": "",
       "title": "Collistar Tanning Moisturizing Milk Spray SPF 50+ 200 ml",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48013,18 +48157,18 @@
       "id": "gid://shopify/Product/15509518713207",
       "sku": "26037",
       "title": "Collistar Bi-Phase Aftersun Dry Oil 200 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509518745975",
       "sku": "26249",
       "title": "Collistar Supertanning Concentrate Unguent SPF 10 200 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
@@ -48040,36 +48184,36 @@
       "id": "gid://shopify/Product/15509518811511",
       "sku": "7005234",
       "title": "Collistar Protective Oil Coloured Hair 100 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509518844279",
       "sku": "7005230",
       "title": "Collistar Correc. Protect. Sun Stick Dark Spots SPF 50+",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509520220535",
       "sku": "7005231",
       "title": "Collistar Correc. Protect. Sun Face Fluid Dark Spots SPF50+",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509520253303",
       "sku": "7005232",
       "title": "Collistar Correc. Protect. Sun Body Cream Dark Spots SPF50+",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
@@ -48083,7 +48227,7 @@
     },
     {
       "id": "gid://shopify/Product/15509520384375",
-      "sku": "26097",
+      "sku": "",
       "title": "Collistar Active Protection Sun Cream Face-Body SPF50 100ml",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48094,14 +48238,14 @@
       "id": "gid://shopify/Product/15509520482679",
       "sku": "26099",
       "title": "Collistar Ultra Soothing After Sun Repair Treatment 250 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
       "status": "geen-inci",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509520515447",
-      "sku": "26200",
+      "sku": "",
       "title": "Collistar Active Protection Sun Cream Face-Body SPF30 150ml",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48110,16 +48254,16 @@
     },
     {
       "id": "gid://shopify/Product/15509520580983",
-      "sku": "26251",
+      "sku": "",
       "title": "Collistar Active Protect. Milk Spray Ultra-Rapid SPF30 200ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
       "status": "geen-inci",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509520613751",
-      "sku": "26252",
+      "sku": "",
       "title": "Collistar Active Protect. Milk Spray Ultra-Rapid SPF50 200ml",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48130,34 +48274,34 @@
       "id": "gid://shopify/Product/15509520646519",
       "sku": "7008271",
       "title": "Collistar Face Magic Drops 30 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509520679287",
       "sku": "7007998",
       "title": "Collistar Body-Legs Magic Drops 125 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509520712055",
       "sku": "7008002",
       "title": "Collistar Magic Drops Gradual-Body Self-Tanning Spray 150 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509520744823",
       "sku": "7007997",
       "title": "Collistar Magic Drops Glow 150 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -48166,216 +48310,234 @@
       "id": "gid://shopify/Product/15509520810359",
       "sku": "7006525",
       "title": "Collistar Uomo Energizing Cleansing Gel Face 200 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509520875895",
       "sku": "7006526",
       "title": "Collistar Uomo Purifying Cleansing Gel Face 125 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509520908663",
       "sku": "28536",
       "title": "Collistar Uomo Men Anti-Wrinkle Revitalizing Cream 50 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509520941431",
       "sku": "28551",
       "title": "Collistar Uomo Eye Contour Hyaluronic Acid+Caffeine 15 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509520974199",
       "sku": "7007187",
       "title": "Collistar Uomo Perfect Adherence Shaving Foam 200 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509521039735",
       "sku": "7003013",
       "title": "Collistar Uomo Tonifying Showergel 250 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509521138039",
       "sku": "7003025",
       "title": "Collistar Uomo Freshness Deodorant Roll-on 75 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509521203575",
       "sku": "7007193",
       "title": "Collistar Uomo Multi-Active Deodorant 48H Dry Spray 125 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509521367415",
       "sku": "7003027",
       "title": "Collistar Uomo 24 Hour Freshness Deodorant 100 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509521465719",
       "sku": "7003037",
       "title": "Collistar Uomo Shower Shampoo 3 in 1 250 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509521564023",
       "sku": "28545",
       "title": "Collistar Uomo Acqua Attiva EDT 100 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509521695095",
       "sku": "28546",
       "title": "Collistar Uomo Acqua Attiva Shower-Shampoo 250 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509521793399",
       "sku": "28547",
       "title": "Collistar Uomo Acqua Vetiver EDT 100 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509521924471",
       "sku": "28548",
       "title": "Collistar Uomo Acqua Vetiver Shower-Shampoo 250 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509522022775",
       "sku": "28549",
       "title": "Collistar Uomo Acqua Wood EDT 100 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509522121079",
       "sku": "28550",
       "title": "Collistar Uomo Acqua Wood Shower-Shampoo 250 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509522219383",
       "sku": "28558",
       "title": "Collistar Uomo Shaving Cream 200 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509522317687",
       "sku": "28559",
       "title": "Collistar Uomo Cleansing Scrub Face and Beard 100 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
-      "hits": []
+      "status": "beperkt",
+      "hits": [
+        {
+          "inci": "Salicylic Acid",
+          "cas": "69-72-7",
+          "annex": "III",
+          "ref": "(EU) 2022/1176",
+          "note": "Beperkt — max. conc. per producttype",
+          "via": "INCI"
+        }
+      ]
     },
     {
       "id": "gid://shopify/Product/15509522383223",
       "sku": "28560",
       "title": "Collistar Uomo Face and Beard Oil 30 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509522579831",
       "sku": "7002591",
       "title": "Collistar Uomo Men Anti-Age Mattifying Cream-Gel 50 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
-      "hits": []
+      "status": "beperkt",
+      "hits": [
+        {
+          "inci": "Salicylic Acid",
+          "cas": "69-72-7",
+          "annex": "III",
+          "ref": "(EU) 2022/1176",
+          "note": "Beperkt — max. conc. per producttype",
+          "via": "INCI"
+        }
+      ]
     },
     {
       "id": "gid://shopify/Product/15509522678135",
       "sku": "7008630",
       "title": "Collistar Uomo Hydra Daily Protective Moisturizer Cream 80ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509522776439",
       "sku": "28525",
       "title": "Collistar Uomo Hydra Total Freshness Moisturizer 80 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509523038583",
       "sku": "28526",
       "title": "Collistar Uomo Hydra Oil Free Moisturizer 80 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509523169655",
       "sku": "28082",
       "title": "Collistar Uomo Magic Drops Face For Men  30 ml",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
@@ -48749,7 +48911,7 @@
     },
     {
       "id": "gid://shopify/Product/15509527200119",
-      "sku": "13341",
+      "sku": "",
       "title": "Collistar Sun Compact Foundation Refill 01 - Elba",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48758,7 +48920,7 @@
     },
     {
       "id": "gid://shopify/Product/15509527232887",
-      "sku": "13342",
+      "sku": "",
       "title": "Collistar Sun Compact Foundation Refill 02 - Ischia",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48767,7 +48929,7 @@
     },
     {
       "id": "gid://shopify/Product/15509527265655",
-      "sku": "13343",
+      "sku": "",
       "title": "Collistar Sun Compact Foundation Refill 03 - Capri",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48776,7 +48938,7 @@
     },
     {
       "id": "gid://shopify/Product/15509527331191",
-      "sku": "13344",
+      "sku": "",
       "title": "Collistar Sun Compact Foundation Refill 04 - Pantelleria",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -48877,9 +49039,9 @@
       "id": "gid://shopify/Product/15509528117623",
       "sku": "7008097",
       "title": "Collistar Setting Spray Impeccabile Cipria",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
@@ -48940,18 +49102,18 @@
       "id": "gid://shopify/Product/15509529198967",
       "sku": "7008150",
       "title": "Collistar Loose Powder Matte Impeccabile 01",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509529461111",
       "sku": "7008120",
       "title": "Collistar Loose Powder Luminous Impeccabile 02",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
@@ -49003,27 +49165,27 @@
       "id": "gid://shopify/Product/15509530182007",
       "sku": "7008118",
       "title": "Collistar Magica Bronzing Loose Powder",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509530247543",
       "sku": "7008090",
       "title": "Collistar Contour Stick Twist Velvet 01",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509530280311",
       "sku": "7008091",
       "title": "Collistar Bronzer Stick Twist Velvet 02",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
@@ -49082,7 +49244,7 @@
     },
     {
       "id": "gid://shopify/Product/15509530673527",
-      "sku": "7005841",
+      "sku": "",
       "title": "Collistar Twist Glowy Blush 01 - Supernova",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49091,7 +49253,7 @@
     },
     {
       "id": "gid://shopify/Product/15509530739063",
-      "sku": "7005851",
+      "sku": "",
       "title": "Collistar Twist Glowy Blush 02 - Eterea",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49100,7 +49262,7 @@
     },
     {
       "id": "gid://shopify/Product/15509530804599",
-      "sku": "7005853",
+      "sku": "",
       "title": "Collistar Twist Glowy Blush 03 - Venere",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49109,7 +49271,7 @@
     },
     {
       "id": "gid://shopify/Product/15509530837367",
-      "sku": "7005854",
+      "sku": "",
       "title": "Collistar Twist Glowy Blush 04 - Mira",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49118,7 +49280,7 @@
     },
     {
       "id": "gid://shopify/Product/15509530870135",
-      "sku": "7005855",
+      "sku": "",
       "title": "Collistar Twist Glowy Highlighter 01 - Sole",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49127,7 +49289,7 @@
     },
     {
       "id": "gid://shopify/Product/15509530902903",
-      "sku": "7005856",
+      "sku": "",
       "title": "Collistar Twist Glowy Highlighter 02 - Luna",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49262,7 +49424,7 @@
     },
     {
       "id": "gid://shopify/Product/15509532508535",
-      "sku": "15710",
+      "sku": "",
       "title": "Collistar Professional Kajal Pencil 1 - Nero",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49271,7 +49433,7 @@
     },
     {
       "id": "gid://shopify/Product/15509532541303",
-      "sku": "15711",
+      "sku": "",
       "title": "Collistar Professional Kajal Pencil 2 - Marrone",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49280,7 +49442,7 @@
     },
     {
       "id": "gid://shopify/Product/15509532574071",
-      "sku": "15713",
+      "sku": "",
       "title": "Collistar Professional Kajal Pencil 3 - Burro",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49289,7 +49451,7 @@
     },
     {
       "id": "gid://shopify/Product/15509532639607",
-      "sku": "7007156",
+      "sku": "",
       "title": "Collistar Twist Design Eye Pencil 01 - Eclipse Black Matte",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49298,7 +49460,7 @@
     },
     {
       "id": "gid://shopify/Product/15509532672375",
-      "sku": "7007157",
+      "sku": "",
       "title": "Collistar Twist Design Eye Pencil 02 - Espresso Brown Matte",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49307,7 +49469,7 @@
     },
     {
       "id": "gid://shopify/Product/15509532705143",
-      "sku": "7007158",
+      "sku": "",
       "title": "Collistar Twist Design Eye Pencil 03 - Ultramarine Blue Mat.",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49316,7 +49478,7 @@
     },
     {
       "id": "gid://shopify/Product/15509532737911",
-      "sku": "7007159",
+      "sku": "",
       "title": "Collistar Twist Design Eye Pencil 05 - Emerald Green Shimmer",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49325,7 +49487,7 @@
     },
     {
       "id": "gid://shopify/Product/15509532836215",
-      "sku": "7007160",
+      "sku": "",
       "title": "Collistar Twist Design Eye Pencil 04 - Imperial Violet Matte",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49334,7 +49496,7 @@
     },
     {
       "id": "gid://shopify/Product/15509532868983",
-      "sku": "7007161",
+      "sku": "",
       "title": "Collistar Twist Design Eye Pencil 06 - Ethereal Silver Shim.",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49343,7 +49505,7 @@
     },
     {
       "id": "gid://shopify/Product/15509532901751",
-      "sku": "7010430",
+      "sku": "",
       "title": "Collistar Twist Design Eye Pencil 07 - Bronzo Aureao Shim.",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49352,7 +49514,7 @@
     },
     {
       "id": "gid://shopify/Product/15509532967287",
-      "sku": "7010414",
+      "sku": "",
       "title": "Collistar Twist Design Eye Pencil 08 - Burgundy Reale Mat.",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49361,7 +49523,7 @@
     },
     {
       "id": "gid://shopify/Product/15509533000055",
-      "sku": "7010431",
+      "sku": "",
       "title": "Collistar Twist Design Eye Pencil 09 - Taupe Lunare Shim.",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49370,7 +49532,7 @@
     },
     {
       "id": "gid://shopify/Product/15509533065591",
-      "sku": "7010432",
+      "sku": "",
       "title": "Collistar Twist Design Eye Pencil 10 - Viola Astrale Shim.",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49381,7 +49543,7 @@
       "id": "gid://shopify/Product/15509533098359",
       "sku": "7008337",
       "title": "Collistar Double Pencil Sharpener",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -49424,7 +49586,7 @@
     },
     {
       "id": "gid://shopify/Product/15509533426039",
-      "sku": "15995",
+      "sku": "",
       "title": "Collistar Professional Tinted Eyebrow Gel 1 - Bionda",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49433,7 +49595,7 @@
     },
     {
       "id": "gid://shopify/Product/15509533458807",
-      "sku": "15996",
+      "sku": "",
       "title": "Collistar Professional Tinted Eyebrow Gel 2 - Castano",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49442,7 +49604,7 @@
     },
     {
       "id": "gid://shopify/Product/15509533491575",
-      "sku": "15997",
+      "sku": "",
       "title": "Collistar Professional Tinted Eyebrow Gel 3 - Bruno",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49561,7 +49723,7 @@
       "id": "gid://shopify/Product/15509534212471",
       "sku": "16000",
       "title": "Collistar Mascara Impeccable Black",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -49570,7 +49732,7 @@
       "id": "gid://shopify/Product/15509534245239",
       "sku": "16010",
       "title": "Collistar Mascara Impeccabile Waterproof Black",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -49579,16 +49741,16 @@
       "id": "gid://shopify/Product/15509534376311",
       "sku": "13290",
       "title": "Collistar Mascara Base Milk-Mint Impeccabile",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
-      "status": "geen-inci",
+      "status": "ok",
       "hits": []
     },
     {
       "id": "gid://shopify/Product/15509534769527",
       "sku": "7005723",
       "title": "Collistar Mascara Base Strawberry-Cream Impeccabile",
-      "brand": "BYLEIJTENS",
+      "brand": "Collistar",
       "image": null,
       "status": "geen-inci",
       "hits": []
@@ -49784,7 +49946,7 @@
     },
     {
       "id": "gid://shopify/Product/15509536801143",
-      "sku": "7007127",
+      "sku": "",
       "title": "Collistar Twist Design Lip Pencil 171 - Granato Rosso",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49793,7 +49955,7 @@
     },
     {
       "id": "gid://shopify/Product/15509536833911",
-      "sku": "7007128",
+      "sku": "",
       "title": "Collistar Twist Design Lip Pencil 166 - Zaffiro Rosa",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49802,7 +49964,7 @@
     },
     {
       "id": "gid://shopify/Product/15509536866679",
-      "sku": "7007129",
+      "sku": "",
       "title": "Collistar Twist Design Lip Pencil 8 - Rosa Cameo",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49811,7 +49973,7 @@
     },
     {
       "id": "gid://shopify/Product/15509536964983",
-      "sku": "7007130",
+      "sku": "",
       "title": "Collistar Twist Design Lip Pencil 113 - Autumn Berry",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49820,7 +49982,7 @@
     },
     {
       "id": "gid://shopify/Product/15509537030519",
-      "sku": "7007131",
+      "sku": "",
       "title": "Collistar Twist Design Lip Pencil 2 - Terracotta",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49829,7 +49991,7 @@
     },
     {
       "id": "gid://shopify/Product/15509537096055",
-      "sku": "7007132",
+      "sku": "",
       "title": "Collistar Twist Design Lip Pencil 13 - Cameo",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49838,7 +50000,7 @@
     },
     {
       "id": "gid://shopify/Product/15509537128823",
-      "sku": "7007133",
+      "sku": "",
       "title": "Collistar Twist Design Lip Pencil 1 - Naturale",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49847,7 +50009,7 @@
     },
     {
       "id": "gid://shopify/Product/15509537194359",
-      "sku": "7007134",
+      "sku": "",
       "title": "Collistar Twist Design Lip Pencil 164 - Quarzo Rosa",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49856,7 +50018,7 @@
     },
     {
       "id": "gid://shopify/Product/15509537227127",
-      "sku": "7007135",
+      "sku": "",
       "title": "Collistar Twist Design Lip Pencil  5 - Rosa del Deserto",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49865,7 +50027,7 @@
     },
     {
       "id": "gid://shopify/Product/15509537259895",
-      "sku": "7007136",
+      "sku": "",
       "title": "Collistar Twist Design Lip Pencil 161 - Perla Rosa",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49874,7 +50036,7 @@
     },
     {
       "id": "gid://shopify/Product/15509537325431",
-      "sku": "7007137",
+      "sku": "",
       "title": "Collistar Twist Design Lip Pencil 109 - Papavero Ipnotico",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49883,7 +50045,7 @@
     },
     {
       "id": "gid://shopify/Product/15509537390967",
-      "sku": "7007138",
+      "sku": "",
       "title": "Collistar Twist Design Lip Pencil 112 - Iris Fiorentino",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49892,7 +50054,7 @@
     },
     {
       "id": "gid://shopify/Product/15509537423735",
-      "sku": "7007139",
+      "sku": "",
       "title": "Collistar Twist Design Lip Pencil 172 - Zircone Rosa",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49901,7 +50063,7 @@
     },
     {
       "id": "gid://shopify/Product/15509537456503",
-      "sku": "7007140",
+      "sku": "",
       "title": "Collistar Twist Design Lip Pencil 111 - Rosso Milano",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49910,7 +50072,7 @@
     },
     {
       "id": "gid://shopify/Product/15509537522039",
-      "sku": "7007141",
+      "sku": "",
       "title": "Collistar Twist Design Lip Pencil 16 - Rubino",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49919,7 +50081,7 @@
     },
     {
       "id": "gid://shopify/Product/15509537554807",
-      "sku": "7007142",
+      "sku": "",
       "title": "Collistar Twist Design Lip Pencil 175 - Rubino Rosso",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49928,7 +50090,7 @@
     },
     {
       "id": "gid://shopify/Product/15509537587575",
-      "sku": "7007144",
+      "sku": "",
       "title": "Collistar Twist Design Lip Pencil 114 - Warm Mauve",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49937,7 +50099,7 @@
     },
     {
       "id": "gid://shopify/Product/15509537653111",
-      "sku": "7007145",
+      "sku": "",
       "title": "Collistar Twist Design Lip Pencil 167 - Tormalina Rossa",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49946,7 +50108,7 @@
     },
     {
       "id": "gid://shopify/Product/15509537685879",
-      "sku": "7007146",
+      "sku": "",
       "title": "Collistar Twist Design Lip Pencil 3 - Mattone",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -49955,7 +50117,7 @@
     },
     {
       "id": "gid://shopify/Product/15509537718647",
-      "sku": "7007147",
+      "sku": "",
       "title": "Collistar Twist Design Lip Pencil 4 - Caffè",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50459,7 +50621,7 @@
     },
     {
       "id": "gid://shopify/Product/15509541421431",
-      "sku": "7003948",
+      "sku": "",
       "title": "Collistar Twist Balmy Gloss 201 - Perla",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50468,7 +50630,7 @@
     },
     {
       "id": "gid://shopify/Product/15509541486967",
-      "sku": "7003951",
+      "sku": "",
       "title": "Collistar Twist Balmy Gloss 203 - Legno Di Rosa",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50477,7 +50639,7 @@
     },
     {
       "id": "gid://shopify/Product/15509541552503",
-      "sku": "7003953",
+      "sku": "",
       "title": "Collistar Twist Balmy Gloss 208 - Ciliegia",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50486,7 +50648,7 @@
     },
     {
       "id": "gid://shopify/Product/15509541585271",
-      "sku": "7003950",
+      "sku": "",
       "title": "Collistar Twist Balmy Gloss 211 - Mou",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50495,7 +50657,7 @@
     },
     {
       "id": "gid://shopify/Product/15509541618039",
-      "sku": "7003952",
+      "sku": "",
       "title": "Collistar Twist Balmy Gloss 212 - Marshallow",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50504,7 +50666,7 @@
     },
     {
       "id": "gid://shopify/Product/15509541683575",
-      "sku": "7003955",
+      "sku": "",
       "title": "Collistar Twist Balmy Gloss 214 - Burgundy",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50513,7 +50675,7 @@
     },
     {
       "id": "gid://shopify/Product/15509541716343",
-      "sku": "7003956",
+      "sku": "",
       "title": "Collistar Twist Balmy Gloss 215 - Berry Kiss",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50522,7 +50684,7 @@
     },
     {
       "id": "gid://shopify/Product/15509541781879",
-      "sku": "7003954",
+      "sku": "",
       "title": "Collistar Twist Balmy Gloss 216 - Rosé",
       "brand": "BYLEIJTENS",
       "image": null,
@@ -50948,8 +51110,8 @@
       "sku": "16132",
       "title": "Bjorn Axen Extra Matt Clay Super Strong Hold Vegan 80 ml",
       "brand": "Bjorn Axen",
-      "image": null,
-      "status": "geen-inci",
+      "image": "https://cdn.shopify.com/s/files/1/0946/5600/4471/files/mattwaxclayvegan.bjornaxen.png?v=1785318413",
+      "status": "ok",
       "hits": []
     },
     {
@@ -51146,6 +51308,159 @@
       "sku": "15830",
       "title": "Collistar Professional Eye Pencil",
       "brand": "Collistar",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520727433591",
+      "sku": "15710",
+      "title": "Collistar Professional Kajal Pencil",
+      "brand": "Collistar",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520727662967",
+      "sku": "15995",
+      "title": "Collistar Professional Tinted Eyebrow Gel",
+      "brand": "Collistar",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520730939767",
+      "sku": "59573936",
+      "title": "LABEL.M Organic Orange Blossom Volumising Shampoo 1000 ml",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520733167991",
+      "sku": "13341",
+      "title": "Collistar Sun Compact Foundation Refill",
+      "brand": "Collistar",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520734642551",
+      "sku": "26243",
+      "title": "Collistar Tanning Moisturizing Milk Spray 200 ml",
+      "brand": "Collistar",
+      "image": null,
+      "status": "ok",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520736838007",
+      "sku": "26034",
+      "title": "Collistar Supertanning Moisturizing Dry Oil 200 ml",
+      "brand": "Collistar",
+      "image": null,
+      "status": "ok",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520737624439",
+      "sku": "7003948",
+      "title": "Collistar Twist Balmy Gloss",
+      "brand": "Collistar",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520768360823",
+      "sku": "7007156",
+      "title": "Collistar Twist Design Eye Pencil",
+      "brand": "Collistar",
+      "image": null,
+      "status": "ok",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520775340407",
+      "sku": "7007133",
+      "title": "Collistar Twist Design Lip Pencil",
+      "brand": "Collistar",
+      "image": null,
+      "status": "ok",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520791396727",
+      "sku": "7005841",
+      "title": "Collistar Twist Glowy Blush",
+      "brand": "Collistar",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520849199479",
+      "sku": "7005855",
+      "title": "Collistar Twist Glowy Highlighter",
+      "brand": "Collistar",
+      "image": null,
+      "status": "ok",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520853361015",
+      "sku": "26251",
+      "title": "Collistar Active Protect. Milk Spray Ultra-Rapid 200 ml",
+      "brand": "Collistar",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15520870072695",
+      "sku": "26200",
+      "title": "Collistar Active Protection Sun Cream Face-Body 150 ml",
+      "brand": "Collistar",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15521225048439",
+      "sku": "437270",
+      "title": "PURA TESTER Concealer Stick Bio",
+      "brand": "Formula Pura",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15521320599927",
+      "sku": "26070",
+      "title": "Collistar Moisturizing Tanning Spray 200 ml",
+      "brand": "Collistar",
+      "image": null,
+      "status": "ok",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15521810579831",
+      "sku": "PF019293",
+      "title": "ALFAPARF KT Curl Design Move Fixer 1000ml",
+      "brand": "Alfaparf",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15521811693943",
+      "sku": "PF019977",
+      "title": "ALFAPARF KT Curl Design Move Creamy Protector 300ml",
+      "brand": "BYLEIJTENS",
       "image": null,
       "status": "geen-inci",
       "hits": []
