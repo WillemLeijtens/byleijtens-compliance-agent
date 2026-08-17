@@ -7,7 +7,8 @@
   "scripts": {
     "sync": "node src/index.js",
     "update-list": "node src/update-list.js",
-    "dashboard": "node server.js"
+    "dashboard": "node server.js",
+    "test": "node --test test/*.test.js"
   },
   "engines": {
     "node": ">=18"
