@@ -109,7 +109,22 @@ function sanitizeToken(raw) {
  * Update-knop niet werkt als je de app rechtstreeks op poort 3000 opent, en
  * dat is precies de bedoeling.
  */
-const ADMIN_GROUP = process.env.COMPLIANCE_ADMIN_GROUP || "app-compliance-admins";
+/**
+ * Wie de scan mag starten. Twee namen, want het platform maakt per app alleen
+ * de users-groep aan; het admin_group-veld uit het register belandt nooit in
+ * de identityprovider. app-compliance-admins bestaat dus niet, en een controle
+ * die alleen daarnaar keek sloot iedereen buiten — ook de beheerder.
+ *
+ * platform-admins is de groep achter het vinkje "Beheerder" in het portaal en
+ * bestaat wél. app-compliance-admins blijft erbij staan zodat de controle
+ * vanzelf fijnmaziger wordt zodra het platform die groep wél aanmaakt.
+ */
+const ADMIN_GROUPS = String(
+  process.env.COMPLIANCE_ADMIN_GROUPS || "app-compliance-admins,platform-admins"
+)
+  .split(",")
+  .map((g) => g.trim())
+  .filter(Boolean);
 
 function identiteit(req) {
   // authentik scheidt groepen met een pipe; sommige opstellingen met komma.
@@ -121,7 +136,7 @@ function identiteit(req) {
   return {
     gebruiker: String(req.headers["x-authentik-username"] || "").trim() || "onbekend",
     groepen,
-    isAdmin: groepen.includes(ADMIN_GROUP)
+    isAdmin: groepen.some((g) => ADMIN_GROUPS.includes(g))
   };
 }
 
@@ -301,10 +316,10 @@ const server = http.createServer((req, res) => {
     }
 
     if (!wie.isAdmin) {
-      console.warn(`[audit] workflow-start GEWEIGERD (geen ${ADMIN_GROUP}) door ${wie.gebruiker}`);
+      console.warn(`[audit] workflow-start GEWEIGERD (geen ${ADMIN_GROUPS.join(" of ")}) door ${wie.gebruiker}`);
       res.writeHead(403, { "Content-Type": "application/json" });
       res.end(JSON.stringify({
-        error: `Alleen leden van ${ADMIN_GROUP} mogen de scan starten. Rapporten bekijken mag wel.`
+        error: `Alleen beheerders mogen de scan starten (${ADMIN_GROUPS.join(" of ")}). Rapporten bekijken mag wel.`
       }));
       return;
     }
