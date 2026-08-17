@@ -122,22 +122,27 @@ test("workflow starten vereist de adminsgroep", async () => {
     headers: { "x-authentik-username": "viewer", "x-authentik-groups": "app-compliance-users" }
   });
   assert.strictEqual(viewer.status, 403);
-  assert.match(viewer.body, /app-compliance-admins/);
+  assert.match(viewer.body, /beheerders/);
 });
 
 test("een admin komt langs de autorisatie heen", async () => {
-  const res = await haal("/api/trigger-workflow", {
-    method: "POST",
-    headers: {
-      "x-authentik-username": "beheerder",
-      "x-authentik-groups": "app-compliance-users|app-compliance-admins"
-    }
-  });
+  // Beide beheerdersgroepen geven toegang: platform-admins is het vinkje
+  // "Beheerder" in het portaal, app-compliance-admins bestaat nog niet maar
+  // moet werken zodra het platform hem aanmaakt.
+  for (const groepen of [
+    "app-compliance-users|app-compliance-admins",
+    "app-compliance-users|platform-admins"
+  ]) {
+    const res = await haal("/api/trigger-workflow", {
+      method: "POST",
+      headers: { "x-authentik-username": "beheerder", "x-authentik-groups": groepen }
+    });
 
-  // 400 = "GITHUB_TOKEN niet gezet": de autorisatie is gepasseerd, en de
-  // aanroep naar GitHub is nooit opgebouwd.
-  assert.strictEqual(res.status, 400);
-  assert.match(res.body, /GITHUB_TOKEN/);
+    // 400 = "GITHUB_TOKEN niet gezet": de autorisatie is gepasseerd, en de
+    // aanroep naar GitHub is nooit opgebouwd.
+    assert.strictEqual(res.status, 400, `${groepen} hoort langs de autorisatie te komen`);
+    assert.match(res.body, /GITHUB_TOKEN/);
+  }
 });
 
 test("een POST vanaf een andere site wordt geweigerd", async () => {
