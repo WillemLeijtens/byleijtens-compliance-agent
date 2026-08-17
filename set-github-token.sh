@@ -72,9 +72,23 @@ rm -f /tmp/.tokentest
 echo "✅ Token werkt."
 
 cd "$APP_DIR"
+
+# pm2 neemt de omgeving over van het moment van 'start'; een latere 'restart'
+# ziet nieuwe variabelen niet. Daarom hier delete + start, met HOST erbij.
+#
+# HOST bepaalt waaraan de server bindt. Zonder waarde is dat loopback, en dan
+# kan de gateway er niet bij — zet hem op het privé (VPC) adres van deze
+# Droplet. Aan alle interfaces binden hoort niet: dan luistert de app ook op
+# het publieke adres en is de cloudfirewall het enige dat bezoek tegenhoudt.
+BIND_HOST="${HOST:-127.0.0.1}"
+echo "   Bindadres: $BIND_HOST"
+
 pm2 delete compliance-agent 2>/dev/null || true
-GITHUB_TOKEN="$TOKEN" GITHUB_REPOSITORY="$REPO" pm2 start server.js --name compliance-agent
+HOST="$BIND_HOST" GITHUB_TOKEN="$TOKEN" GITHUB_REPOSITORY="$REPO" \
+  pm2 start server.js --name compliance-agent
 pm2 save
 
 echo ""
-echo "✅ Token gezet en app herstart. Test de 'Update'-knop op http://$(curl -s --max-time 10 ifconfig.me)"
+echo "✅ Token gezet en app herstart. Open de app via het portaal om de"
+echo "   'Update'-knop te testen; die vereist lidmaatschap van"
+echo "   app-compliance-admins en werkt niet buiten de gateway om."

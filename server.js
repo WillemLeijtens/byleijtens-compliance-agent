@@ -7,6 +7,20 @@ const { exec } = require("child_process");
 const PORT = process.env.PORT || 3000;
 
 /**
+ * Het adres waarop de server luistert. Standaard alleen loopback.
+ *
+ * Hiervoor gaf server.listen() geen adres mee, waardoor Node aan álle
+ * interfaces bond — inclusief het publieke adres van de Droplet. De app stond
+ * daarmee op het open internet te luisteren en alleen de cloudfirewall hield
+ * bezoek tegen; één verkeerde regel daar en de app lag open.
+ *
+ * In productie hoort HOST het privé (VPC) adres te zijn, zodat uitsluitend de
+ * gateway erbij kan. Vergeet je HOST te zetten, dan is de app onbereikbaar in
+ * plaats van publiek bereikbaar: dat is de goede kant om te falen.
+ */
+const HOST = process.env.HOST || "127.0.0.1";
+
+/**
  * De expliciete allowlist van bestanden die deze server mag uitleveren.
  *
  * Hiervoor bouwde de statische handler het pad op met
@@ -421,7 +435,11 @@ function toonStartbanner() {
   const cleanToken = sanitizeToken(rawToken);
   const stripped = rawToken.length - cleanToken.length;
 
-  console.log(`\n📊 Compliance Dashboard: http://localhost:${PORT}`);
+  console.log(`\n📊 Compliance Dashboard: http://${HOST}:${PORT}`);
+  if (HOST === "0.0.0.0" || HOST === "::") {
+    console.log("  ⚠ Luistert op ALLE interfaces, dus ook op het publieke adres.");
+    console.log("    Zet HOST op het privé (VPC) adres zodat alleen de gateway erbij kan.");
+  }
   if (!cleanToken) {
     console.log("GitHub Token: ❌ Niet gezet");
   } else {
@@ -437,7 +455,7 @@ function toonStartbanner() {
 // requiren dezelfde server en kiezen zelf een vrije poort, zodat ze de echte
 // request-afhandeling toetsen in plaats van een nagebouwde variant.
 if (require.main === module) {
-  server.listen(PORT, toonStartbanner);
+  server.listen(PORT, HOST, toonStartbanner);
 }
 
 module.exports = { server, resolveStatic, identiteit, zelfdeOorsprong, STATIC_FILES };
