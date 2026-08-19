@@ -1,14 +1,14 @@
 {
-  "lastScan": "2026-08-04T07:41:55.407Z",
+  "lastScan": "2026-08-19T11:55:56.443Z",
   "counts": {
     "verboden": 8,
     "beperkt": 77,
     "ok": 2519,
-    "geen-inci": 2858,
-    "totaal": 5462
+    "geen-inci": 2906,
+    "totaal": 5510
   },
   "storeDomain": "leijtens.myshopify.com",
-  "shopifyTotalCount": 5462,
+  "shopifyTotalCount": 5510,
   "violations": [
     {
       "id": "gid://shopify/Product/15246707392887",
@@ -51460,6 +51460,438 @@
       "id": "gid://shopify/Product/15521811693943",
       "sku": "PF019977",
       "title": "ALFAPARF KT Curl Design Move Creamy Protector 300ml",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15523649192311",
+      "sku": "9895901",
+      "title": "Mavala DISPLAY Lip Balm Neutral 9 stuks",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15528473067895",
+      "sku": "",
+      "title": "ALFAPARF SDL Advent Calendar Snowy Fairy Tale 2026",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15528473624951",
+      "sku": "",
+      "title": "ALFAPARF SDL Advent Calendar Snowy Fairy Tale 2026",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15528474116471",
+      "sku": "",
+      "title": "ALFAPARF SDL Advent Calendar Snowy Fairy Tale 2026",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15528533131639",
+      "sku": "",
+      "title": "Paraffine Sokken Set 1 paar",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15528732754295",
+      "sku": "29300",
+      "title": "Wetbrush RETAIL Curl Shaper Black",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15528748876151",
+      "sku": "",
+      "title": "ALFAPARF SDL Advent Calendar Snowy Fairy Tale 2026",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15528749039991",
+      "sku": "",
+      "title": "ALFAPARF SDL Advent Calendar Snowy Fairy Tale 2026",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15529244885367",
+      "sku": "29304",
+      "title": "Wetbrush PRO Detangler Pattern Poise - Leopard",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15529249898871",
+      "sku": "",
+      "title": "Wetbrush EPIC Deluxe Detangler Black",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15529295118711",
+      "sku": "29305",
+      "title": "Wetbrush PRO Detangler Pattern Poise - Cheetah",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15529295184247",
+      "sku": "29306",
+      "title": "Wetbrush PRO Detangler Rodeo Rebel - Sweet Cherry",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15529295217015",
+      "sku": "29307",
+      "title": "Wetbrush PRO Detangler Rodeo Rebel - Lucky Charm",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15529295413623",
+      "sku": "29308",
+      "title": "Wetbrush PRO Mini Detangler Rodeo Rebel - Sweet Cherry",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15533004620151",
+      "sku": "388862",
+      "title": "Deborah Milano 24Ore Perfect Fluid Concealer 3.2, Vanilla",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15533004685687",
+      "sku": "",
+      "title": "Deborah Milano TESTER 24Ore Perfect Fluid Concealer 3.2",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15535084863863",
+      "sku": "",
+      "title": "Mavala INSERT Mavalip (16 kleuren + testers) (1/2)",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536011706743",
+      "sku": "300025",
+      "title": "Teaology SAMPLE PAKKET",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536059285879",
+      "sku": "T50437",
+      "title": "Teaology Tea Glow Anti Blemish Stick Concealer 6,6 gr",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536059416951",
+      "sku": "T50652",
+      "title": "Teaology Tea Balm Trio",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536059515255",
+      "sku": "T50395",
+      "title": "Teaology VALUE PACK Matcha Hydrogel Eye Patch",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536059679095",
+      "sku": "P50676",
+      "title": "Teaology TESTER Tea Glow Anti Blemish Stick Concealer 6,6 gr",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536063381879",
+      "sku": "P50677",
+      "title": "Teaology  DISPLAY Tea Glow Anti Blemish Stick Concealer",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536063480183",
+      "sku": "T50658",
+      "title": "Teaology XMAS Matcha Tea Firming Ritual",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536063578487",
+      "sku": "T50659",
+      "title": "Teaology XMAS Peach Tea Hydrating Ritual",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536063611255",
+      "sku": "T50660",
+      "title": "Teaology XMAS Jasmine Tea Hydrating Hand & Body Ritual",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536063971703",
+      "sku": "T50684",
+      "title": "Teaology XMAS Matcha Skincare Ritual",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536066789751",
+      "sku": "T50662",
+      "title": "Teaology XMAS Matcha Perfecting Set",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536066855287",
+      "sku": "T50670",
+      "title": "Teaology XMAS Peptide Volume Lip Set - Sugar",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536066888055",
+      "sku": "T50671",
+      "title": "Teaology XMAS Peptide Volume Lip Set - Berry",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536066953591",
+      "sku": "T50661",
+      "title": "Teaology XMAS Hand & Nail Cream Tea Collection",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536067543415",
+      "sku": "T50385",
+      "title": "Teaology XMAS Advent Calendar - 12 days of Christmas",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536136126839",
+      "sku": "HOLTX26",
+      "title": "Patchology Holiday Treats 2026",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536136257911",
+      "sku": "MTHK26",
+      "title": "Patchology Mistletoes 2026",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536136290679",
+      "sku": "PTW26",
+      "title": "Patchology Patching All The Way 2026",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536143565175",
+      "sku": "98096507036",
+      "title": "Mavala DISPLAY MAESTRA Color's (6 x 6 stuks)",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536143729015",
+      "sku": "90096507",
+      "title": "Mavala Mini Color 507, Capri 5 ml",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536143925623",
+      "sku": "90096508",
+      "title": "Mavala Mini Color 508, Montreux 5 ml",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536144154999",
+      "sku": "90096509",
+      "title": "Mavala Mini Color 509, Medellin 5 ml",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536144351607",
+      "sku": "90096510",
+      "title": "Mavala Mini Color 510, San Francisco 5 ml",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536148775287",
+      "sku": "90096511",
+      "title": "Mavala Mini Color 511, Bratislava 5 ml",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536148808055",
+      "sku": "90096512",
+      "title": "Mavala Mini Color 512, Rotterdam 5 ml",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536148939127",
+      "sku": "8391507",
+      "title": "Mavala PLASTIC NAIL 507",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536149037431",
+      "sku": "8391508",
+      "title": "Mavala PLASTIC NAIL 508",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536149070199",
+      "sku": "8391509",
+      "title": "Mavala PLASTIC NAIL 509",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536149135735",
+      "sku": "8391510",
+      "title": "Mavala PLASTIC NAIL 510",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536149168503",
+      "sku": "8391511",
+      "title": "Mavala PLASTIC NAIL 511",
+      "brand": "BYLEIJTENS",
+      "image": null,
+      "status": "geen-inci",
+      "hits": []
+    },
+    {
+      "id": "gid://shopify/Product/15536149234039",
+      "sku": "8391512",
+      "title": "Mavala PLASTIC NAIL 512",
       "brand": "BYLEIJTENS",
       "image": null,
       "status": "geen-inci",
