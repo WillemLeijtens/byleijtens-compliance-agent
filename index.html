@@ -1,842 +1,811 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="nl" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Compliance Agent — By Leijtens</title>
+  <title>Merkenplatform — By Leijtens</title>
   <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&display=swap" rel="stylesheet">
+  <script>
+    // Thema zetten vóór de eerste verf, anders flitst de pagina in het
+    // verkeerde thema (patroon uit de Retailer Console).
+    try {
+      var t = localStorage.getItem('bl-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  </script>
   <style>
     /* ==========================================================
-       By Leijtens — design tokens (from Compliance Agent UI-upgrade)
-       Only two background colors exist: hoofdkleur (dark) and paper
-       (light). --bl-accent is strictly for hairlines, small dot
-       indicators and labels — never buttons or large fills.
+       Thema — 1:1 overgenomen uit de Retailer Console
+       (console/frontend/src/ds/theme.css). Beide sets, licht en
+       donker, zodat een thema wisselen alleen andere waarden is.
 
-       NOTE: "The Seasons" is intentionally NOT self-hosted here — the
-       .ttf supplied in the design handoff is a watermarked demo/trial
-       cut (renders a "DEMO" glyph inside numerals). Falls back to
-       Cormorant Garamond (Google Fonts) until a licensed copy is
-       provided. Montserrat below is the free/SIL-licensed variable
-       font and is safe to self-host.
+       The Seasons ontbreekt bewust: de enige beschikbare cut is een
+       demoversie die een "DEMO"-teken in cijfers rendert. Koppen
+       vallen terug op Cormorant Garamond tot er een licentie is.
        ========================================================== */
-
-    /* Montserrat — body & labels. */
     @font-face {
       font-family: "Montserrat";
       src: url("assets/fonts/Montserrat-VariableFont_wght.ttf") format("truetype-variations"),
            url("assets/fonts/Montserrat-VariableFont_wght.ttf") format("truetype");
-      font-weight: 100 900;
-      font-style: normal;
-      font-display: swap;
+      font-weight: 100 900; font-style: normal; font-display: swap;
     }
 
-    :root {
-      --bl-hoofdkleur: #0E323B;
-      --bl-paper: #F8F5F5;
-      --bl-gray-700: #7E8D92;
-      --bl-gray-400: #BAC3C8;
-      --bl-gray-200: #EAEFF1;
-      --bl-white: #FFFFFF;
-      --bl-accent: #FF914D;
-
-      --fg-1: var(--bl-hoofdkleur);
-      --fg-3: var(--bl-gray-700);
-      --fg-4: var(--bl-gray-400);
-      --border-soft: var(--bl-gray-400);
-
-      --font-display: "The Seasons", "Cormorant Garamond", "Playfair Display", Georgia, serif;
-      --font-label: "Montserrat", "Futura PT", -apple-system, Arial, sans-serif;
-      --font-body: "Montserrat", "Inter", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
-      --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-
-      --tracking-display: 0.08em;
-      --tracking-label: 0.15em;
-      --tracking-eyebrow: 0.18em;
-
-      --shadow-1: 0 1px 2px rgba(26, 58, 56, 0.06);
-      --shadow-2: 0 4px 16px rgba(26, 58, 56, 0.08);
+    :root, html[data-theme="light"] {
+      --t-bg:#F8F5F5; --t-card:#FFFFFF; --t-card2:#EAEFF1; --t-border:rgba(14,50,59,0.12);
+      --t-fg:#0E323B; --t-fg2:#546E77; --t-fg3:#7E8D92; --t-meta:#657378;
+      --t-shadow:0 4px 16px rgba(26,58,56,0.08);
+      --t-sidebar:#0E323B; --t-sidebar-fg:#F8F5F5; --t-sidebar-fg2:#BAC3C8;
+      --t-sidebar-hover:rgba(248,245,245,0.09); --t-sidebar-active:rgba(248,245,245,0.14);
+      --t-grid:#EAEFF1;
+      --c-y1:#6B7F8C; --c-y2:#1E88C7; --c-y3:#17A184;
+      --pos:#178F73; --neg:#C7563B; --warn:#B4690E;
+      --pos-text:#147D65; --neg-text:#B94E35; --warn-text:#A15E0D;
     }
+    html[data-theme="dark"] {
+      --t-bg:#0E323B; --t-card:#12404C; --t-card2:#0B2A32; --t-border:rgba(248,245,245,0.10);
+      --t-fg:#F8F5F5; --t-fg2:#BAC3C8; --t-fg3:#7E8D92; --t-meta:#9CA8AC;
+      --t-shadow:0 4px 16px rgba(0,0,0,0.18);
+      --t-sidebar:#0B2A32; --t-sidebar-fg:#F8F5F5; --t-sidebar-fg2:#BAC3C8;
+      --t-sidebar-hover:rgba(248,245,245,0.07); --t-sidebar-active:rgba(248,245,245,0.12);
+      --t-grid:rgba(248,245,245,0.08);
+      --c-y1:#5E7684; --c-y2:#3FB0E8; --c-y3:#55D6B8;
+      --pos:#2FBF9B; --neg:#DB6E52; --warn:#D9A03F;
+      --pos-text:#2FBF9B; --neg-text:#E38E78; --warn-text:#D9A03F;
+    }
+    /* Accent uitsluitend voor haarlijnen, markers en kleine labels —
+       nooit knoppen of vlakken. */
+    :root { --accent:#FF914D; }
 
+    html { background: var(--t-bg); }
     * { box-sizing: border-box; }
     [v-cloak] { display: none; }
+    body {
+      margin:0; background:var(--t-bg); color:var(--t-fg);
+      font-family:"Montserrat", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+      font-size:13.5px; line-height:1.6; -webkit-font-smoothing:antialiased;
+    }
+    a { color:var(--t-fg); text-decoration:none; border-bottom:1px solid var(--accent); transition:opacity 160ms ease; }
+    a:hover { opacity:0.7; }
+    ::selection { background:var(--accent); color:#fff; }
 
-    html, body {
-      margin: 0;
-      font-family: var(--font-body);
-      font-size: 15px;
-      line-height: 1.6;
-      color: var(--fg-1);
-      background: var(--bl-paper);
-      -webkit-font-smoothing: antialiased;
+    .mp-h1 {
+      font-family:"The Seasons","Cormorant Garamond",Georgia,serif; font-weight:400;
+      text-transform:uppercase; font-size:27px; letter-spacing:0.06em; margin:0 0 6px; color:var(--t-fg);
+    }
+    .mp-h2 { font-family:"The Seasons","Cormorant Garamond",Georgia,serif; font-weight:400; font-size:17px; letter-spacing:0.04em; margin:0 0 12px; color:var(--t-fg); }
+    .mp-sub { color:var(--t-meta); font-size:11.5px; margin:0; }
+    .mp-eyebrow { font-weight:600; font-size:9.5px; letter-spacing:0.18em; text-transform:uppercase; color:var(--t-meta); }
+
+    /* --- Shell ------------------------------------------------------- */
+    .mp-shell { display:flex; min-height:100vh; }
+    .mp-nav {
+      width:248px; flex:0 0 248px; position:sticky; top:0; height:100vh; overflow-y:auto;
+      background:var(--t-sidebar); color:var(--t-sidebar-fg); display:flex; flex-direction:column; padding:24px 0 16px;
+    }
+    .mp-navitem {
+      display:block; width:100%; text-align:left; border:0; background:none; cursor:pointer;
+      color:var(--t-sidebar-fg); padding:9px 24px; font-family:inherit; font-weight:500;
+      font-size:12px; letter-spacing:0.06em; transition:background 180ms ease;
+    }
+    .mp-navitem:hover { background:var(--t-sidebar-hover); }
+    .mp-navitem.is-active { background:var(--t-sidebar-active); }
+    .mp-navitem.is-sub { padding-left:48px; color:var(--t-sidebar-fg2); }
+    .mp-navgroup {
+      display:flex; align-items:center; gap:6px; padding:14px 24px 6px; color:var(--t-sidebar-fg2);
+      font-weight:600; font-size:9.5px; letter-spacing:0.18em; text-transform:uppercase;
+    }
+    .mp-sig { padding:20px 24px 8px; font-family:"Brittany Signature",cursive; font-size:21px; color:var(--t-sidebar-fg2); }
+
+    .mp-tabs {
+      display:flex; gap:4px; padding:14px 40px 0; background:var(--t-card);
+      border-bottom:1px solid var(--t-border); flex-wrap:wrap;
+    }
+    .mp-tab {
+      display:flex; align-items:center; gap:8px; border:0; background:none; padding:10px 14px 12px;
+      cursor:pointer; font-family:inherit; font-weight:500; font-size:12px; letter-spacing:0.05em;
+      color:var(--t-meta); border-bottom:2px solid transparent; transition:background 160ms ease, color 160ms ease;
+    }
+    .mp-tab:hover { background:var(--t-card2); }
+    .mp-tab.is-active { color:var(--t-fg); border-bottom-color:var(--t-fg); }
+    .mp-tabmeta { font-size:9.5px; letter-spacing:0.12em; color:var(--t-meta); }
+    .mp-dot { width:7px; height:7px; border-radius:50%; display:inline-block; flex-shrink:0; }
+
+    .mp-main { max-width:1360px; padding:34px 40px 60px; }
+    @media (max-width: 720px) {
+      .mp-shell { flex-direction:column; }
+      .mp-nav { width:100%; flex:none; position:static; height:auto; padding:16px 0; }
+      .mp-main { padding:24px 18px 48px; }
+      .mp-tabs { padding:12px 18px 0; }
     }
 
-    ::selection { background: var(--bl-accent); color: #fff; }
-
-    .ca-wrap { max-width: 1140px; margin: 0 auto; padding: 40px 24px 64px; }
-    @media (min-width: 640px) { .ca-wrap { padding: 56px 40px 80px; } }
-
-    .ca-header {
-      display: flex; align-items: flex-start; justify-content: space-between;
-      gap: 24px; flex-wrap: wrap; padding-bottom: 28px; border-bottom: 1px solid var(--border-soft);
+    /* --- Bouwstenen -------------------------------------------------- */
+    .mp-card { background:var(--t-card); border:1px solid var(--t-border); border-radius:8px; padding:22px 24px; box-shadow:var(--t-shadow); }
+    .mp-card2 { background:var(--t-card2); border-radius:6px; padding:16px 18px; }
+    .mp-btn {
+      font-family:inherit; font-weight:500; font-size:12px; letter-spacing:0.15em; text-transform:uppercase;
+      padding:13px 24px; border-radius:6px; border:1px solid var(--t-fg); background:var(--t-fg);
+      color:var(--t-bg); cursor:pointer; transition:opacity 180ms ease; white-space:nowrap;
     }
-    .ca-eyebrow {
-      font-family: var(--font-label); font-size: 11px; font-weight: 500;
-      letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--fg-3); margin-bottom: 8px;
+    .mp-btn:hover:not(:disabled) { opacity:0.82; }
+    .mp-btn:disabled { opacity:0.5; cursor:default; }
+    .mp-btn-ghost { background:transparent; color:var(--t-fg); }
+    .mp-btn-ghost:hover:not(:disabled) { opacity:0.6; }
+    .mp-input, .mp-select, .mp-textarea {
+      font-family:inherit; font-size:14px; color:var(--t-fg); background:var(--t-card);
+      border:1px solid var(--t-border); border-radius:6px; padding:11px 12px; outline:none; width:100%;
     }
-    .ca-h1 {
-      font-family: var(--font-display); font-weight: 400; font-size: 30px;
-      letter-spacing: var(--tracking-display); text-transform: uppercase;
-      line-height: 1.05; color: var(--fg-1); margin: 0 0 10px;
-    }
-    @media (min-width: 640px) { .ca-h1 { font-size: 38px; } }
-    .ca-sub { font-family: var(--font-body); font-size: 13px; color: var(--fg-3); }
+    .mp-input:focus, .mp-select:focus, .mp-textarea:focus { border-color:var(--t-fg); }
+    .mp-textarea { font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:13px; min-height:130px; resize:vertical; }
+    .mp-label { font-weight:500; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--t-meta); }
+    .mp-field { display:flex; flex-direction:column; gap:8px; }
 
-    .ca-btn-primary {
-      font-family: var(--font-label); font-size: 12px; font-weight: 500;
-      letter-spacing: var(--tracking-label); text-transform: uppercase;
-      padding: 14px 26px; border-radius: 6px; border: 1px solid var(--bl-hoofdkleur);
-      background: var(--bl-hoofdkleur); color: var(--bl-paper); cursor: pointer;
-      transition: opacity 180ms ease; white-space: nowrap;
-    }
-    .ca-btn-primary:hover:not(:disabled) { opacity: 0.82; }
-    .ca-btn-primary:disabled { opacity: 0.6; cursor: default; }
+    .mp-badge { font-weight:500; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; padding:6px 12px; border-radius:999px; flex:none; }
+    .mp-badge-verboden { background:var(--t-fg); color:var(--t-bg); border:1px solid var(--t-fg); }
+    .mp-badge-beperkt { background:transparent; color:var(--t-fg); border:1px solid var(--accent); }
+    .mp-badge-neutraal { background:var(--t-card2); color:var(--t-fg); border:1px solid transparent; }
 
-    .ca-statusrow { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; padding: 20px 0 32px; }
-    .ca-statusrow .ca-divider { width: 1px; height: 14px; background: var(--border-soft); }
-    .ca-dot { width: 6px; height: 6px; border-radius: 999px; display: inline-block; flex-shrink: 0; }
-    .ca-connlabel {
-      display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-label);
-      font-size: 11px; font-weight: 500; letter-spacing: var(--tracking-label); text-transform: uppercase;
+    .mp-pill { display:inline-flex; align-items:center; gap:8px; font-size:12px; color:var(--t-fg); border:1px solid var(--t-border); border-radius:999px; padding:6px 14px; }
+    .mp-mono { font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:11.5px; }
+    .mp-lege {
+      background:var(--t-card); border:1.5px dashed var(--t-border); border-radius:8px;
+      padding:40px 24px; color:var(--t-meta); font-size:13px;
     }
-    .ca-meta { font-size: 13px; color: var(--fg-3); }
-    .ca-pill {
-      display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: var(--fg-1);
-      border: 1px solid var(--border-soft); border-radius: 999px; padding: 6px 14px; text-decoration: none;
-    }
-    a.ca-pill:hover { opacity: 0.75; }
-    .ca-pill .ca-dot { border-radius: 999px; width: 6px; height: 6px; }
-
-    .ca-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 32px; }
-    @media (min-width: 640px) { .ca-cards { grid-template-columns: repeat(4, 1fr); } }
-    .ca-card {
-      background: var(--bl-white); border: 1px solid var(--border-soft); border-top: 1px solid var(--border-soft);
-      border-radius: 8px; padding: 20px 22px; cursor: pointer; text-align: left; width: 100%;
-      transition: border-color 160ms ease; box-shadow: var(--shadow-1); font: inherit; color: inherit;
-    }
-    .ca-card:hover { border-color: var(--bl-hoofdkleur); }
-    .ca-card.is-active { border-color: var(--bl-hoofdkleur); border-top-color: var(--bl-accent); border-top-width: 2px; padding-top: 19px; }
-    .ca-card-label {
-      font-family: var(--font-label); font-size: 10px; letter-spacing: var(--tracking-eyebrow);
-      text-transform: uppercase; color: var(--fg-3); margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
-    }
-    .ca-card-value { font-family: var(--font-display); font-size: 30px; letter-spacing: 0.02em; }
-    @media (min-width: 640px) { .ca-card-value { font-size: 34px; } }
-
-    .ca-panel { background: var(--bl-white); border: 1px solid var(--border-soft); border-radius: 8px; padding: 22px 24px; margin-bottom: 32px; box-shadow: var(--shadow-1); }
-    @media (min-width: 640px) { .ca-panel { padding: 26px 28px; } }
-    .ca-panel-title { font-family: var(--font-label); font-size: 11px; font-weight: 500; letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--fg-3); margin-bottom: 20px; }
-    .ca-filters-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-    @media (min-width: 900px) { .ca-filters-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; } }
-    .ca-field { display: flex; flex-direction: column; gap: 8px; }
-    .ca-field-label { font-family: var(--font-label); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-3); }
-    .ca-input, .ca-select {
-      font-family: var(--font-body); font-size: 14px; color: var(--fg-1); background: var(--bl-white);
-      border: 1px solid var(--border-soft); border-radius: 6px; padding: 11px 12px; outline: none; width: 100%;
-    }
-    .ca-input:focus, .ca-select:focus { border-color: var(--bl-hoofdkleur); }
-    .ca-select {
-      appearance: none; padding-right: 34px;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0L5 6L10 0' fill='%230E323B'/%3E%3C/svg%3E");
-      background-repeat: no-repeat; background-position: right 14px center;
-    }
-
-    .ca-resultcount { font-size: 13px; color: var(--fg-3); margin-bottom: 16px; }
-
-    .ca-empty { background: var(--bl-white); border: 1px dashed var(--border-soft); border-radius: 8px; padding: 56px 24px; text-align: center; color: var(--fg-3); font-size: 14px; }
-
-    .ca-list { display: flex; flex-direction: column; gap: 14px; }
-    .ca-row { background: var(--bl-white); border: 1px solid var(--border-soft); border-radius: 8px; padding: 20px 22px; box-shadow: var(--shadow-1); }
-    @media (min-width: 640px) { .ca-row { padding: 22px 24px; } }
-    .ca-row-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-    .ca-row-main { display: flex; gap: 16px; align-items: flex-start; min-width: 0; }
-    .ca-avatar {
-      width: 48px; height: 48px; border-radius: 6px; background: var(--bl-gray-200); color: var(--fg-3);
-      display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 16px;
-      flex: none; object-fit: cover; border: 1px solid var(--border-soft);
-    }
-    .ca-row-title { font-size: 15px; font-weight: 500; color: var(--fg-1); margin-bottom: 4px; }
-    .ca-row-meta { font-size: 12.5px; color: var(--fg-3); }
-    .ca-row-link { font-size: 12.5px; color: var(--fg-1); border-bottom: 1px solid var(--bl-accent); display: inline-block; margin-top: 6px; }
-    .ca-row-link:hover { opacity: 0.7; }
-
-    .ca-badge {
-      flex: none; font-family: var(--font-label); font-size: 10px; font-weight: 500;
-      letter-spacing: var(--tracking-label); text-transform: uppercase; padding: 6px 12px; border-radius: 999px;
-    }
-    .ca-badge-verboden { background: var(--bl-hoofdkleur); color: var(--bl-paper); border: 1px solid var(--bl-hoofdkleur); }
-    .ca-badge-beperkt { background: transparent; color: var(--bl-hoofdkleur); border: 1px solid var(--bl-accent); }
-    .ca-badge-neutral { background: var(--bl-gray-200); color: var(--fg-1); border: 1px solid transparent; }
-
-    .ca-ingredient { background: var(--bl-gray-200); border-radius: 6px; padding: 16px 18px; margin-top: 16px; }
-    .ca-ingredient-name { font-size: 13.5px; font-weight: 500; color: var(--fg-1); margin-bottom: 6px; }
-    .ca-ingredient-meta { font-family: var(--font-mono); font-size: 11.5px; color: var(--fg-3); margin-bottom: 4px; }
-    .ca-ingredient-note { font-size: 12.5px; margin-bottom: 6px; }
-    .ca-ingredient-via { font-size: 11px; color: var(--fg-4); text-transform: uppercase; letter-spacing: 0.08em; }
-
-    .ca-disclaimer { font-size: 12px; color: var(--fg-3); background: var(--bl-gray-200); border-radius: 6px; padding: 12px 14px; margin-top: 12px; }
-    .ca-disclaimer a { color: var(--fg-1); border-bottom: 1px solid var(--bl-accent); }
-    .ca-disclaimer a:hover { opacity: 0.7; }
-
-    .ca-footer { text-align: center; margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border-soft); font-size: 12px; color: var(--fg-4); }
-
-    /* --- Tabbladen --------------------------------------------------- */
-    .ca-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border-soft); margin: 28px 0 0; flex-wrap: wrap; }
-    .ca-tab {
-      font-family: var(--font-label); font-size: 11px; font-weight: 500;
-      letter-spacing: var(--tracking-label); text-transform: uppercase;
-      padding: 12px 18px; background: none; border: none; border-bottom: 2px solid transparent;
-      color: var(--fg-3); cursor: pointer; transition: color 160ms ease, border-color 160ms ease;
-      margin-bottom: -1px;
-    }
-    .ca-tab:hover { color: var(--fg-1); }
-    .ca-tab.is-active { color: var(--fg-1); border-bottom-color: var(--bl-accent); }
-
-    /* --- Handmatige check -------------------------------------------- */
-    .ca-textarea {
-      font-family: var(--font-mono); font-size: 13px; line-height: 1.6; color: var(--fg-1);
-      background: var(--bl-white); border: 1px solid var(--border-soft); border-radius: 6px;
-      padding: 12px 14px; outline: none; width: 100%; min-height: 130px; resize: vertical;
-    }
-    .ca-textarea:focus { border-color: var(--bl-hoofdkleur); }
-    .ca-btn-ghost {
-      font-family: var(--font-label); font-size: 12px; font-weight: 500;
-      letter-spacing: var(--tracking-label); text-transform: uppercase;
-      padding: 14px 22px; border-radius: 6px; border: 1px solid var(--bl-hoofdkleur);
-      background: transparent; color: var(--bl-hoofdkleur); cursor: pointer; transition: opacity 180ms ease;
-    }
-    .ca-btn-ghost:hover:not(:disabled) { opacity: 0.6; }
-    .ca-btn-ghost:disabled { opacity: 0.4; cursor: default; }
-    .ca-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 18px; }
-
-    .ca-ing-row {
-      display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
-      padding: 12px 0; border-bottom: 1px solid var(--bl-gray-200);
-    }
-    .ca-ing-row:last-child { border-bottom: none; }
-    .ca-ing-name { font-size: 14px; color: var(--fg-1); font-weight: 500; }
-    .ca-ing-detail { font-size: 12px; color: var(--fg-3); margin-top: 3px; }
-    .ca-ing-detail code { font-family: var(--font-mono); font-size: 11.5px; }
-
-    .ca-saved-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-    .ca-linkbtn {
-      background: none; border: none; padding: 0; cursor: pointer; font-family: var(--font-body);
-      font-size: 12.5px; color: var(--fg-3); border-bottom: 1px solid var(--bl-accent);
-    }
-    .ca-linkbtn:hover { color: var(--fg-1); }
   </style>
 </head>
 <body>
-  <div id="app" v-cloak>
-    <div class="ca-wrap">
+  <div id="app" v-cloak class="mp-shell">
 
-      <!-- Header -->
-      <div class="ca-header">
-        <div>
-          <img src="assets/logo-dark.svg" alt="By Leijtens" style="height:18px;width:auto;margin-bottom:20px;display:block" />
-          <div class="ca-eyebrow">Compliance</div>
-          <h1 class="ca-h1">Compliance Agent</h1>
-          <div class="ca-sub">EU Verordening (EG) 1223/2009 · Annex II &amp; III</div>
-        </div>
-        <button v-if="tab === 'catalogus'" @click="triggerWorkflow" :disabled="workflowLoading" class="ca-btn-primary">
-          {{ workflowLoading ? 'Bijwerken…' : 'Update' }}
+    <!-- ================= Zijbalk ================= -->
+    <nav class="mp-nav">
+      <div style="padding:0 24px 24px">
+        <img src="assets/logo-white.svg" alt="By Leijtens" style="width:132px;display:block" />
+      </div>
+
+      <button class="mp-navitem" :class="{ 'is-active': scherm === 'overzicht' }" @click="ga('overzicht')">Overzicht</button>
+
+      <div class="mp-navgroup">
+        <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 L5 6.5 L8 3.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        Compliance agent
+      </div>
+      <button class="mp-navitem is-sub" :class="{ 'is-active': scherm === 'catalogus' }" @click="ga('catalogus')">Shopify-catalogus</button>
+      <button class="mp-navitem is-sub" :class="{ 'is-active': scherm === 'inci' }" @click="ga('inci')">Handmatige INCI-check</button>
+
+      <div class="mp-navgroup">
+        <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 L5 6.5 L8 3.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        Doorverkoop
+      </div>
+      <button class="mp-navitem is-sub" :class="{ 'is-active': scherm === 'doorverkoop' }" @click="ga('doorverkoop')">Analyse per merk</button>
+
+      <div class="mp-navgroup">
+        <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 L5 6.5 L8 3.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        Contract agent
+      </div>
+      <button class="mp-navitem is-sub" :class="{ 'is-active': scherm === 'contract' }" @click="ga('contract')">Contracten &amp; signalen</button>
+
+      <button class="mp-navitem" style="margin-top:14px" :class="{ 'is-active': scherm === 'instellingen' }" @click="ga('instellingen')">Instellingen</button>
+
+      <div style="margin-top:auto">
+        <button class="mp-navitem" style="font-size:11px;letter-spacing:0.12em" @click="wisselThema">
+          {{ thema === 'dark' ? 'Licht thema' : 'Donker thema' }}
+        </button>
+        <div class="mp-sig">Willem Leijtens</div>
+      </div>
+    </nav>
+
+    <div style="flex:1;min-width:0">
+
+      <!-- ================= Merk-tabs ================= -->
+      <div class="mp-tabs">
+        <button class="mp-tab" :class="{ 'is-active': merk === 'alle' }" @click="kiesMerk('alle')">Alle merken</button>
+        <button
+          v-for="m in merkTabs" :key="m.naam"
+          class="mp-tab" :class="{ 'is-active': merk === m.naam }"
+          @click="kiesMerk(m.naam)"
+        >
+          <span class="mp-dot" :style="{ background: m.dotKleur }"></span>
+          {{ m.naam }}
+          <span class="mp-tabmeta">{{ m.meta }}</span>
         </button>
       </div>
 
-      <!-- Tabbladen -->
-      <div class="ca-tabs">
-        <button type="button" class="ca-tab" :class="{ 'is-active': tab === 'catalogus' }" @click="tab = 'catalogus'">
-          Shopify-catalogus
-        </button>
-        <button type="button" class="ca-tab" :class="{ 'is-active': tab === 'handmatig' }" @click="tab = 'handmatig'">
-          Handmatige INCI-check
-        </button>
-      </div>
+      <main class="mp-main">
 
-      <!-- ============ TABBLAD 1: Shopify-catalogus ============ -->
-      <!-- Status row -->
-      <div class="ca-statusrow" v-show="tab === 'catalogus'">
-        <span class="ca-connlabel" :style="{ color: connectionTextColor }">
-          <span class="ca-dot" :style="{ background: connectionDotColor }"></span>
-          {{ connectionLabel }}
-        </span>
-        <span class="ca-divider"></span>
-        <span class="ca-meta">Laatst gescand: <strong style="color:var(--fg-1);font-weight:500">{{ lastScanText }}</strong></span>
+        <!-- ============ Shopify-catalogus ============ -->
+        <template v-if="scherm === 'catalogus'">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap">
+            <div>
+              <h1 class="mp-h1">Shopify&#8209;catalogus</h1>
+              <p class="mp-sub">EU Verordening (EG) 1223/2009 · Annex II t/m VI<span v-if="merk !== 'alle'"> · gefilterd op {{ merk }}</span></p>
+            </div>
+            <button class="mp-btn" :disabled="workflowLoading" @click="triggerWorkflow">
+              {{ workflowLoading ? 'Bijwerken…' : 'Update' }}
+            </button>
+          </div>
 
-        <template v-if="status && status.lastRun">
-          <span class="ca-divider"></span>
-          <a class="ca-pill" :href="status.lastRun.url" target="_blank" rel="noopener noreferrer">
-            <span class="ca-dot" :style="{ border: '1px solid ' + runDotColor, background: 'transparent' }"></span>
-            Laatste run — {{ runLabel }}
-          </a>
-        </template>
+          <!-- statusregel -->
+          <div style="display:flex;align-items:center;flex-wrap:wrap;gap:14px;padding:20px 0 28px">
+            <span style="display:inline-flex;align-items:center;gap:8px;font-weight:500;font-size:11px;letter-spacing:0.15em;text-transform:uppercase"
+                  :style="{ color: shopifyOk ? 'var(--t-fg)' : 'var(--accent)' }">
+              <span class="mp-dot" :style="{ background: shopifyOk ? 'var(--pos)' : 'var(--accent)' }"></span>
+              {{ shopifyLabel }}
+            </span>
+            <span style="width:1px;height:14px;background:var(--t-border)"></span>
+            <span class="mp-sub" style="font-size:13px">Laatst gescand: <strong style="font-weight:500;color:var(--t-fg)">{{ laatsteScanTekst }}</strong></span>
 
-        <template v-if="data && data.shopifyTotalCount != null">
-          <span class="ca-divider"></span>
-          <span class="ca-pill" :title="'App: ' + (data.counts.totaal || 0) + ' geanalyseerd — Shopify: ' + data.shopifyTotalCount + ' op moment van laatste scan'">
-            <span class="ca-dot" :style="{ border: '1px solid ' + countDotColor, background: 'transparent' }"></span>
-            {{ data.counts.totaal || 0 }} / {{ data.shopifyTotalCount }} producten
-          </span>
-        </template>
+            <template v-if="status && status.lastRun">
+              <span style="width:1px;height:14px;background:var(--t-border)"></span>
+              <a class="mp-pill" :href="status.lastRun.url" target="_blank" rel="noopener noreferrer" style="border-bottom-color:var(--t-border)">
+                <span class="mp-dot" :style="{ border: '1px solid ' + runDotKleur, background:'transparent' }"></span>
+                Laatste run — {{ runLabel }}
+              </a>
+            </template>
 
-        <template v-if="data && data.prohibitedList">
-          <span class="ca-divider"></span>
-          <span class="ca-pill" :title="lijstTitel">
-            <span class="ca-dot" :style="{ border: '1px solid ' + (lijstGelijk ? 'var(--bl-hoofdkleur)' : 'var(--bl-accent)'), background: 'transparent' }"></span>
-            Stoffenlijst: {{ data.prohibitedList.count }}
-            <template v-if="!lijstGelijk"> — wijkt af</template>
-          </span>
-        </template>
+            <template v-if="data && data.shopifyTotalCount != null">
+              <span style="width:1px;height:14px;background:var(--t-border)"></span>
+              <span class="mp-pill">{{ data.counts.totaal || 0 }} / {{ data.shopifyTotalCount }} producten</span>
+            </template>
 
-        <span v-if="workflowError" class="ca-meta" style="color:var(--bl-accent)">{{ workflowError }}</span>
-        <span v-if="workflowSuccess" class="ca-meta">Workflow gestart.</span>
-      </div>
+            <template v-if="data && data.prohibitedList">
+              <span style="width:1px;height:14px;background:var(--t-border)"></span>
+              <span class="mp-pill" :title="lijstTitel">
+                <span class="mp-dot" :style="{ border:'1px solid ' + (lijstGelijk ? 'var(--t-fg)' : 'var(--accent)'), background:'transparent' }"></span>
+                Stoffenlijst: {{ data.prohibitedList.count }}<template v-if="!lijstGelijk"> — wijkt af</template>
+              </span>
+            </template>
 
-      <!-- Summary cards -->
-      <div v-if="data && tab === 'catalogus'" class="ca-cards">
-        <button type="button" @click="filters.status = ''" class="ca-card" :class="{ 'is-active': filters.status === '' }">
-          <div class="ca-card-label">Totaal</div>
-          <div class="ca-card-value">{{ data.counts.totaal || 0 }}</div>
-        </button>
-        <button type="button" @click="filters.status = 'verboden'" class="ca-card" :class="{ 'is-active': filters.status === 'verboden' }">
-          <div class="ca-card-label">Verboden (II)</div>
-          <div class="ca-card-value">{{ data.counts.verboden }}</div>
-        </button>
-        <button type="button" @click="filters.status = 'beperkt'" class="ca-card" :class="{ 'is-active': filters.status === 'beperkt' }">
-          <div class="ca-card-label">Beperkt (III) <span class="ca-dot" style="background:var(--bl-accent)"></span></div>
-          <div class="ca-card-value">{{ data.counts.beperkt }}</div>
-        </button>
-        <button type="button" @click="filters.status = 'geen-inci'" class="ca-card" :class="{ 'is-active': filters.status === 'geen-inci' }">
-          <div class="ca-card-label">Geen INCI</div>
-          <div class="ca-card-value">{{ data.counts["geen-inci"] }}</div>
-        </button>
-      </div>
+            <span v-if="workflowError" class="mp-sub" style="color:var(--neg-text)">{{ workflowError }}</span>
+            <span v-if="workflowSuccess" class="mp-sub">Workflow gestart.</span>
+          </div>
 
-      <!-- Filters -->
-      <div class="ca-panel" v-show="tab === 'catalogus'">
-        <div class="ca-panel-title">Filters</div>
-        <div class="ca-filters-grid">
-          <label class="ca-field">
-            <span class="ca-field-label">Status</span>
-            <select v-model="filters.status" class="ca-select">
-              <option value="">Alles (bevindingen)</option>
-              <option value="verboden">Verboden</option>
-              <option value="beperkt">Beperkt</option>
-              <option value="geen-inci">Geen INCI</option>
-            </select>
-          </label>
-          <label class="ca-field">
-            <span class="ca-field-label">Merk</span>
-            <input v-model="filters.brand" type="text" placeholder="Zoek merk…" class="ca-input" />
-          </label>
-          <label class="ca-field">
-            <span class="ca-field-label">Ingrediënt</span>
-            <input v-model="filters.inci" type="text" placeholder="Zoek ingrediënt…" class="ca-input" />
-          </label>
-          <label class="ca-field">
-            <span class="ca-field-label">Sorteer op</span>
-            <select v-model="filters.sortBy" class="ca-select">
-              <option value="naam">Productnaam</option>
-              <option value="merk">Merk</option>
-              <option value="ernst">Ernst</option>
-            </select>
-          </label>
-        </div>
-      </div>
+          <!-- tellerkaarten -->
+          <div v-if="data" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:28px">
+            <button v-for="k in tellerKaarten" :key="k.status" class="mp-card"
+                    style="cursor:pointer;text-align:left;font:inherit;color:inherit;transition:border-color 160ms ease"
+                    :style="{ borderTop: '2px solid ' + k.rand, paddingTop: '21px' }"
+                    @click="filters.status = k.status">
+              <div class="mp-eyebrow" style="margin-bottom:10px">{{ k.label }}</div>
+              <div style="font-family:'The Seasons','Cormorant Garamond',Georgia,serif;font-size:32px;letter-spacing:0.02em">{{ k.waarde }}</div>
+            </button>
+          </div>
 
-      <div class="ca-resultcount" v-show="tab === 'catalogus'">{{ filteredViolations.length }} van {{ totalForCurrentFilter }} producten getoond</div>
+          <!-- filters -->
+          <div class="mp-card" style="margin-bottom:28px">
+            <div class="mp-eyebrow" style="margin-bottom:18px">Filters</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px">
+              <label class="mp-field">
+                <span class="mp-label">Status</span>
+                <select v-model="filters.status" class="mp-select">
+                  <option value="">Alles (bevindingen)</option>
+                  <option value="verboden">Verboden</option>
+                  <option value="beperkt">Beperkt</option>
+                  <option value="geen-inci">Geen INCI</option>
+                </select>
+              </label>
+              <label class="mp-field">
+                <span class="mp-label">Merk</span>
+                <input v-model="filters.brand" type="text" placeholder="Zoek merk…" class="mp-input" />
+              </label>
+              <label class="mp-field">
+                <span class="mp-label">Ingrediënt</span>
+                <input v-model="filters.inci" type="text" placeholder="Zoek ingrediënt…" class="mp-input" />
+              </label>
+              <label class="mp-field">
+                <span class="mp-label">Sorteer op</span>
+                <select v-model="filters.sortBy" class="mp-select">
+                  <option value="naam">Productnaam</option>
+                  <option value="merk">Merk</option>
+                  <option value="ernst">Ernst</option>
+                </select>
+              </label>
+            </div>
+          </div>
 
-      <!-- Empty state -->
-      <div v-if="tab === 'catalogus' && filteredViolations.length === 0" class="ca-empty">
-        Geen producten gevonden voor deze filters.
-      </div>
+          <p class="mp-sub" style="margin-bottom:16px">
+            {{ zichtbaar.length }} van {{ gefilterd.length }} getoond<span v-if="gefilterd.length > zichtbaar.length"> — gebruik "Toon meer" onderaan</span>
+          </p>
 
-      <!-- Results -->
-      <div class="ca-list" v-show="tab === 'catalogus'">
-        <div v-for="(violation, idx) in filteredViolations" :key="idx" class="ca-row">
-          <div class="ca-row-top">
-            <div class="ca-row-main">
-              <img v-if="violation.image" :src="violation.image" :alt="violation.title" loading="lazy" class="ca-avatar" />
-              <div v-else class="ca-avatar">{{ initial(violation) }}</div>
-              <div style="min-width:0">
-                <div class="ca-row-title">{{ violation.title }}</div>
-                <div class="ca-row-meta">
-                  <span v-if="violation.sku">SKU: {{ violation.sku }}</span>
-                  <span v-if="violation.brand" style="margin-left:8px">Merk: {{ violation.brand }}</span>
+          <div v-if="gefilterd.length === 0" class="mp-lege" style="text-align:center">
+            Geen producten gevonden voor deze filters.
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div v-for="(v, i) in zichtbaar" :key="i" class="mp-card">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap">
+                <div style="display:flex;gap:16px;align-items:flex-start;min-width:0">
+                  <img v-if="v.image" :src="v.image" :alt="v.title" loading="lazy"
+                       style="width:48px;height:48px;border-radius:6px;object-fit:cover;flex:none;border:1px solid var(--t-border)" />
+                  <div v-else style="width:48px;height:48px;border-radius:6px;background:var(--t-card2);color:var(--t-meta);display:flex;align-items:center;justify-content:center;flex:none;font-family:'The Seasons','Cormorant Garamond',serif;font-size:16px">
+                    {{ initiaal(v) }}
+                  </div>
+                  <div style="min-width:0">
+                    <div style="font-size:15px;font-weight:500;margin-bottom:4px">{{ v.title }}</div>
+                    <div class="mp-sub" style="font-size:12.5px">
+                      <span v-if="v.sku">SKU: {{ v.sku }}</span>
+                      <span v-if="v.brand" style="margin-left:8px">Merk: {{ v.brand }}</span>
+                    </div>
+                    <a v-if="shopifyUrl(v)" :href="shopifyUrl(v)" target="_blank" rel="noopener noreferrer"
+                       style="font-size:12.5px;display:inline-block;margin-top:6px">Bekijk in Shopify ↗</a>
+                  </div>
                 </div>
-                <a v-if="shopifyProductUrl(violation)" :href="shopifyProductUrl(violation)" target="_blank" rel="noopener noreferrer" class="ca-row-link">
-                  Bekijk in Shopify ↗
-                </a>
+                <span class="mp-badge" :class="badgeKlasse(v.status)">{{ statusLabel(v.status) }}</span>
+              </div>
+
+              <div v-for="(h, hi) in v.hits" :key="hi" class="mp-card2" style="margin-top:14px">
+                <div style="font-size:13.5px;font-weight:500;margin-bottom:6px">{{ h.inci }}</div>
+                <div class="mp-mono" style="color:var(--t-meta);margin-bottom:4px">
+                  <span v-if="h.cas">CAS: {{ h.cas }} · </span>Annex {{ h.annex }} · {{ h.ref }}
+                </div>
+                <div v-if="h.note" style="font-size:12.5px;margin-bottom:6px">{{ h.note }}</div>
+                <div style="font-size:11px;color:var(--t-fg3);text-transform:uppercase;letter-spacing:0.08em">Match via {{ h.via }}</div>
+              </div>
+
+              <div v-if="v.status === 'verboden' || v.status === 'beperkt'" class="mp-card2" style="margin-top:12px;font-size:12px;color:var(--t-meta)">
+                INCI op basis van de Shopify-INCI-lijst. Controleer de INCI op het productlabel om zeker te zijn.
+                Dit is slechts een indicatie — controleer op
+                <a href="https://ec.europa.eu/growth/tools-databases/cosing/" target="_blank" rel="noopener noreferrer">CosIng</a>
+                of het ingrediënt echt verboden is, alvorens contact op te nemen met de leverancier.
               </div>
             </div>
-            <span class="ca-badge" :class="statusBadgeClass(violation.status)">{{ statusLabel(violation.status) }}</span>
           </div>
 
-          <div v-for="(hit, hIdx) in violation.hits" :key="hIdx" class="ca-ingredient">
-            <div class="ca-ingredient-name">{{ hit.inci }}</div>
-            <div class="ca-ingredient-meta" v-if="hit.cas">CAS: {{ hit.cas }} · {{ hit.annex }} · {{ hit.ref }}</div>
-            <div class="ca-ingredient-meta" v-else>{{ hit.annex }} · {{ hit.ref }}</div>
-            <div v-if="hit.note" class="ca-ingredient-note" style="color:var(--fg-1)">{{ hit.note }}</div>
-            <div class="ca-ingredient-via">Match via {{ hit.via }}</div>
+          <div v-if="gefilterd.length > zichtbaar.length" style="margin-top:20px;text-align:center">
+            <button class="mp-btn mp-btn-ghost" @click="toonMeer">Toon meer ({{ gefilterd.length - zichtbaar.length }} resterend)</button>
           </div>
+        </template>
 
-          <div v-if="violation.status === 'verboden' || violation.status === 'beperkt'" class="ca-disclaimer">
-            INCI op basis van de Shopify-INCI-lijst. Controleer de INCI op het productlabel om zeker te zijn.
-            Dit is slechts een indicatie — controleer op <a href="https://ec.europa.eu/growth/tools-databases/cosing/" target="_blank" rel="noopener noreferrer">CosIng</a>
-            of het ingrediënt echt verboden is, alvorens contact op te nemen met de leverancier.
-          </div>
-        </div>
-      </div>
-
-      <!-- ============ TABBLAD 2: Handmatige INCI-check ============ -->
-      <div v-show="tab === 'handmatig'">
-
-        <div class="ca-statusrow">
-          <span class="ca-meta">
+        <!-- ============ Handmatige INCI-check ============ -->
+        <template v-if="scherm === 'inci'">
+          <h1 class="mp-h1">Handmatige INCI&#8209;check</h1>
+          <p class="mp-sub">
             Controleer een losse INCI-lijst tegen dezelfde stoffenlijst als de automatische scan.
             Losstaand van de Shopify-catalogus — hier wordt niets uit de productdatabase gelezen of gewijzigd.
-          </span>
-          <template v-if="manual.result && manual.result.prohibitedList">
-            <span class="ca-divider"></span>
-            <span class="ca-meta">Stoffenlijst: {{ manual.result.prohibitedList.count }} stoffen</span>
-          </template>
-        </div>
+          </p>
 
-        <!-- Invoer -->
-        <div class="ca-panel">
-          <div class="ca-panel-title">Nieuwe controle</div>
+          <div class="mp-card" style="margin-top:24px">
+            <div class="mp-eyebrow" style="margin-bottom:18px">Nieuwe controle</div>
 
-          <div class="ca-field" style="margin-bottom:18px">
-            <span class="ca-field-label">Productnaam <span style="text-transform:none;letter-spacing:0">(optioneel)</span></span>
-            <input v-model="manual.productName" type="text" placeholder="Bijv. Teaology Body Cream 260 ml" class="ca-input" />
-          </div>
+            <label class="mp-field" style="margin-bottom:18px">
+              <span class="mp-label">Productnaam <span style="text-transform:none;letter-spacing:0">(optioneel)</span></span>
+              <input v-model="manual.productName" type="text" placeholder="Bijv. Teaology Body Cream 260 ml" class="mp-input" />
+            </label>
 
-          <div class="ca-field">
-            <span class="ca-field-label">INCI-lijst</span>
-            <textarea
-              v-model="manual.inci"
-              class="ca-textarea"
-              placeholder="Plak hier de volledige INCI-lijst, bijvoorbeeld:&#10;Aqua, Glycerin, Butylphenyl Methylpropional, Salicylic Acid, Parfum"
-              @keydown.ctrl.enter="runInciCheck"
-              @keydown.meta.enter="runInciCheck"
-            ></textarea>
-          </div>
+            <label class="mp-field">
+              <span class="mp-label">INCI-lijst</span>
+              <textarea v-model="manual.inci" class="mp-textarea"
+                placeholder="Plak hier de volledige INCI-lijst, bijvoorbeeld:&#10;Aqua, Glycerin, Butylphenyl Methylpropional, Salicylic Acid, Parfum"
+                @keydown.ctrl.enter="doeCheck" @keydown.meta.enter="doeCheck"></textarea>
+            </label>
 
-          <div class="ca-actions">
-            <button class="ca-btn-primary" :disabled="manual.loading || !manual.inci.trim()" @click="runInciCheck">
-              {{ manual.loading ? 'Bezig…' : 'Check' }}
-            </button>
-            <button class="ca-btn-ghost" :disabled="manual.loading" @click="clearInciCheck">Wissen</button>
-            <span v-if="manual.error" class="ca-meta" style="color:var(--bl-accent)">{{ manual.error }}</span>
-            <span v-if="manual.savedNotice" class="ca-meta">{{ manual.savedNotice }}</span>
-          </div>
-        </div>
-
-        <!-- Uitslag -->
-        <div v-if="manual.result" class="ca-panel">
-          <div class="ca-saved-head" style="margin-bottom:18px">
-            <div>
-              <div class="ca-panel-title" style="margin-bottom:6px">Uitslag</div>
-              <div class="ca-row-title">{{ manual.result.productName || 'Naamloos product' }}</div>
-              <div class="ca-row-meta">
-                {{ manual.result.totaal }} ingrediënten ·
-                {{ manual.result.counts.verboden }} verboden ·
-                {{ manual.result.counts.beperkt }} beperkt ·
-                {{ manual.result.counts.ok }} geen match
-              </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:18px">
+              <button class="mp-btn" :disabled="manual.loading || !manual.inci.trim()" @click="doeCheck">
+                {{ manual.loading ? 'Bezig…' : 'Check' }}
+              </button>
+              <button class="mp-btn mp-btn-ghost" :disabled="manual.loading" @click="wisCheck">Wissen</button>
+              <span v-if="manual.error" class="mp-sub" style="color:var(--neg-text)">{{ manual.error }}</span>
+              <span v-if="manual.savedNotice" class="mp-sub">{{ manual.savedNotice }}</span>
             </div>
-            <span class="ca-badge" :class="statusBadgeClass(manual.result.status)">{{ manualStatusLabel(manual.result.status) }}</span>
           </div>
 
-          <div>
-            <div v-for="(ing, i) in manual.result.ingredients" :key="i" class="ca-ing-row">
+          <div v-if="manual.result" class="mp-card" style="margin-top:24px">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px">
+              <div>
+                <div class="mp-eyebrow" style="margin-bottom:6px">Uitslag</div>
+                <div style="font-size:15px;font-weight:500">{{ manual.result.productName || 'Naamloos product' }}</div>
+                <div class="mp-sub" style="font-size:12.5px">
+                  {{ manual.result.totaal }} ingrediënten ·
+                  {{ manual.result.counts.verboden }} verboden ·
+                  {{ manual.result.counts.beperkt }} beperkt ·
+                  {{ manual.result.counts.ok }} geen match
+                </div>
+              </div>
+              <span class="mp-badge" :class="badgeKlasse(manual.result.status)">{{ uitslagLabel(manual.result.status) }}</span>
+            </div>
+
+            <div v-for="(ing, i) in manual.result.ingredients" :key="i"
+                 style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--t-card2)">
               <div style="min-width:0">
-                <div class="ca-ing-name">{{ ing.input }}</div>
-                <div v-if="ing.match" class="ca-ing-detail">
+                <div style="font-size:14px;font-weight:500">{{ ing.input }}</div>
+                <div v-if="ing.match" class="mp-sub" style="font-size:12px;margin-top:3px">
                   Gevonden als <strong style="font-weight:500">{{ ing.match.inci }}</strong>
-                  <span v-if="ing.match.cas"> · CAS <code>{{ ing.match.cas }}</code></span>
+                  <span v-if="ing.match.cas"> · CAS <code class="mp-mono">{{ ing.match.cas }}</code></span>
                   · Annex {{ ing.match.annex }} · {{ ing.match.ref }}
                 </div>
-                <div v-if="ing.match && ing.match.note" class="ca-ing-detail" style="color:var(--fg-1)">{{ ing.match.note }}</div>
-                <div v-if="ing.match" class="ca-ing-detail" style="font-size:11px">Match via {{ ing.match.via }}</div>
-                <div v-else class="ca-ing-detail">Niet gevonden in de controlelijst</div>
+                <div v-if="ing.match && ing.match.note" style="font-size:12px;margin-top:3px">{{ ing.match.note }}</div>
+                <div v-if="ing.match" class="mp-sub" style="font-size:11px;margin-top:3px">Match via {{ ing.match.via }}</div>
+                <div v-else class="mp-sub" style="font-size:12px;margin-top:3px">Niet gevonden in de controlelijst</div>
               </div>
-              <span class="ca-badge" :class="statusBadgeClass(ing.status)">{{ ingLabel(ing.status) }}</span>
+              <span class="mp-badge" :class="badgeKlasse(ing.status)">{{ ingLabel(ing.status) }}</span>
+            </div>
+
+            <div style="margin-top:18px">
+              <button class="mp-btn" :disabled="manual.saving" @click="slaOp">
+                {{ manual.saving ? 'Opslaan…' : 'Opslaan' }}
+              </button>
+            </div>
+
+            <div class="mp-card2" style="margin-top:18px;font-size:12px;color:var(--t-meta)">
+              De controlelijst telt {{ manual.result.listSize }} stoffen uit Annex II t/m VI.
+              <strong style="font-weight:500">"Geen match" betekent niet automatisch dat een ingrediënt is toegestaan</strong> —
+              de app kan geen concentraties of producttypes beoordelen. Controleer de INCI op het productlabel en verifieer op
+              <a href="https://ec.europa.eu/growth/tools-databases/cosing/" target="_blank" rel="noopener noreferrer">CosIng</a>
+              voordat u conclusies trekt of contact opneemt met de leverancier.
             </div>
           </div>
 
-          <div class="ca-actions">
-            <button class="ca-btn-primary" :disabled="manual.saving" @click="saveInciCheck">
-              {{ manual.saving ? 'Opslaan…' : 'Opslaan' }}
-            </button>
+          <p class="mp-sub" style="margin:28px 0 16px">
+            {{ manual.saved.length }} opgeslagen {{ manual.saved.length === 1 ? 'controle' : 'controles' }}
+          </p>
+
+          <div v-if="manual.saved.length === 0" class="mp-lege" style="text-align:center">
+            Nog geen controles opgeslagen. Doe hierboven een check en klik op "Opslaan".
           </div>
 
-          <div class="ca-disclaimer" style="margin-top:18px">
-            De controlelijst bevat een selectie van {{ manual.result.listSize }} stoffen, niet de volledige EU-annexen.
-            <strong style="font-weight:500">"Geen match" betekent dus niet automatisch dat een ingrediënt is toegestaan.</strong>
-            Controleer altijd de INCI op het productlabel en verifieer op
-            <a href="https://ec.europa.eu/growth/tools-databases/cosing/" target="_blank" rel="noopener noreferrer">CosIng</a>
-            voordat u conclusies trekt of contact opneemt met de leverancier.
-          </div>
-        </div>
-
-        <!-- Opgeslagen controles -->
-        <div class="ca-resultcount">{{ manual.saved.length }} opgeslagen {{ manual.saved.length === 1 ? 'controle' : 'controles' }}</div>
-
-        <div v-if="manual.saved.length === 0" class="ca-empty">
-          Nog geen controles opgeslagen. Doe hierboven een check en klik op "Opslaan".
-        </div>
-
-        <div class="ca-list">
-          <div v-for="check in manual.saved" :key="check.id" class="ca-row">
-            <div class="ca-saved-head">
-              <div style="min-width:0">
-                <div class="ca-row-title">{{ check.productName }}</div>
-                <div class="ca-row-meta">
-                  {{ formatDate(check.savedAt) }}
-                  <span v-if="check.savedBy && check.savedBy !== 'onbekend'"> · door {{ check.savedBy }}</span>
-                  · {{ check.totaal }} ingrediënten
-                  · {{ check.counts.verboden }} verboden
-                  · {{ check.counts.beperkt }} beperkt
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div v-for="c in manual.saved" :key="c.id" class="mp-card">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">
+                <div style="min-width:0">
+                  <div style="font-size:15px;font-weight:500">{{ c.productName }}</div>
+                  <div class="mp-sub" style="font-size:12.5px">
+                    {{ formatDatum(c.savedAt) }}
+                    <span v-if="c.savedBy && c.savedBy !== 'onbekend'"> · door {{ c.savedBy }}</span>
+                    · {{ c.totaal }} ingrediënten · {{ c.counts.verboden }} verboden · {{ c.counts.beperkt }} beperkt
+                  </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;flex:none">
+                  <span class="mp-badge" :class="badgeKlasse(c.status)">{{ uitslagLabel(c.status) }}</span>
+                  <button @click="verwijder(c)"
+                          style="background:none;border:0;padding:0;cursor:pointer;font-family:inherit;font-size:12.5px;color:var(--t-meta);border-bottom:1px solid var(--accent)">
+                    Verwijderen
+                  </button>
                 </div>
               </div>
-              <div style="display:flex;align-items:center;gap:12px;flex:none">
-                <span class="ca-badge" :class="statusBadgeClass(check.status)">{{ manualStatusLabel(check.status) }}</span>
-                <button class="ca-linkbtn" @click="deleteInciCheck(check)">Verwijderen</button>
-              </div>
-            </div>
 
-            <div v-for="(ing, i) in check.ingredients.filter(x => x.match)" :key="i" class="ca-ingredient">
-              <div class="ca-ingredient-name">{{ ing.input }}</div>
-              <div class="ca-ingredient-meta">
-                <span v-if="ing.match.cas">CAS: {{ ing.match.cas }} · </span>Annex {{ ing.match.annex }} · {{ ing.match.ref }}
+              <div v-for="(ing, i) in c.ingredients.filter(x => x.match)" :key="i" class="mp-card2" style="margin-top:14px">
+                <div style="font-size:13.5px;font-weight:500;margin-bottom:6px">{{ ing.input }}</div>
+                <div class="mp-mono" style="color:var(--t-meta)">
+                  <span v-if="ing.match.cas">CAS: {{ ing.match.cas }} · </span>Annex {{ ing.match.annex }} · {{ ing.match.ref }}
+                </div>
+                <div v-if="ing.match.note" style="font-size:12.5px;margin-top:4px">{{ ing.match.note }}</div>
               </div>
-              <div v-if="ing.match.note" class="ca-ingredient-note" style="color:var(--fg-1)">{{ ing.match.note }}</div>
-              <div class="ca-ingredient-via">Match via {{ ing.match.via }}</div>
-            </div>
 
-            <details style="margin-top:14px">
-              <summary style="cursor:pointer;font-size:12.5px;color:var(--fg-3)">Volledige INCI-lijst</summary>
-              <div style="font-family:var(--font-mono);font-size:12px;color:var(--fg-3);margin-top:8px;white-space:pre-wrap">{{ check.inci }}</div>
-            </details>
+              <details style="margin-top:14px">
+                <summary style="cursor:pointer;font-size:12.5px;color:var(--t-meta)">Volledige INCI-lijst</summary>
+                <div class="mp-mono" style="color:var(--t-meta);margin-top:8px;white-space:pre-wrap">{{ c.inci }}</div>
+              </details>
+            </div>
           </div>
-        </div>
+        </template>
 
-      </div>
+        <!-- ============ Nog niet aangesloten schermen ============ -->
+        <template v-if="nogNietGebouwd">
+          <h1 class="mp-h1">{{ nogNietGebouwd.titel }}</h1>
+          <p class="mp-sub">{{ nogNietGebouwd.sub }}</p>
 
-      <div class="ca-footer">Dit dashboard toont leesgegevens van de compliance-scans. Wijzigingen start u met de knop "Update".</div>
+          <div class="mp-lege" style="margin-top:24px">
+            <div class="mp-eyebrow" style="margin-bottom:12px">Nog niet aangesloten</div>
+            <p style="margin:0 0 14px;color:var(--t-fg)">{{ nogNietGebouwd.uitleg }}</p>
+            <div class="mp-eyebrow" style="margin-bottom:8px">Hiervoor nodig</div>
+            <ul style="margin:0;padding-left:18px;color:var(--t-meta)">
+              <li v-for="(p, i) in nogNietGebouwd.nodig" :key="i" style="margin-bottom:6px">{{ p }}</li>
+            </ul>
+          </div>
+        </template>
 
+      </main>
     </div>
   </div>
 
   <script>
     const { createApp } = Vue;
 
+    // Schermen die nog geen databron hebben. Bewust géén voorbeeldcijfers:
+    // in een compliance-omgeving is een verzonnen getal dat er echt uitziet
+    // schadelijker dan een leeg scherm.
+    const NIET_AANGESLOTEN = {
+      overzicht: {
+        titel: 'Overzicht',
+        sub: 'Signalen en taken per merk',
+        uitleg: 'Het overzicht vat compliance, doorverkoop en contracten samen per merk. Twee van die drie bronnen bestaan nog niet, dus het scherm zou grotendeels uit placeholders bestaan.',
+        nodig: [
+          'Een takenmodel: wat genereert een taak, welke deadline hoort erbij, en waar worden afgevinkte taken bewaard',
+          'De doorverkoopkoppeling (zie Analyse per merk)',
+          'De contractanalyse (zie Contracten & signalen)'
+        ]
+      },
+      doorverkoop: {
+        titel: 'Analyse per merk',
+        sub: 'Doorverkoopcijfers uit de Retailer Console',
+        uitleg: 'De cijfers komen uit de Retailer Console (repo Data-analytics-internal). Dat endpoint bestaat nog niet en die repo is vanuit deze sessie alleen leesbaar, niet te wijzigen.',
+        nodig: [
+          'Endpoint GET /api/merken/{merk}/doorverkoop in console/backend/main.py — sellout_facts heeft al een merk-index',
+          'Server-side ophalen via 127.0.0.1 (beide apps draaien op deze droplet), zodat er geen CORS speelt en het token op de machine blijft',
+          'Een API-token voor de console, in te stellen bij Instellingen'
+        ]
+      },
+      contract: {
+        titel: 'Contracten & signalen',
+        sub: 'AI-analyse van merkcontracten',
+        uitleg: 'De contractagent leest looptijd, territorium, targets en bijdragen uit een geüpload contract via de Anthropic API.',
+        nodig: [
+          'Een Anthropic API-key, server-side opgeslagen en nooit terugleesbaar',
+          'Opslag voor contracten en geëxtraheerde afspraken (patroon: contract_documents in de console-repo)',
+          'Een besluit over waar de bestanden landen: op de droplet of in objectopslag'
+        ]
+      },
+      instellingen: {
+        titel: 'Instellingen',
+        sub: 'Koppelingen en sleutels',
+        uitleg: 'Hier komen de Claude API-key en de koppeling met de Retailer Console. Beide horen server-side te worden bewaard en nooit terugleesbaar te zijn.',
+        nodig: [
+          'Endpoints om sleutels op te slaan en te testen zonder ze terug te geven',
+          'Een plek om ze te bewaren die de deploy-webhook (git pull) niet overschrijft'
+        ]
+      }
+    };
+
+    const SCHERMEN = ['overzicht', 'catalogus', 'inci', 'doorverkoop', 'contract', 'instellingen'];
+    const PAGINA = 40; // productkaarten per keer — 2300 in één keer is te veel voor een telefoon
+
     createApp({
       data() {
         return {
-          data: null,
-          filters: {
-            status: '',
-            brand: '',
-            inci: '',
-            sortBy: 'naam'
-          },
-          workflowLoading: false,
-          workflowError: '',
-          workflowSuccess: false,
-          lastScanDate: null,
-          status: null,
+          scherm: 'catalogus',
+          merk: 'alle',
+          thema: document.documentElement.getAttribute('data-theme') || 'light',
+          limiet: PAGINA,
 
-          // Actief tabblad. De handmatige check staat bewust volledig los van
-          // de catalogusgegevens hierboven.
-          tab: 'catalogus',
+          data: null,
+          status: null,
+          lastScanDate: null,
+          filters: { status: '', brand: '', inci: '', sortBy: 'naam' },
+          workflowLoading: false, workflowError: '', workflowSuccess: false,
 
           manual: {
-            productName: '',
-            inci: '',
-            result: null,
-            saved: [],
-            loading: false,
-            saving: false,
-            error: '',
-            savedNotice: '',
-            listSize: null
+            productName: '', inci: '', result: null, saved: [],
+            loading: false, saving: false, error: '', savedNotice: ''
           }
         };
       },
+
       computed: {
-        connectionLabel() {
-          const state = this.status?.shopify?.state;
-          if (state === 'ok') return 'Shopify verbonden';
-          if (state === 'fout') return 'Shopify niet verbonden';
+        nogNietGebouwd() { return NIET_AANGESLOTEN[this.scherm] || null; },
+
+        /** Merk-tabs uit de echte scandata, gesorteerd op aantal bevindingen. */
+        merkTabs() {
+          if (!this.data) return [];
+          const per = {};
+          (this.data.violations || []).forEach(v => {
+            const m = (v.brand || '').trim();
+            if (!m) return;
+            per[m] = per[m] || { naam: m, verboden: 0, beperkt: 0 };
+            if (v.status === 'verboden') per[m].verboden++;
+            else per[m].beperkt++;
+          });
+          return Object.values(per)
+            .sort((a, b) => (b.verboden - a.verboden) || (b.beperkt - a.beperkt))
+            .slice(0, 8)
+            .map(m => ({
+              naam: m.naam,
+              // Signaalkleur volgt de zwaarste bevinding van dat merk.
+              dotKleur: m.verboden ? 'var(--neg)' : m.beperkt ? 'var(--warn)' : 'var(--pos)',
+              meta: m.verboden ? `${m.verboden} verboden` : `${m.beperkt} beperkt`
+            }));
+        },
+
+        tellerKaarten() {
+          const c = this.data.counts || {};
+          return [
+            { status: '',          label: 'Totaal',        waarde: c.totaal || 0,      rand: 'var(--t-border)' },
+            { status: 'verboden',  label: 'Verboden (II)', waarde: c.verboden || 0,    rand: c.verboden ? 'var(--neg)' : 'var(--t-border)' },
+            { status: 'beperkt',   label: 'Beperkt (III+)',waarde: c.beperkt || 0,     rand: c.beperkt ? 'var(--accent)' : 'var(--t-border)' },
+            { status: 'geen-inci', label: 'Geen INCI',     waarde: c['geen-inci'] || 0,rand: 'var(--t-border)' }
+          ];
+        },
+
+        /** Volledige gefilterde lijst; het merk-tabblad filtert mee. */
+        gefilterd() {
+          if (!this.data) return [];
+          const bron = this.filters.status
+            ? (this.data.allProducts || []).filter(p => p.status === this.filters.status)
+            : (this.data.violations || []);
+
+          const merkFilter = this.merk !== 'alle' ? this.merk.toLowerCase() : '';
+          const zoekMerk = this.filters.brand.toLowerCase();
+          const zoekInci = this.filters.inci.toLowerCase();
+
+          const uit = bron.filter(v => {
+            const merk = (v.brand || '').toLowerCase();
+            if (merkFilter && merk !== merkFilter) return false;
+            if (zoekMerk && !merk.includes(zoekMerk)) return false;
+            if (zoekInci && !(v.hits || []).some(h => h.inci.toLowerCase().includes(zoekInci))) return false;
+            return true;
+          });
+
+          const ernst = { verboden: 0, beperkt: 1 };
+          return uit.slice().sort((a, b) => {
+            if (this.filters.sortBy === 'merk') return (a.brand || '').localeCompare(b.brand || '');
+            if (this.filters.sortBy === 'ernst') return (ernst[a.status] ?? 2) - (ernst[b.status] ?? 2);
+            return (a.title || '').localeCompare(b.title || '');
+          });
+        },
+
+        /** Alleen de eerste N renderen: 2300 kaarten tegelijk loopt vast op mobiel. */
+        zichtbaar() { return this.gefilterd.slice(0, this.limiet); },
+
+        shopifyOk()    { return this.status?.shopify?.state === 'ok'; },
+        shopifyLabel() {
+          const s = this.status?.shopify?.state;
+          if (s === 'ok') return 'Shopify verbonden';
+          if (s === 'fout') return 'Shopify niet verbonden';
           return this.status?.shopify?.message || 'Shopify status onbekend';
-        },
-        connectionTextColor() {
-          const state = this.status?.shopify?.state;
-          return state === 'ok' ? 'var(--fg-1)' : 'var(--bl-accent)';
-        },
-        connectionDotColor() {
-          const state = this.status?.shopify?.state;
-          return state === 'ok' ? 'var(--bl-hoofdkleur)' : 'var(--bl-accent)';
         },
         runLabel() {
           const r = this.status?.lastRun;
           if (!r) return '';
-          if (r.status !== 'completed') return 'bezig…';
-          return r.conclusion === 'success' ? 'succesvol' : 'mislukt';
+          return r.status !== 'completed' ? 'bezig…' : (r.conclusion === 'success' ? 'succesvol' : 'mislukt');
         },
-        runDotColor() {
+        runDotKleur() {
           const r = this.status?.lastRun;
-          if (!r || r.status !== 'completed') return 'var(--bl-gray-400)';
-          return r.conclusion === 'success' ? 'var(--bl-hoofdkleur)' : 'var(--bl-accent)';
+          if (!r || r.status !== 'completed') return 'var(--t-fg3)';
+          return r.conclusion === 'success' ? 'var(--pos)' : 'var(--neg)';
         },
-        countDotColor() {
-          if (!this.data || this.data.shopifyTotalCount == null) return 'var(--bl-gray-400)';
-          const scanned = this.data.counts.totaal || 0;
-          return scanned >= this.data.shopifyTotalCount ? 'var(--bl-hoofdkleur)' : 'var(--bl-accent)';
-        },
+        laatsteScanTekst() { return this.lastScanDate ? this.formatDatum(this.lastScanDate) : 'geen scans gevonden'; },
+
         lijstGelijk() {
-          // De scan draait in GitHub Actions, de handmatige check op deze
-          // server. Beide lezen data/prohibited-list.json, maar uit een eigen
-          // kopie van de repo — die kunnen uiteenlopen als er één is bijgewerkt.
           const scan = this.data?.prohibitedList?.hash;
           const server = this.manual.result?.prohibitedList?.hash;
-          if (!scan || !server) return true; // niets te vergelijken
-          return scan === server;
+          return !scan || !server ? true : scan === server;
         },
         lijstTitel() {
-          const scan = this.data?.prohibitedList;
-          const server = this.manual.result?.prohibitedList;
+          const scan = this.data?.prohibitedList, server = this.manual.result?.prohibitedList;
           if (!scan) return '';
           if (!server) return `Laatste scan gebruikte ${scan.count} stoffen (${scan.hash}).`;
           return this.lijstGelijk
-            ? `Scan en handmatige check gebruiken dezelfde lijst (${scan.count} stoffen, ${scan.hash}).`
-            : `LET OP — verschillende lijsten: scan ${scan.count} (${scan.hash}), server ${server.count} (${server.hash}). Draai een nieuwe scan of werk de server bij.`;
-        },
-        lastScanText() {
-          return this.lastScanDate ? this.formatDate(this.lastScanDate) : 'geen scans gevonden';
-        },
-        totalForCurrentFilter() {
-          if (!this.data) return 0;
-          return this.filters.status
-            ? (this.data.allProducts || []).length
-            : (this.data.violations || []).length;
-        },
-        filteredViolations() {
-          if (!this.data) return [];
-          // Zonder statusfilter: alleen bevindingen (verboden + beperkt), zoals
-          // voorheen. Met een specifieke status (incl. "geen-inci"): filter over
-          // de volledige productenlijst, want die staat niet in "violations".
-          const source = this.filters.status
-            ? (this.data.allProducts || []).filter(p => p.status === this.filters.status)
-            : (this.data.violations || []);
-          const filtered = source.filter(v => {
-            if (this.filters.brand && !v.brand.toLowerCase().includes(this.filters.brand.toLowerCase())) return false;
-            if (this.filters.inci) {
-              const hasInci = v.hits.some(h => h.inci.toLowerCase().includes(this.filters.inci.toLowerCase()));
-              if (!hasInci) return false;
-            }
-            return true;
-          });
-          const severity = { verboden: 0, beperkt: 1 };
-          return filtered.slice().sort((a, b) => {
-            if (this.filters.sortBy === 'merk') return (a.brand || '').localeCompare(b.brand || '');
-            if (this.filters.sortBy === 'ernst') return (severity[a.status] ?? 2) - (severity[b.status] ?? 2);
-            return (a.title || '').localeCompare(b.title || '');
-          });
+            ? `Scan en handmatige check gebruiken dezelfde lijst (${scan.count} stoffen).`
+            : `LET OP — verschillende lijsten: scan ${scan.count} (${scan.hash}), server ${server.count} (${server.hash}).`;
         }
       },
+
       methods: {
-        // --- Handmatige INCI-check ---------------------------------------
-        manualStatusLabel(status) {
-          // Geen 'Conform': deze lijst dekt niet de volledige annexen, dus
-          // afwezigheid van een match is geen bewijs van toelaatbaarheid.
-          return { verboden: 'Verboden', beperkt: 'Beperkt', ok: 'Geen bevindingen', leeg: 'Leeg' }[status] || status;
+        // --- navigatie: scherm en merk staan in de URL ---
+        ga(scherm) { this.scherm = scherm; this.limiet = PAGINA; this.schrijfUrl(); },
+        kiesMerk(m) { this.merk = m; this.limiet = PAGINA; this.schrijfUrl(); },
+        toonMeer() { this.limiet += PAGINA; },
+
+        schrijfUrl() {
+          const hash = `#/${encodeURIComponent(this.merk)}/${this.scherm}`;
+          if (location.hash !== hash) history.replaceState(null, '', hash);
         },
-        ingLabel(status) {
-          // "ok" hier betekent alleen: niet gevonden in de controlelijst.
-          // Bewust niet "Toegestaan" — dat kan deze lijst niet bewijzen.
-          return { verboden: 'Verboden', beperkt: 'Beperkt', ok: 'Geen match' }[status] || status;
-        },
-        async runInciCheck() {
-          this.manual.loading = true;
-          this.manual.error = '';
-          this.manual.savedNotice = '';
-          try {
-            const response = await fetch('/api/inci-check', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ productName: this.manual.productName, inci: this.manual.inci })
-            });
-            const result = await response.json();
-            if (!response.ok) throw new Error(result.error || `Fout ${response.status}`);
-            this.manual.result = result;
-          } catch (e) {
-            this.manual.result = null;
-            this.manual.error = e.message;
-          } finally {
-            this.manual.loading = false;
-          }
-        },
-        clearInciCheck() {
-          this.manual.productName = '';
-          this.manual.inci = '';
-          this.manual.result = null;
-          this.manual.error = '';
-          this.manual.savedNotice = '';
-        },
-        async saveInciCheck() {
-          this.manual.saving = true;
-          this.manual.error = '';
-          this.manual.savedNotice = '';
-          try {
-            const response = await fetch('/api/manual-checks', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ productName: this.manual.productName, inci: this.manual.inci })
-            });
-            const result = await response.json();
-            if (!response.ok) throw new Error(result.error || `Fout ${response.status}`);
-            this.manual.savedNotice = 'Opgeslagen.';
-            await this.loadManualChecks();
-          } catch (e) {
-            this.manual.error = e.message;
-          } finally {
-            this.manual.saving = false;
-          }
-        },
-        async loadManualChecks() {
-          try {
-            const response = await fetch('/api/manual-checks');
-            const result = await response.json();
-            this.manual.saved = result.checks || [];
-          } catch (e) {
-            console.error('Fout bij laden opgeslagen checks:', e);
-          }
-        },
-        async deleteInciCheck(check) {
-          if (!confirm(`"${check.productName}" verwijderen?`)) return;
-          this.manual.error = '';
-          try {
-            const response = await fetch(`/api/manual-checks?id=${encodeURIComponent(check.id)}`, { method: 'DELETE' });
-            const result = await response.json();
-            if (!response.ok) throw new Error(result.error || `Fout ${response.status}`);
-            await this.loadManualChecks();
-          } catch (e) {
-            this.manual.error = e.message;
-          }
+        leesUrl() {
+          const m = (location.hash || '').match(/^#\/([^/]*)\/([^/]*)/);
+          if (!m) return;
+          const merk = decodeURIComponent(m[1] || 'alle');
+          const scherm = m[2];
+          if (SCHERMEN.includes(scherm)) this.scherm = scherm;
+          if (merk) this.merk = merk;
         },
 
+        wisselThema() {
+          this.thema = this.thema === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', this.thema);
+          try { localStorage.setItem('bl-theme', this.thema); } catch (e) {}
+        },
 
-        async loadData() {
+        // --- weergavehulpjes ---
+        initiaal(p) { return (p.brand || p.title || '?').charAt(0).toUpperCase(); },
+        statusLabel(s) { return { verboden:'Verboden', beperkt:'Beperkt', 'geen-inci':'Geen INCI', ok:'Conform' }[s] || s; },
+        uitslagLabel(s) { return { verboden:'Verboden', beperkt:'Beperkt', ok:'Geen bevindingen', leeg:'Leeg' }[s] || s; },
+        ingLabel(s) { return { verboden:'Verboden', beperkt:'Beperkt', ok:'Geen match' }[s] || s; },
+        badgeKlasse(s) {
+          if (s === 'verboden') return 'mp-badge-verboden';
+          if (s === 'beperkt') return 'mp-badge-beperkt';
+          return 'mp-badge-neutraal';
+        },
+        shopifyUrl(p) {
+          if (!this.data?.storeDomain || !p?.id) return null;
+          const id = String(p.id).split('/').pop();
+          return id ? `https://${this.data.storeDomain}/admin/products/${id}` : null;
+        },
+        formatDatum(d) {
+          if (!d) return '';
+          return new Date(d).toLocaleDateString('nl-NL', {
+            year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit'
+          });
+        },
+
+        // --- data ---
+        async laadData() {
           try {
-            // Probeer de meest recente violations bestand te laden
-            const response = await fetch('./reports/violations-latest.json');
-            if (!response.ok) throw new Error('Bestand niet gevonden');
-            this.data = await response.json();
-
-            // Zet lastScanDate
-            if (this.data.lastScan) {
-              this.lastScanDate = new Date(this.data.lastScan);
-            }
+            const r = await fetch('./reports/violations-latest.json');
+            if (!r.ok) throw new Error('Bestand niet gevonden');
+            this.data = await r.json();
+            if (this.data.lastScan) this.lastScanDate = new Date(this.data.lastScan);
           } catch (e) {
             console.error('Fout bij laden data:', e);
-            this.data = { violations: [], allProducts: [], storeDomain: '', shopifyTotalCount: null, counts: { verboden: 0, beperkt: 0, "geen-inci": 0, totaal: 0 } };
+            this.data = { violations: [], allProducts: [], storeDomain: '', shopifyTotalCount: null,
+                          counts: { verboden:0, beperkt:0, 'geen-inci':0, totaal:0 } };
           }
         },
-        initial(product) {
-          return (product.brand || product.title || '?').charAt(0).toUpperCase();
-        },
-        statusLabel(status) {
-          return { verboden: 'Verboden', beperkt: 'Beperkt', 'geen-inci': 'Geen INCI', ok: 'Conform' }[status] || status;
-        },
-        statusBadgeClass(status) {
-          if (status === 'verboden') return 'ca-badge-verboden';
-          if (status === 'beperkt') return 'ca-badge-beperkt';
-          return 'ca-badge-neutral';
-        },
-        shopifyProductUrl(product) {
-          if (!this.data?.storeDomain || !product?.id) return null;
-          const numericId = String(product.id).split('/').pop();
-          if (!numericId) return null;
-          return `https://${this.data.storeDomain}/admin/products/${numericId}`;
-        },
-        async loadStatus() {
-          try {
-            const response = await fetch('/api/status');
-            this.status = await response.json();
-          } catch (e) {
-            console.error('Fout bij laden status:', e);
-          }
-        },
-        formatDate(date) {
-          if (!date) return '';
-          return new Date(date).toLocaleDateString('nl-NL', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-          });
+        async laadStatus() {
+          try { this.status = await (await fetch('/api/status')).json(); }
+          catch (e) { console.error('Fout bij laden status:', e); }
         },
         async triggerWorkflow() {
-          this.workflowLoading = true;
-          this.workflowError = '';
-          this.workflowSuccess = false;
-
+          this.workflowLoading = true; this.workflowError = ''; this.workflowSuccess = false;
           try {
-            // Probeer server-side trigger (als server.js draait)
-            const response = await fetch('/api/trigger-workflow', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' }
-            });
-
-            const result = await response.json();
-
-            if (response.ok || result.status === 204) {
+            const r = await fetch('/api/trigger-workflow', { method:'POST', headers:{'Content-Type':'application/json'} });
+            const res = await r.json();
+            if (r.ok || res.status === 204) {
               this.workflowSuccess = true;
-              setTimeout(() => {
-                this.workflowSuccess = false;
-                this.loadData();
-                this.loadStatus();
-              }, 3000);
+              setTimeout(() => { this.workflowSuccess = false; this.laadData(); this.laadStatus(); }, 3000);
             } else {
-              let detail = result.error || result.message || '';
-              try {
-                const parsed = JSON.parse(detail);
-                detail = parsed.message || detail;
-              } catch {}
-              this.workflowError = detail ? `Fout ${response.status}: ${detail}` : `Fout ${response.status}`;
+              let d = res.error || res.message || '';
+              try { d = JSON.parse(d).message || d; } catch (e) {}
+              this.workflowError = d ? `Fout ${r.status}: ${d}` : `Fout ${r.status}`;
             }
-          } catch (e) {
-            this.workflowError = `Fout: ${e.message}`;
-          } finally {
-            this.workflowLoading = false;
-          }
+          } catch (e) { this.workflowError = `Fout: ${e.message}`; }
+          finally { this.workflowLoading = false; }
+        },
+
+        // --- handmatige check (hergebruikt de bestaande endpoints) ---
+        async doeCheck() {
+          this.manual.loading = true; this.manual.error = ''; this.manual.savedNotice = '';
+          try {
+            const r = await fetch('/api/inci-check', {
+              method:'POST', headers:{'Content-Type':'application/json'},
+              body: JSON.stringify({ productName:this.manual.productName, inci:this.manual.inci })
+            });
+            const res = await r.json();
+            if (!r.ok) throw new Error(res.error || `Fout ${r.status}`);
+            this.manual.result = res;
+          } catch (e) { this.manual.result = null; this.manual.error = e.message; }
+          finally { this.manual.loading = false; }
+        },
+        wisCheck() {
+          Object.assign(this.manual, { productName:'', inci:'', result:null, error:'', savedNotice:'' });
+        },
+        async slaOp() {
+          this.manual.saving = true; this.manual.error = ''; this.manual.savedNotice = '';
+          try {
+            const r = await fetch('/api/manual-checks', {
+              method:'POST', headers:{'Content-Type':'application/json'},
+              body: JSON.stringify({ productName:this.manual.productName, inci:this.manual.inci })
+            });
+            const res = await r.json();
+            if (!r.ok) throw new Error(res.error || `Fout ${r.status}`);
+            this.manual.savedNotice = 'Opgeslagen.';
+            await this.laadOpgeslagen();
+          } catch (e) { this.manual.error = e.message; }
+          finally { this.manual.saving = false; }
+        },
+        async laadOpgeslagen() {
+          try {
+            const res = await (await fetch('/api/manual-checks')).json();
+            this.manual.saved = res.checks || [];
+          } catch (e) { console.error('Fout bij laden opgeslagen checks:', e); }
+        },
+        async verwijder(c) {
+          if (!confirm(`"${c.productName}" verwijderen?`)) return;
+          this.manual.error = '';
+          try {
+            const r = await fetch(`/api/manual-checks?id=${encodeURIComponent(c.id)}`, { method:'DELETE' });
+            const res = await r.json();
+            if (!r.ok) throw new Error(res.error || `Fout ${r.status}`);
+            await this.laadOpgeslagen();
+          } catch (e) { this.manual.error = e.message; }
         }
       },
+
       mounted() {
-        this.loadData();
-        this.loadStatus();
-        this.loadManualChecks();
-        // Refresh elke 5 minuten
-        setInterval(() => {
-          this.loadData();
-          this.loadStatus();
-        }, 5 * 60 * 1000);
+        this.leesUrl();
+        window.addEventListener('hashchange', () => this.leesUrl());
+        this.laadData();
+        this.laadStatus();
+        this.laadOpgeslagen();
+        setInterval(() => { this.laadData(); this.laadStatus(); }, 5 * 60 * 1000);
       }
     }).mount('#app');
   </script>

@@ -224,12 +224,13 @@ Dashboard leest uit: `reports/violations-latest.json`
 
 ## 🎨 Aanpassen
 
-Dashboard-code staat in `index.html` (Vue.js + Tailwind CSS).
+De app-code staat in `index.html` (Merkenplatform-shell, Vue 3 zonder buildstap).
 
 Wijzigingen aanpassen:
-1. Edit `index.html` of `dashboard.html`
-2. Commit en push
-3. GitHub Actions deployt automatisch
+1. Edit `index.html`
+2. Commit en push naar `main`
+3. Op de Droplet: `git pull origin main && pm2 restart compliance-agent`
+   (of automatisch, zodra `DEPLOY_WEBHOOK_URL` in GitHub is gezet)
 
 ## ❓ Troubleshooting
 

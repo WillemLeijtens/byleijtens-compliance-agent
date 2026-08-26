@@ -115,12 +115,10 @@ const DOCROOT = __dirname;
 const STATIC_FILES = new Map([
   ["/", "index.html"],
   ["/index.html", "index.html"],
-  ["/dashboard.html", "dashboard.html"],
   ["/assets/logo-dark.svg", "assets/logo-dark.svg"],
+  ["/assets/logo-white.svg", "assets/logo-white.svg"],
   ["/assets/fonts/Montserrat-VariableFont_wght.ttf", "assets/fonts/Montserrat-VariableFont_wght.ttf"],
-  ["/reports/violations-latest.json", "reports/violations-latest.json"],
-  ["/merkenplatform.html", "merkenplatform.html"],
-  ["/assets/logo-white.svg", "assets/logo-white.svg"]
+  ["/reports/violations-latest.json", "reports/violations-latest.json"]
 ]);
 
 // Alleen tekstformaten hebben baat bij compressie; fonts en SVG-plaatjes
