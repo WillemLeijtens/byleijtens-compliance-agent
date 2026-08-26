@@ -145,6 +145,8 @@
     .mp-badge { font-weight:500; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; padding:6px 12px; border-radius:999px; flex:none; }
     .mp-badge-verboden { background:var(--t-fg); color:var(--t-bg); border:1px solid var(--t-fg); }
     .mp-badge-beperkt { background:transparent; color:var(--t-fg); border:1px solid var(--accent); }
+    .mp-badge-etikettering { background:transparent; color:var(--t-meta); border:1px solid var(--t-border); }
+    .mp-badge-toegestaan { background:transparent; color:var(--pos-text); border:1px solid var(--pos); }
     .mp-badge-neutraal { background:var(--t-card2); color:var(--t-fg); border:1px solid transparent; }
 
     .mp-pill { display:inline-flex; align-items:center; gap:8px; font-size:12px; color:var(--t-fg); border:1px solid var(--t-border); border-radius:999px; padding:6px 14px; }
@@ -281,6 +283,8 @@
                   <option value="">Alles (bevindingen)</option>
                   <option value="verboden">Verboden</option>
                   <option value="beperkt">Beperkt</option>
+                  <option value="toegestaan">Alleen toegestane stoffen</option>
+                  <option value="ok">Conform</option>
                   <option value="geen-inci">Geen INCI</option>
                 </select>
               </label>
@@ -334,9 +338,13 @@
               </div>
 
               <div v-for="(h, hi) in v.hits" :key="hi" class="mp-card2" style="margin-top:14px">
-                <div style="font-size:13.5px;font-weight:500;margin-bottom:6px">{{ h.inci }}</div>
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px">
+                  <div style="font-size:13.5px;font-weight:500">{{ h.inci }}</div>
+                  <span v-if="h.soort" class="mp-badge" :class="badgeKlasse(h.soort)">{{ ingLabel(h.soort) }}</span>
+                </div>
                 <div class="mp-mono" style="color:var(--t-meta);margin-bottom:4px">
                   <span v-if="h.cas">CAS: {{ h.cas }} · </span>Annex {{ h.annex }} · {{ h.ref }}
+                  <span v-if="h.ookIn"> · staat ook in Annex {{ h.ookIn.join(', ') }}</span>
                 </div>
                 <div v-if="h.note" style="font-size:12.5px;margin-bottom:6px">{{ h.note }}</div>
                 <div style="font-size:11px;color:var(--t-fg3);text-transform:uppercase;letter-spacing:0.08em">Match via {{ h.via }}</div>
@@ -398,6 +406,8 @@
                   {{ manual.result.totaal }} ingrediënten ·
                   {{ manual.result.counts.verboden }} verboden ·
                   {{ manual.result.counts.beperkt }} beperkt ·
+                  {{ manual.result.counts.etikettering }} aangegeven ·
+                  {{ manual.result.counts.toegestaan }} toegestaan ·
                   {{ manual.result.counts.ok }} geen match
                 </div>
               </div>
@@ -427,6 +437,21 @@
             </div>
 
             <div class="mp-card2" style="margin-top:18px;font-size:12px;color:var(--t-meta)">
+              <div class="mp-eyebrow" style="margin-bottom:8px">Wat de oordelen betekenen</div>
+              <ul style="margin:0;padding-left:16px;line-height:1.7">
+                <li><strong style="font-weight:500">Verboden</strong> — Annex II. Mag niet in een cosmetisch product.</li>
+                <li><strong style="font-weight:500">Beperkt</strong> — Annex III, of een Annex II-verbod dat alleen voor een
+                    bepaalde vorm of producttype geldt (nano, haarverf). De voorwaarde staat erbij; de app kan niet zien of
+                    eraan is voldaan, want een INCI-lijst bevat geen concentraties.</li>
+                <li><strong style="font-weight:500">Aangegeven</strong> — geurallergeen uit Annex III waarvan de enige
+                    voorwaarde de vermelding op het etiket is. Doordat de stof in de INCI-lijst staat, is daaraan voldaan.</li>
+                <li><strong style="font-weight:500">Toegestaan</strong> — Annex IV, V of VI. Dat zijn toelatingslijsten:
+                    artikel 14 verbiedt juist de kleurstoffen, conserveermiddelen en UV-filters die er <em>niet</em> op
+                    staan. Een treffer is dus een bevestiging, geen bevinding — met de voorwaarden uit de annex erbij.</li>
+              </ul>
+            </div>
+
+            <div class="mp-card2" style="margin-top:12px;font-size:12px;color:var(--t-meta)">
               De controlelijst telt {{ manual.result.listSize }} stoffen uit Annex II t/m VI.
               <strong style="font-weight:500">"Geen match" betekent niet automatisch dat een ingrediënt is toegestaan</strong> —
               de app kan geen concentraties of producttypes beoordelen. Controleer de INCI op het productlabel en verifieer op
@@ -599,9 +624,10 @@
           const c = this.data.counts || {};
           return [
             { status: '',          label: 'Totaal',        waarde: c.totaal || 0,      rand: 'var(--t-border)' },
-            { status: 'verboden',  label: 'Verboden (II)', waarde: c.verboden || 0,    rand: c.verboden ? 'var(--neg)' : 'var(--t-border)' },
-            { status: 'beperkt',   label: 'Beperkt (III+)',waarde: c.beperkt || 0,     rand: c.beperkt ? 'var(--accent)' : 'var(--t-border)' },
-            { status: 'geen-inci', label: 'Geen INCI',     waarde: c['geen-inci'] || 0,rand: 'var(--t-border)' }
+            { status: 'verboden',  label: 'Verboden (II)',  waarde: c.verboden || 0,    rand: c.verboden ? 'var(--neg)' : 'var(--t-border)' },
+            { status: 'beperkt',   label: 'Beperkt (III)',  waarde: c.beperkt || 0,     rand: c.beperkt ? 'var(--accent)' : 'var(--t-border)' },
+            { status: 'toegestaan',label: 'Toegestaan (IV–VI)', waarde: c.toegestaan || 0, rand: 'var(--t-border)' },
+            { status: 'geen-inci', label: 'Geen INCI',      waarde: c['geen-inci'] || 0,rand: 'var(--t-border)' }
           ];
         },
 
@@ -624,7 +650,7 @@
             return true;
           });
 
-          const ernst = { verboden: 0, beperkt: 1 };
+          const ernst = { verboden: 0, beperkt: 1, toegestaan: 2, ok: 3 };
           return uit.slice().sort((a, b) => {
             if (this.filters.sortBy === 'merk') return (a.brand || '').localeCompare(b.brand || '');
             if (this.filters.sortBy === 'ernst') return (ernst[a.status] ?? 2) - (ernst[b.status] ?? 2);
@@ -696,12 +722,14 @@
 
         // --- weergavehulpjes ---
         initiaal(p) { return (p.brand || p.title || '?').charAt(0).toUpperCase(); },
-        statusLabel(s) { return { verboden:'Verboden', beperkt:'Beperkt', 'geen-inci':'Geen INCI', ok:'Conform' }[s] || s; },
-        uitslagLabel(s) { return { verboden:'Verboden', beperkt:'Beperkt', ok:'Geen bevindingen', leeg:'Leeg' }[s] || s; },
-        ingLabel(s) { return { verboden:'Verboden', beperkt:'Beperkt', ok:'Geen match' }[s] || s; },
+        statusLabel(s) { return { verboden:'Verboden', beperkt:'Beperkt', toegestaan:'Toegestaan', 'geen-inci':'Geen INCI', ok:'Conform' }[s] || s; },
+        uitslagLabel(s) { return { verboden:'Verboden', beperkt:'Beperkt', toegestaan:'Toegestaan', ok:'Geen bevindingen', leeg:'Leeg' }[s] || s; },
+        ingLabel(s) { return { verboden:'Verboden', beperkt:'Beperkt', etikettering:'Aangegeven', toegestaan:'Toegestaan', ok:'Geen match' }[s] || s; },
         badgeKlasse(s) {
           if (s === 'verboden') return 'mp-badge-verboden';
           if (s === 'beperkt') return 'mp-badge-beperkt';
+          if (s === 'etikettering') return 'mp-badge-etikettering';
+          if (s === 'toegestaan') return 'mp-badge-toegestaan';
           return 'mp-badge-neutraal';
         },
         shopifyUrl(p) {

@@ -10,6 +10,10 @@ const normalize = (s) =>
     .replace(/\s+/g, " ")
     .trim();
 
+// Van zwaar naar licht. Bepaalt welke regel wint als een naam er meerdere
+// raakt, en welk oordeel de status van een heel product zet.
+const ERNST = { verboden: 0, beperkt: 1, etikettering: 2, toegestaan: 3 };
+
 const CAS_RE = /\b\d{2,7}-\d{2}-\d\b/g;
 // Kleurstoffen staan op etiketten meestal als CI-nummer, niet als INCI-naam.
 const CI_RE = /\bci\s*\d{5}\b/gi;
@@ -22,19 +26,55 @@ function splitInci(raw) {
     .filter(Boolean);
 }
 
+// Losse woorden die na het splitsen van een botanische naam overblijven
+// ("Melissa officinalis leaf / stem oil" levert "leaf" en "stem oil" op).
+// Als synoniem zijn ze waardeloos en gevaarlijk: ze matchen op elk etiket.
+const GENERIEKE_DELEN = new Set(
+  "leaf stem oil extract root bark seed flower fruit water juice powder wax butter ec".split(" ")
+);
+const CAS_VORM = /^\d{2,7}-\d{2}-\d$/;
+
+function bruikbaarSynoniem(n) {
+  if (!n || n.length < 2) return false;
+  if (/^[\d\W_]+$/.test(n)) return false; // "29", "[1]", "--"
+  return !n.split(" ").every((w) => GENERIEKE_DELEN.has(w));
+}
+
 function buildIndex(list) {
   const byName = new Map();
   const byCas = new Map();
+
+  // Eén naam kan naar MEERDERE stoffen wijzen. CI 14270 staat bijvoorbeeld in
+  // Annex IV (toegestaan als kleurstof) én in Annex II (verboden in haarverf).
+  // Zou de index één entry per naam bewaren, dan bepaalt de importvolgorde
+  // welke wint en kan een verbod stilletjes verdwijnen achter een toelating.
+  const voegToe = (map, sleutel, entry) => {
+    if (!sleutel) return;
+    const bestaand = map.get(sleutel);
+    if (bestaand) {
+      if (!bestaand.includes(entry)) bestaand.push(entry);
+    } else {
+      map.set(sleutel, [entry]);
+    }
+  };
+
   list.forEach((e) => {
-    if (e.inci) byName.set(normalize(e.inci), e);
+    voegToe(byName, normalize(e.inci), e);
     // Synoniemen en CI-nummers wijzen naar dezelfde stof. Zonder deze index
     // mist een etiket dat "Oxybenzone" of "CI 42555" schrijft de match, ook
     // al staat de stof gewoon in de lijst.
     (e.synonyms || []).forEach((syn) => {
       const n = normalize(syn);
-      if (n && !byName.has(n)) byName.set(n, e);
+      if (bruikbaarSynoniem(n)) voegToe(byName, n, e);
     });
-    if (e.cas) String(e.cas).split(/[/\s]+/).forEach((c) => c && byCas.set(c.trim(), e));
+    if (e.cas) {
+      String(e.cas)
+        .split(/[/\s]+/)
+        .forEach((c) => {
+          const nummer = c.trim();
+          if (CAS_VORM.test(nummer)) voegToe(byCas, nummer, e);
+        });
+    }
   });
   return { byName, byCas };
 }
@@ -66,42 +106,141 @@ function matchToken(token, index) {
   }
 
   for (const kandidaat of kandidaten) {
-    if (index.byName.has(kandidaat)) {
-      return { entry: index.byName.get(kandidaat), via: "INCI" };
-    }
+    const treffers = index.byName.get(kandidaat);
+    if (treffers && treffers.length) return { entries: treffers, via: "INCI" };
   }
 
   const cas = (String(token).match(CAS_RE) || [])[0];
-  if (cas && index.byCas.has(cas)) return { entry: index.byCas.get(cas), via: "CAS" };
+  if (cas && index.byCas.has(cas)) return { entries: index.byCas.get(cas), via: "CAS" };
 
   const ci = (String(token).match(CI_RE) || [])[0];
   if (ci) {
     const genormaliseerd = normalize(ci).replace(/\s+/g, " ");
-    if (index.byName.has(genormaliseerd)) {
-      return { entry: index.byName.get(genormaliseerd), via: "CI-nummer" };
-    }
+    const treffers = index.byName.get(genormaliseerd);
+    if (treffers && treffers.length) return { entries: treffers, via: "CI-nummer" };
   }
 
   return null;
 }
 
+/**
+ * Kiest uit meerdere regels voor dezelfde naam de zwaarste.
+ *
+ * Staat een stof zowel op een verbodslijst als op een toegestaan-lijst, dan
+ * telt het verbod. Anders zou een toelating een verbod kunnen maskeren.
+ */
+function zwaarste(entries) {
+  return entries.reduce((a, b) => (ERNST[classifyEntry(b)] < ERNST[classifyEntry(a)] ? b : a));
+}
+
+/**
+ * Bepaalt wat een treffer betekent volgens Verordening (EG) 1223/2009.
+ *
+ * De annexen zijn geen lijstjes van hetzelfde soort. II is een verbodslijst,
+ * III een lijst met beperkingen, maar IV (kleurstoffen), V (conserveer-
+ * middelen) en VI (UV-filters) zijn TOEGESTAAN-lijsten: artikel 14 verbiedt
+ * juist alles wat er NIET op staat. Een treffer daar is dus geen bevinding —
+ * het is de bevestiging dat de stof is toegelaten, met de voorwaarden die in
+ * de annex staan (maximumconcentratie, producttype, waarschuwingen).
+ */
+// De voorwaarde bij een Annex II-regel staat lang niet altijd in de note.
+// CosIng zet hem net zo vaak in de stofnaam zelf ("Furocoumarines … except
+// for normal content in natural essences") of in een van de synoniemen
+// ("… when used as a substance in hair dye products"). Alleen naar de note
+// kijken verklaart zulke stoffen ten onrechte absoluut verboden.
+const voorwaardeTekst = (entry) =>
+  [entry.inci, entry.note, ...(entry.synonyms || [])].filter(Boolean).join(" ");
+
+const UITZONDERING =
+  /\b(except|unless|other than|with the exception|when used as)\b|\(nano\)|\bin hair dye products\b/i;
+
+// Verwijst de uitzondering naar een ANDERE annex ("kwik en zijn verbindingen,
+// behalve de gevallen in Annex V"), dan is die uitzondering een apart
+// genoemde stof — niet degene die hier bij naam staat. Het verbod blijft dus
+// staan. Verwijst hij naar een vorm of een producttype, dan is het een
+// controlepunt: alleen de nanovorm, alleen in haarverf, alleen boven een
+// natuurlijk gehalte.
+const VERWIJST_NAAR_ANNEX = /\bannex\s+(iii|iv|v|vi)\b/i;
+
+// De 26+ geurallergenen in Annex III kennen als enige voorwaarde een
+// AANGIFTEPLICHT: de stof moet in de ingredientenlijst staan. Vinden we hem
+// daar, dan is daarmee voldaan. Zulke entries als "beperkt" tonen zou de
+// vervulling van de plicht als overtreding presenteren.
+const ETIKETCLAUSULE = /the presence of the substance (?:must|shall) be indicated in the list of ingredients/i;
+
+function alleenEtiketplicht(entry) {
+  const note = entry.note || "";
+  if (!ETIKETCLAUSULE.test(note)) return false;
+  // Staat er BUITEN de etiketzin nog een concentratiegrens, dan is het een
+  // echte beperking en niet slechts een aangifteplicht.
+  const rest = note.replace(/the presence of the substance[\s\S]*/i, "");
+  return !/\d\s*[,.]?\d*\s*%/.test(rest);
+}
+
+const SOORT_CACHE = new WeakMap();
+
+function classifyEntry(entry) {
+  const onthouden = SOORT_CACHE.get(entry);
+  if (onthouden) return onthouden;
+
+  let soort;
+  if (entry.annex === "II") {
+    const tekst = voorwaardeTekst(entry);
+    const voorwaardelijk = entry.conditional || UITZONDERING.test(tekst);
+    soort = voorwaardelijk && !VERWIJST_NAAR_ANNEX.test(tekst) ? "beperkt" : "verboden";
+  } else if (entry.annex === "III") {
+    soort = alleenEtiketplicht(entry) ? "etikettering" : "beperkt";
+  } else {
+    soort = "toegestaan";
+  }
+
+  SOORT_CACHE.set(entry, soort);
+  return soort;
+}
+
 function scanProduct(product, index) {
   const hits = [];
+  const noteerTreffer = (ingredient, entries, via) => {
+    const entry = zwaarste(entries);
+    if (hits.some((h) => h.entry === entry && h.ingredient === ingredient)) return;
+    hits.push({
+      ingredient,
+      entry,
+      via,
+      // Andere annexen waarin dezelfde naam voorkomt; zichtbaar houden zodat
+      // een analist ziet dat de stof ook ergens toegelaten is.
+      ookIn: entries.filter((e) => e !== entry).map((e) => e.annex),
+    });
+  };
+
   splitInci(product.inci).forEach((tok) => {
     const treffer = matchToken(tok, index);
-    if (treffer) hits.push({ ingredient: tok, entry: treffer.entry, via: treffer.via });
+    if (treffer) noteerTreffer(tok, treffer.entries, treffer.via);
   });
   const haystack = `${product.inci || ""} ${product.description || ""}`;
   (haystack.match(CAS_RE) || []).forEach((cas) => {
-    if (index.byCas.has(cas)) {
-      const e = index.byCas.get(cas);
-      if (!hits.some((h) => h.entry === e)) hits.push({ ingredient: cas, entry: e, via: "CAS" });
-    }
+    const entries = index.byCas.get(cas);
+    if (!entries) return;
+    const entry = zwaarste(entries);
+    if (!hits.some((h) => h.entry === entry)) noteerTreffer(cas, entries, "CAS");
   });
-  const banned = hits.filter((h) => h.entry.annex === "II" && !h.entry.conditional);
-  const restricted = hits.filter((h) => h.entry.annex !== "II" || h.entry.conditional);
-  const status = banned.length ? "verboden" : restricted.length ? "beperkt" : product.inci ? "ok" : "geen-inci";
-  return { status, banned, restricted };
+
+  const banned = hits.filter((h) => classifyEntry(h.entry) === "verboden");
+  const restricted = hits.filter((h) => classifyEntry(h.entry) === "beperkt");
+  // Toegestane stoffen (Annex IV/V/VI) en aangegeven geurallergenen zijn geen
+  // bevindingen. Ze blijven zichtbaar op de kaart, maar bepalen niet of een
+  // product opvalt — anders verdrinkt een echt verbod in de ruis.
+  const allowed = hits.filter((h) => ERNST[classifyEntry(h.entry)] >= ERNST.etikettering);
+  const status = banned.length
+    ? "verboden"
+    : restricted.length
+      ? "beperkt"
+      : allowed.length
+        ? "toegestaan"
+        : product.inci
+          ? "ok"
+          : "geen-inci";
+  return { status, banned, restricted, allowed };
 }
 
 function toDashboardEntry(r) {
@@ -112,13 +251,18 @@ function toDashboardEntry(r) {
     brand: r.product.brand,
     image: r.product.image || null,
     status: r.status,
-    hits: [...r.banned, ...r.restricted].map((h) => ({
+    // Elke treffer draagt zijn eigen oordeel: een product met een verboden
+    // stof kan daarnaast een keurig toegelaten kleurstof bevatten, en die
+    // twee horen niet als hetzelfde te worden getoond.
+    hits: [...r.banned, ...r.restricted, ...(r.allowed || [])].map((h) => ({
       inci: h.entry.inci,
       cas: h.entry.cas || null,
       annex: h.entry.annex,
       ref: h.entry.ref,
       note: h.entry.note || "",
       via: h.via,
+      soort: classifyEntry(h.entry),
+      ookIn: h.ookIn && h.ookIn.length ? h.ookIn : null,
     })),
   };
 }
@@ -127,7 +271,7 @@ function toDashboardEntry(r) {
 function scanAll(products, prohibitedList) {
   const index = buildIndex(prohibitedList);
   const results = products.map((p) => ({ product: p, ...scanProduct(p, index) }));
-  const counts = { verboden: 0, beperkt: 0, ok: 0, "geen-inci": 0 };
+  const counts = { verboden: 0, beperkt: 0, toegestaan: 0, ok: 0, "geen-inci": 0 };
   results.forEach((r) => counts[r.status]++);
   const violations = results
     .filter((r) => r.status === "verboden" || r.status === "beperkt")
@@ -151,17 +295,10 @@ function checkInciList(rawInci, prohibitedList) {
 
   const ingredients = splitInci(rawInci).map((token) => {
     const treffer = matchToken(token, index);
-    const entry = treffer ? treffer.entry : null;
+    const entry = treffer ? zwaarste(treffer.entries) : null;
     const via = treffer ? treffer.via : null;
 
-    // Een voorwaardelijke Annex II-regel (alleen de nanovorm, of "except
-    // if…") is geen absoluut verbod. Als "verboden" tonen zou legale
-    // producten ten onrechte aanmerken; het hoort een controlepunt te zijn.
-    const status = !entry
-      ? "ok"
-      : entry.annex === "II" && !entry.conditional
-        ? "verboden"
-        : "beperkt";
+    const status = entry ? classifyEntry(entry) : "ok";
 
     return {
       input: token,
@@ -172,14 +309,16 @@ function checkInciList(rawInci, prohibitedList) {
     };
   });
 
-  const counts = { verboden: 0, beperkt: 0, ok: 0 };
+  const counts = { verboden: 0, beperkt: 0, etikettering: 0, toegestaan: 0, ok: 0 };
   ingredients.forEach((i) => counts[i.status]++);
 
   return {
     ingredients,
     counts,
     totaal: ingredients.length,
-    // Het zwaarste oordeel bepaalt de status van het geheel.
+    // Het zwaarste oordeel bepaalt de status van het geheel. Een treffer op
+    // een toegestaan-lijst (IV/V/VI) telt daarin niet mee: dat is geen
+    // bevinding, dus een lijst met alleen zulke treffers is "ok".
     status: counts.verboden ? "verboden" : counts.beperkt ? "beperkt" : ingredients.length ? "ok" : "leeg",
   };
 }
@@ -198,8 +337,12 @@ function checkInciList(rawInci, prohibitedList) {
  * gebruiken.
  */
 function listFingerprint(list) {
+  // Ook de synoniemen tellen mee. Zij bepalen wat de app herkent: valt er een
+  // synoniem weg, dan verandert de uitslag terwijl namen, annexen en
+  // CAS-nummers gelijk blijven. Een vingerafdruk die dat niet ziet, bewijst
+  // niet wat hij hoort te bewijzen.
   const genormaliseerd = (list || [])
-    .map((e) => `${e.inci}|${e.annex}|${e.cas || ""}`)
+    .map((e) => `${e.inci}|${e.annex}|${e.cas || ""}|${(e.synonyms || []).slice().sort().join("~")}`)
     .sort()
     .join("\n");
 
@@ -213,4 +356,4 @@ function listFingerprint(list) {
   return { count: (list || []).length, hash: hash.toString(16).padStart(8, "0") };
 }
 
-module.exports = { normalize, splitInci, buildIndex, scanProduct, scanAll, checkInciList, listFingerprint };
+module.exports = { normalize, splitInci, buildIndex, classifyEntry, scanProduct, scanAll, checkInciList, listFingerprint };

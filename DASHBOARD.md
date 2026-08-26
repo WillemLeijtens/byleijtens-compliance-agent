@@ -27,8 +27,10 @@ Dashboard: `http://<droplet-ip>` (via Nginx-reverse-proxy naar poort 3000, zie `
 
 - **Responsive design**: Werkt perfect op iPhone, tablet en desktop
 - **Real-time data**: Laadt automatisch `violations-latest.json` van de reports
-- **Filtering**: Zoeken op status (verboden/beperkt), merk, ingrediënt
-- **Summary cards**: Overzicht van totaal, verboden, beperkt, zonder INCI
+- **Filtering**: Zoeken op status (verboden/beperkt/toegestaan/conform), merk,
+  ingrediënt
+- **Summary cards**: Totaal, verboden (II), beperkt (III), toegestaan (IV–VI),
+  zonder INCI
 - **Timestamp**: Toont wanneer de scan is gedraaid (ISO datetime)
 - **Update knop**: Start workflow handmatig (vereist GitHub token)
 
@@ -95,7 +97,8 @@ webshop staat, of van een label dat je van een leverancier hebt gekregen.
 
 - Plak de INCI-lijst, vul optioneel een productnaam in, klik **Check**
 - Per ingrediënt volgt een oordeel: **Verboden** (Annex II), **Beperkt**
-  (Annex III) of **Geen match**
+  (Annex III), **Aangegeven** (geurallergeen met alleen een aangifteplicht),
+  **Toegestaan** (Annex IV/V/VI) of **Geen match**
 - **Opslaan** bewaart de controle; opgeslagen controles kun je weer
   **Verwijderen**
 
@@ -147,8 +150,16 @@ Twee dingen die het script bewust doet:
   `Chemical name / INN` ("2-hydroxy-4-methoxybenzophenone"). Op een etiket
   staat de eerste; die moet dus de hoofdnaam zijn, met de chemische naam als
   synoniem. Andersom matcht de lijst juist niet op echte etiketten.
-- **Annex II wint van Annex III** als een stof in beide voorkomt — verboden
-  gaat voor beperkt.
+- **Eén naam kan meerdere annexen raken.** CI 14270 staat in Annex II (verbod
+  in haarverf) én in Annex IV (toegelaten kleurstof). De index bewaart daarom
+  álle regels per naam en het zwaarste oordeel wint. Zou hij er één bewaren,
+  dan bepaalt de importvolgorde welke wint en kan een toelating een verbod
+  maskeren.
+- **De schuine streep is dubbelzinnig.** `Butylparaben/Propylparaben/Sodium
+  Propylparaben` is een opsomming; `Saccharomyces/Zinc/Magnesium/Selenium
+  Ferment` is één ingrediënt. Beslissend is het laatste deel: draagt dat een
+  kopwoord (Ferment, Extract, Oil …), dan zijn de delen ervoor bepalingen en
+  geen zelfstandige stoffen. Zonder die regel werd `Zinc` een verboden stof.
 
 De server cachet de lijst op mtime, dus een verse import is direct actief
 zonder herstart.
@@ -168,16 +179,35 @@ Drie dingen die de app principieel niet kan beoordelen:
 - **Producttype.** Veel beperkingen gelden alleen voor rinse-off, alleen voor
   professioneel gebruik, of niet voor kinderen onder de 3.
 - **Voorwaardelijke verboden.** Sommige Annex II-regels gelden alleen voor een
-  specifieke vorm — `Styrene/Acrylates copolymer (nano)`, of petrolatum
-  waarvan de raffinagehistorie onbekend is. Die staan als `conditional`
-  gemarkeerd en verschijnen als **beperkt**, niet als verbod, met de
-  voorwaarde erbij. Als absoluut verbod tonen zou tientallen legale producten
-  ten onrechte aanmerken.
+  specifieke vorm of een bepaald producttype — `Styrene/Acrylates copolymer
+  (nano)`, of `CI 26100 … when used as a substance in hair dye products`. Die
+  verschijnen als **beperkt**, met de voorwaarde erbij.
 
-Geurallergenen (Limonene, Linalool, Citronellol …) staan als **beperkt**. Dat
-volgt Annex III letterlijk, maar de verplichting is daar een
-*etiketteringsplicht* boven een drempelwaarde — geen verbod. Dat verklaart
-waarom een groot deel van de catalogus als beperkt wordt gemarkeerd.
+### De vier oordelen
+
+De vijf annexen zijn niet hetzelfde soort lijst, en de app houdt ze uit
+elkaar. II verbiedt, III beperkt, maar **IV, V en VI zijn toelatingslijsten**:
+artikel 14 verbiedt juist de kleurstoffen, conserveermiddelen en UV-filters
+die er *niet* op staan. Een treffer daar is dus een bevestiging, geen
+bevinding.
+
+| Oordeel | Waar het vandaan komt |
+|---|---|
+| **Verboden** | Annex II, zonder uitzondering die op deze stof slaat |
+| **Beperkt** | Annex III met een echte grens, of een Annex II-verbod dat alleen voor een vorm of producttype geldt |
+| **Aangegeven** | Annex III-geurallergeen waarvan de enige voorwaarde de vermelding op het etiket is — daaraan is voldaan doordat de stof in de INCI-lijst staat |
+| **Toegestaan** | Annex IV, V of VI, met de voorwaarden uit de annex erbij |
+
+Alleen **verboden** en **beperkt** zijn bevindingen. Aangegeven en toegestaan
+bepalen niet of een product opvalt; anders verdrinkt een echt verbod erin.
+
+Een uitzondering die naar een **andere annex** verwijst ("kwik en zijn
+verbindingen, behalve de gevallen in Annex V") heft het verbod niet op: die
+uitzondering is een apart genoemde stof, niet degene die hier bij naam staat.
+Kwikchloride blijft dus verboden. Verwijst de uitzondering naar een vorm of
+producttype, dan wordt het een controlepunt. De voorwaarde staat in CosIng
+lang niet altijd in de conditiekolom — net zo vaak in de stofnaam zelf of in
+een synoniem, dus de app leest de hele regel.
 
 ### Beveiliging
 

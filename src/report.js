@@ -2,11 +2,11 @@ function buildMarkdownReport({ counts, violations, total, dateStr }) {
   const lines = [];
   lines.push(`# Compliance-scan — ${dateStr}`);
   lines.push("");
-  lines.push(`EU Verordening (EG) 1223/2009 · Annex II & III · CosIng`);
+  lines.push(`EU Verordening (EG) 1223/2009 · Annex II t/m VI · CosIng`);
   lines.push("");
-  lines.push(`| Producten | Verboden (Annex II) | Beperkt (Annex III) | Zonder INCI | Conform |`);
+  lines.push(`| Producten | Verboden (Annex II) | Beperkt (Annex III) | Alleen toegestane stoffen (IV–VI) | Zonder INCI | Conform |`);
   lines.push(`|---|---|---|---|---|`);
-  lines.push(`| ${total} | ${counts.verboden} | ${counts.beperkt} | ${counts["geen-inci"]} | ${counts.ok} |`);
+  lines.push(`| ${total} | ${counts.verboden} | ${counts.beperkt} | ${counts.toegestaan || 0} | ${counts["geen-inci"]} | ${counts.ok} |`);
   lines.push("");
 
   if (!violations.length) {
@@ -23,7 +23,7 @@ function buildMarkdownReport({ counts, violations, total, dateStr }) {
       if (v.brand) lines.push(`Merk: ${v.brand}`);
       v.hits.forEach((h) => {
         lines.push(
-          `- **${h.inci}**${h.cas ? ` · CAS ${h.cas}` : ""} · Annex ${h.annex} · ${h.ref}${h.note ? ` — ${h.note}` : ""} (match via ${h.via})`
+          `- **${h.inci}**${h.cas ? ` · CAS ${h.cas}` : ""} · Annex ${h.annex} · ${h.ref}${h.soort ? ` · ${h.soort}` : ""}${h.note ? ` — ${h.note}` : ""} (match via ${h.via})`
         );
       });
       lines.push("");

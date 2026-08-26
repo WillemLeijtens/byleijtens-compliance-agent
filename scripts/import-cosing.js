@@ -163,10 +163,19 @@ async function importeerAnnex(bron, annex) {
    *   SACCHAROMYCES/GOLD FERMENT                      → één INCI-naam
    *
    * Altijd splitsen maakte van gewoon gistferment een verboden stof; nooit
-   * splitsen liet de parabenen onvindbaar. Onderscheid: drie of meer delen
-   * leest als opsomming, twee als één naam. De volledige tekst blijft
-   * daarnaast altijd staan, zodat een naam mét streep ook heel matcht.
+   * splitsen liet de parabenen onvindbaar. Het aantal delen alléén is geen
+   * goed onderscheid: "SACCHAROMYCES/ZINC/MAGNESIUM/SELENIUM FERMENT" heeft
+   * er zes en is toch één ingrediënt. Beslissend is het laatste deel. Draagt
+   * dat een kopwoord (FERMENT, EXTRACT, OIL …), dan zijn de delen ervoor
+   * bepalingen bij die kop en geen zelfstandige stoffen — anders werd ZINC
+   * een verboden stof. De volledige tekst blijft daarnaast altijd staan,
+   * zodat een naam mét streep ook heel matcht.
    */
+  const KOPWOORDEN = new Set(
+    ("ferment extract oil polypeptide lysate filtrate juice water powder " +
+     "butter wax resin balsam sprout culture").split(" ")
+  );
+
   const splitsNamen = (cel) => {
     const regels = String(cel || "")
       .split(/\s*;\s*|\s*\n\s*/)
@@ -177,7 +186,12 @@ async function importeerAnnex(bron, annex) {
     for (const regel of regels) {
       namen.push(regel);
       const delen = regel.split(/\s*\/\s*/).map((x) => x.trim()).filter(Boolean);
-      if (delen.length >= 3) namen.push(...delen);
+      if (delen.length < 3) continue;
+      const laatsteWoorden = delen[delen.length - 1].split(/\s+/);
+      const samengesteld =
+        laatsteWoorden.length > 1 &&
+        KOPWOORDEN.has(laatsteWoorden[laatsteWoorden.length - 1].toLowerCase());
+      if (!samengesteld) namen.push(...delen);
     }
     return [...new Set(namen)];
   };
