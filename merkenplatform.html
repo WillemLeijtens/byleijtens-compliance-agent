@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="nl" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Merkenplatform — By Leijtens</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&display=swap" rel="stylesheet">
+  <script>
+    // Thema zetten vóór de eerste verf, anders flitst de pagina in het
+    // verkeerde thema (patroon uit de Retailer Console).
+    try {
+      var t = localStorage.getItem('bl-theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  </script>
+  <style>
+    /* ==========================================================
+       Thema — 1:1 overgenomen uit de Retailer Console
+       (console/frontend/src/ds/theme.css). Beide sets, licht en
+       donker, zodat een thema wisselen alleen andere waarden is.
+
+       The Seasons ontbreekt bewust: de enige beschikbare cut is een
+       demoversie die een "DEMO"-teken in cijfers rendert. Koppen
+       vallen terug op Cormorant Garamond tot er een licentie is.
+       ========================================================== */
+    @font-face {
+      font-family: "Montserrat";
+      src: url("assets/fonts/Montserrat-VariableFont_wght.ttf") format("truetype-variations"),
+           url("assets/fonts/Montserrat-VariableFont_wght.ttf") format("truetype");
+      font-weight: 100 900; font-style: normal; font-display: swap;
+    }
+
+    :root, html[data-theme="light"] {
+      --t-bg:#F8F5F5; --t-card:#FFFFFF; --t-card2:#EAEFF1; --t-border:rgba(14,50,59,0.12);
+      --t-fg:#0E323B; --t-fg2:#546E77; --t-fg3:#7E8D92; --t-meta:#657378;
+      --t-shadow:0 4px 16px rgba(26,58,56,0.08);
+      --t-sidebar:#0E323B; --t-sidebar-fg:#F8F5F5; --t-sidebar-fg2:#BAC3C8;
+      --t-sidebar-hover:rgba(248,245,245,0.09); --t-sidebar-active:rgba(248,245,245,0.14);
+      --t-grid:#EAEFF1;
+      --c-y1:#6B7F8C; --c-y2:#1E88C7; --c-y3:#17A184;
+      --pos:#178F73; --neg:#C7563B; --warn:#B4690E;
+      --pos-text:#147D65; --neg-text:#B94E35; --warn-text:#A15E0D;
+    }
+    html[data-theme="dark"] {
+      --t-bg:#0E323B; --t-card:#12404C; --t-card2:#0B2A32; --t-border:rgba(248,245,245,0.10);
+      --t-fg:#F8F5F5; --t-fg2:#BAC3C8; --t-fg3:#7E8D92; --t-meta:#9CA8AC;
+      --t-shadow:0 4px 16px rgba(0,0,0,0.18);
+      --t-sidebar:#0B2A32; --t-sidebar-fg:#F8F5F5; --t-sidebar-fg2:#BAC3C8;
+      --t-sidebar-hover:rgba(248,245,245,0.07); --t-sidebar-active:rgba(248,245,245,0.12);
+      --t-grid:rgba(248,245,245,0.08);
+      --c-y1:#5E7684; --c-y2:#3FB0E8; --c-y3:#55D6B8;
+      --pos:#2FBF9B; --neg:#DB6E52; --warn:#D9A03F;
+      --pos-text:#2FBF9B; --neg-text:#E38E78; --warn-text:#D9A03F;
+    }
+    /* Accent uitsluitend voor haarlijnen, markers en kleine labels —
+       nooit knoppen of vlakken. */
+    :root { --accent:#FF914D; }
+
+    html { background: var(--t-bg); }
+    * { box-sizing: border-box; }
+    [v-cloak] { display: none; }
+    body {
+      margin:0; background:var(--t-bg); color:var(--t-fg);
+      font-family:"Montserrat", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+      font-size:13.5px; line-height:1.6; -webkit-font-smoothing:antialiased;
+    }
+    a { color:var(--t-fg); text-decoration:none; border-bottom:1px solid var(--accent); transition:opacity 160ms ease; }
+    a:hover { opacity:0.7; }
+    ::selection { background:var(--accent); color:#fff; }
+
+    .mp-h1 {
+      font-family:"The Seasons","Cormorant Garamond",Georgia,serif; font-weight:400;
+      text-transform:uppercase; font-size:27px; letter-spacing:0.06em; margin:0 0 6px; color:var(--t-fg);
+    }
+    .mp-h2 { font-family:"The Seasons","Cormorant Garamond",Georgia,serif; font-weight:400; font-size:17px; letter-spacing:0.04em; margin:0 0 12px; color:var(--t-fg); }
+    .mp-sub { color:var(--t-meta); font-size:11.5px; margin:0; }
+    .mp-eyebrow { font-weight:600; font-size:9.5px; letter-spacing:0.18em; text-transform:uppercase; color:var(--t-meta); }
+
+    /* --- Shell ------------------------------------------------------- */
+    .mp-shell { display:flex; min-height:100vh; }
+    .mp-nav {
+      width:248px; flex:0 0 248px; position:sticky; top:0; height:100vh; overflow-y:auto;
+      background:var(--t-sidebar); color:var(--t-sidebar-fg); display:flex; flex-direction:column; padding:24px 0 16px;
+    }
+    .mp-navitem {
+      display:block; width:100%; text-align:left; border:0; background:none; cursor:pointer;
+      color:var(--t-sidebar-fg); padding:9px 24px; font-family:inherit; font-weight:500;
+      font-size:12px; letter-spacing:0.06em; transition:background 180ms ease;
+    }
+    .mp-navitem:hover { background:var(--t-sidebar-hover); }
+    .mp-navitem.is-active { background:var(--t-sidebar-active); }
+    .mp-navitem.is-sub { padding-left:48px; color:var(--t-sidebar-fg2); }
+    .mp-navgroup {
+      display:flex; align-items:center; gap:6px; padding:14px 24px 6px; color:var(--t-sidebar-fg2);
+      font-weight:600; font-size:9.5px; letter-spacing:0.18em; text-transform:uppercase;
+    }
+    .mp-sig { padding:20px 24px 8px; font-family:"Brittany Signature",cursive; font-size:21px; color:var(--t-sidebar-fg2); }
+
+    .mp-tabs {
+      display:flex; gap:4px; padding:14px 40px 0; background:var(--t-card);
+      border-bottom:1px solid var(--t-border); flex-wrap:wrap;
+    }
+    .mp-tab {
+      display:flex; align-items:center; gap:8px; border:0; background:none; padding:10px 14px 12px;
+      cursor:pointer; font-family:inherit; font-weight:500; font-size:12px; letter-spacing:0.05em;
+      color:var(--t-meta); border-bottom:2px solid transparent; transition:background 160ms ease, color 160ms ease;
+    }
+    .mp-tab:hover { background:var(--t-card2); }
+    .mp-tab.is-active { color:var(--t-fg); border-bottom-color:var(--t-fg); }
+    .mp-tabmeta { font-size:9.5px; letter-spacing:0.12em; color:var(--t-meta); }
+    .mp-dot { width:7px; height:7px; border-radius:50%; display:inline-block; flex-shrink:0; }
+
+    .mp-main { max-width:1360px; padding:34px 40px 60px; }
+    @media (max-width: 720px) {
+      .mp-shell { flex-direction:column; }
+      .mp-nav { width:100%; flex:none; position:static; height:auto; padding:16px 0; }
+      .mp-main { padding:24px 18px 48px; }
+      .mp-tabs { padding:12px 18px 0; }
+    }
+
+    /* --- Bouwstenen -------------------------------------------------- */
+    .mp-card { background:var(--t-card); border:1px solid var(--t-border); border-radius:8px; padding:22px 24px; box-shadow:var(--t-shadow); }
+    .mp-card2 { background:var(--t-card2); border-radius:6px; padding:16px 18px; }
+    .mp-btn {
+      font-family:inherit; font-weight:500; font-size:12px; letter-spacing:0.15em; text-transform:uppercase;
+      padding:13px 24px; border-radius:6px; border:1px solid var(--t-fg); background:var(--t-fg);
+      color:var(--t-bg); cursor:pointer; transition:opacity 180ms ease; white-space:nowrap;
+    }
+    .mp-btn:hover:not(:disabled) { opacity:0.82; }
+    .mp-btn:disabled { opacity:0.5; cursor:default; }
+    .mp-btn-ghost { background:transparent; color:var(--t-fg); }
+    .mp-btn-ghost:hover:not(:disabled) { opacity:0.6; }
+    .mp-input, .mp-select, .mp-textarea {
+      font-family:inherit; font-size:14px; color:var(--t-fg); background:var(--t-card);
+      border:1px solid var(--t-border); border-radius:6px; padding:11px 12px; outline:none; width:100%;
+    }
+    .mp-input:focus, .mp-select:focus, .mp-textarea:focus { border-color:var(--t-fg); }
+    .mp-textarea { font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:13px; min-height:130px; resize:vertical; }
+    .mp-label { font-weight:500; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--t-meta); }
+    .mp-field { display:flex; flex-direction:column; gap:8px; }
+
+    .mp-badge { font-weight:500; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; padding:6px 12px; border-radius:999px; flex:none; }
+    .mp-badge-verboden { background:var(--t-fg); color:var(--t-bg); border:1px solid var(--t-fg); }
+    .mp-badge-beperkt { background:transparent; color:var(--t-fg); border:1px solid var(--accent); }
+    .mp-badge-neutraal { background:var(--t-card2); color:var(--t-fg); border:1px solid transparent; }
+
+    .mp-pill { display:inline-flex; align-items:center; gap:8px; font-size:12px; color:var(--t-fg); border:1px solid var(--t-border); border-radius:999px; padding:6px 14px; }
+    .mp-mono { font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:11.5px; }
+    .mp-lege {
+      background:var(--t-card); border:1.5px dashed var(--t-border); border-radius:8px;
+      padding:40px 24px; color:var(--t-meta); font-size:13px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" v-cloak class="mp-shell">
+
+    <!-- ================= Zijbalk ================= -->
+    <nav class="mp-nav">
+      <div style="padding:0 24px 24px">
+        <img src="assets/logo-white.svg" alt="By Leijtens" style="width:132px;display:block" />
+      </div>
+
+      <button class="mp-navitem" :class="{ 'is-active': scherm === 'overzicht' }" @click="ga('overzicht')">Overzicht</button>
+
+      <div class="mp-navgroup">
+        <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 L5 6.5 L8 3.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        Compliance agent
+      </div>
+      <button class="mp-navitem is-sub" :class="{ 'is-active': scherm === 'catalogus' }" @click="ga('catalogus')">Shopify-catalogus</button>
+      <button class="mp-navitem is-sub" :class="{ 'is-active': scherm === 'inci' }" @click="ga('inci')">Handmatige INCI-check</button>
+
+      <div class="mp-navgroup">
+        <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 L5 6.5 L8 3.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        Doorverkoop
+      </div>
+      <button class="mp-navitem is-sub" :class="{ 'is-active': scherm === 'doorverkoop' }" @click="ga('doorverkoop')">Analyse per merk</button>
+
+      <div class="mp-navgroup">
+        <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 L5 6.5 L8 3.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        Contract agent
+      </div>
+      <button class="mp-navitem is-sub" :class="{ 'is-active': scherm === 'contract' }" @click="ga('contract')">Contracten &amp; signalen</button>
+
+      <button class="mp-navitem" style="margin-top:14px" :class="{ 'is-active': scherm === 'instellingen' }" @click="ga('instellingen')">Instellingen</button>
+
+      <div style="margin-top:auto">
+        <button class="mp-navitem" style="font-size:11px;letter-spacing:0.12em" @click="wisselThema">
+          {{ thema === 'dark' ? 'Licht thema' : 'Donker thema' }}
+        </button>
+        <div class="mp-sig">Willem Leijtens</div>
+      </div>
+    </nav>
+
+    <div style="flex:1;min-width:0">
+
+      <!-- ================= Merk-tabs ================= -->
+      <div class="mp-tabs">
+        <button class="mp-tab" :class="{ 'is-active': merk === 'alle' }" @click="kiesMerk('alle')">Alle merken</button>
+        <button
+          v-for="m in merkTabs" :key="m.naam"
+          class="mp-tab" :class="{ 'is-active': merk === m.naam }"
+          @click="kiesMerk(m.naam)"
+        >
+          <span class="mp-dot" :style="{ background: m.dotKleur }"></span>
+          {{ m.naam }}
+          <span class="mp-tabmeta">{{ m.meta }}</span>
+        </button>
+      </div>
+
+      <main class="mp-main">
+
+        <!-- ============ Shopify-catalogus ============ -->
+        <template v-if="scherm === 'catalogus'">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap">
+            <div>
+              <h1 class="mp-h1">Shopify&#8209;catalogus</h1>
+              <p class="mp-sub">EU Verordening (EG) 1223/2009 · Annex II t/m VI<span v-if="merk !== 'alle'"> · gefilterd op {{ merk }}</span></p>
+            </div>
+            <button class="mp-btn" :disabled="workflowLoading" @click="triggerWorkflow">
+              {{ workflowLoading ? 'Bijwerken…' : 'Update' }}
+            </button>
+          </div>
+
+          <!-- statusregel -->
+          <div style="display:flex;align-items:center;flex-wrap:wrap;gap:14px;padding:20px 0 28px">
+            <span style="display:inline-flex;align-items:center;gap:8px;font-weight:500;font-size:11px;letter-spacing:0.15em;text-transform:uppercase"
+                  :style="{ color: shopifyOk ? 'var(--t-fg)' : 'var(--accent)' }">
+              <span class="mp-dot" :style="{ background: shopifyOk ? 'var(--pos)' : 'var(--accent)' }"></span>
+              {{ shopifyLabel }}
+            </span>
+            <span style="width:1px;height:14px;background:var(--t-border)"></span>
+            <span class="mp-sub" style="font-size:13px">Laatst gescand: <strong style="font-weight:500;color:var(--t-fg)">{{ laatsteScanTekst }}</strong></span>
+
+            <template v-if="status && status.lastRun">
+              <span style="width:1px;height:14px;background:var(--t-border)"></span>
+              <a class="mp-pill" :href="status.lastRun.url" target="_blank" rel="noopener noreferrer" style="border-bottom-color:var(--t-border)">
+                <span class="mp-dot" :style="{ border: '1px solid ' + runDotKleur, background:'transparent' }"></span>
+                Laatste run — {{ runLabel }}
+              </a>
+            </template>
+
+            <template v-if="data && data.shopifyTotalCount != null">
+              <span style="width:1px;height:14px;background:var(--t-border)"></span>
+              <span class="mp-pill">{{ data.counts.totaal || 0 }} / {{ data.shopifyTotalCount }} producten</span>
+            </template>
+
+            <template v-if="data && data.prohibitedList">
+              <span style="width:1px;height:14px;background:var(--t-border)"></span>
+              <span class="mp-pill" :title="lijstTitel">
+                <span class="mp-dot" :style="{ border:'1px solid ' + (lijstGelijk ? 'var(--t-fg)' : 'var(--accent)'), background:'transparent' }"></span>
+                Stoffenlijst: {{ data.prohibitedList.count }}<template v-if="!lijstGelijk"> — wijkt af</template>
+              </span>
+            </template>
+
+            <span v-if="workflowError" class="mp-sub" style="color:var(--neg-text)">{{ workflowError }}</span>
+            <span v-if="workflowSuccess" class="mp-sub">Workflow gestart.</span>
+          </div>
+
+          <!-- tellerkaarten -->
+          <div v-if="data" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:28px">
+            <button v-for="k in tellerKaarten" :key="k.status" class="mp-card"
+                    style="cursor:pointer;text-align:left;font:inherit;color:inherit;transition:border-color 160ms ease"
+                    :style="{ borderTop: '2px solid ' + k.rand, paddingTop: '21px' }"
+                    @click="filters.status = k.status">
+              <div class="mp-eyebrow" style="margin-bottom:10px">{{ k.label }}</div>
+              <div style="font-family:'The Seasons','Cormorant Garamond',Georgia,serif;font-size:32px;letter-spacing:0.02em">{{ k.waarde }}</div>
+            </button>
+          </div>
+
+          <!-- filters -->
+          <div class="mp-card" style="margin-bottom:28px">
+            <div class="mp-eyebrow" style="margin-bottom:18px">Filters</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px">
+              <label class="mp-field">
+                <span class="mp-label">Status</span>
+                <select v-model="filters.status" class="mp-select">
+                  <option value="">Alles (bevindingen)</option>
+                  <option value="verboden">Verboden</option>
+                  <option value="beperkt">Beperkt</option>
+                  <option value="geen-inci">Geen INCI</option>
+                </select>
+              </label>
+              <label class="mp-field">
+                <span class="mp-label">Merk</span>
+                <input v-model="filters.brand" type="text" placeholder="Zoek merk…" class="mp-input" />
+              </label>
+              <label class="mp-field">
+                <span class="mp-label">Ingrediënt</span>
+                <input v-model="filters.inci" type="text" placeholder="Zoek ingrediënt…" class="mp-input" />
+              </label>
+              <label class="mp-field">
+                <span class="mp-label">Sorteer op</span>
+                <select v-model="filters.sortBy" class="mp-select">
+                  <option value="naam">Productnaam</option>
+                  <option value="merk">Merk</option>
+                  <option value="ernst">Ernst</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <p class="mp-sub" style="margin-bottom:16px">
+            {{ zichtbaar.length }} van {{ gefilterd.length }} getoond<span v-if="gefilterd.length > zichtbaar.length"> — gebruik "Toon meer" onderaan</span>
+          </p>
+
+          <div v-if="gefilterd.length === 0" class="mp-lege" style="text-align:center">
+            Geen producten gevonden voor deze filters.
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div v-for="(v, i) in zichtbaar" :key="i" class="mp-card">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap">
+                <div style="display:flex;gap:16px;align-items:flex-start;min-width:0">
+                  <img v-if="v.image" :src="v.image" :alt="v.title" loading="lazy"
+                       style="width:48px;height:48px;border-radius:6px;object-fit:cover;flex:none;border:1px solid var(--t-border)" />
+                  <div v-else style="width:48px;height:48px;border-radius:6px;background:var(--t-card2);color:var(--t-meta);display:flex;align-items:center;justify-content:center;flex:none;font-family:'The Seasons','Cormorant Garamond',serif;font-size:16px">
+                    {{ initiaal(v) }}
+                  </div>
+                  <div style="min-width:0">
+                    <div style="font-size:15px;font-weight:500;margin-bottom:4px">{{ v.title }}</div>
+                    <div class="mp-sub" style="font-size:12.5px">
+                      <span v-if="v.sku">SKU: {{ v.sku }}</span>
+                      <span v-if="v.brand" style="margin-left:8px">Merk: {{ v.brand }}</span>
+                    </div>
+                    <a v-if="shopifyUrl(v)" :href="shopifyUrl(v)" target="_blank" rel="noopener noreferrer"
+                       style="font-size:12.5px;display:inline-block;margin-top:6px">Bekijk in Shopify ↗</a>
+                  </div>
+                </div>
+                <span class="mp-badge" :class="badgeKlasse(v.status)">{{ statusLabel(v.status) }}</span>
+              </div>
+
+              <div v-for="(h, hi) in v.hits" :key="hi" class="mp-card2" style="margin-top:14px">
+                <div style="font-size:13.5px;font-weight:500;margin-bottom:6px">{{ h.inci }}</div>
+                <div class="mp-mono" style="color:var(--t-meta);margin-bottom:4px">
+                  <span v-if="h.cas">CAS: {{ h.cas }} · </span>Annex {{ h.annex }} · {{ h.ref }}
+                </div>
+                <div v-if="h.note" style="font-size:12.5px;margin-bottom:6px">{{ h.note }}</div>
+                <div style="font-size:11px;color:var(--t-fg3);text-transform:uppercase;letter-spacing:0.08em">Match via {{ h.via }}</div>
+              </div>
+
+              <div v-if="v.status === 'verboden' || v.status === 'beperkt'" class="mp-card2" style="margin-top:12px;font-size:12px;color:var(--t-meta)">
+                INCI op basis van de Shopify-INCI-lijst. Controleer de INCI op het productlabel om zeker te zijn.
+                Dit is slechts een indicatie — controleer op
+                <a href="https://ec.europa.eu/growth/tools-databases/cosing/" target="_blank" rel="noopener noreferrer">CosIng</a>
+                of het ingrediënt echt verboden is, alvorens contact op te nemen met de leverancier.
+              </div>
+            </div>
+          </div>
+
+          <div v-if="gefilterd.length > zichtbaar.length" style="margin-top:20px;text-align:center">
+            <button class="mp-btn mp-btn-ghost" @click="toonMeer">Toon meer ({{ gefilterd.length - zichtbaar.length }} resterend)</button>
+          </div>
+        </template>
+
+        <!-- ============ Handmatige INCI-check ============ -->
+        <template v-if="scherm === 'inci'">
+          <h1 class="mp-h1">Handmatige INCI&#8209;check</h1>
+          <p class="mp-sub">
+            Controleer een losse INCI-lijst tegen dezelfde stoffenlijst als de automatische scan.
+            Losstaand van de Shopify-catalogus — hier wordt niets uit de productdatabase gelezen of gewijzigd.
+          </p>
+
+          <div class="mp-card" style="margin-top:24px">
+            <div class="mp-eyebrow" style="margin-bottom:18px">Nieuwe controle</div>
+
+            <label class="mp-field" style="margin-bottom:18px">
+              <span class="mp-label">Productnaam <span style="text-transform:none;letter-spacing:0">(optioneel)</span></span>
+              <input v-model="manual.productName" type="text" placeholder="Bijv. Teaology Body Cream 260 ml" class="mp-input" />
+            </label>
+
+            <label class="mp-field">
+              <span class="mp-label">INCI-lijst</span>
+              <textarea v-model="manual.inci" class="mp-textarea"
+                placeholder="Plak hier de volledige INCI-lijst, bijvoorbeeld:&#10;Aqua, Glycerin, Butylphenyl Methylpropional, Salicylic Acid, Parfum"
+                @keydown.ctrl.enter="doeCheck" @keydown.meta.enter="doeCheck"></textarea>
+            </label>
+
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:18px">
+              <button class="mp-btn" :disabled="manual.loading || !manual.inci.trim()" @click="doeCheck">
+                {{ manual.loading ? 'Bezig…' : 'Check' }}
+              </button>
+              <button class="mp-btn mp-btn-ghost" :disabled="manual.loading" @click="wisCheck">Wissen</button>
+              <span v-if="manual.error" class="mp-sub" style="color:var(--neg-text)">{{ manual.error }}</span>
+              <span v-if="manual.savedNotice" class="mp-sub">{{ manual.savedNotice }}</span>
+            </div>
+          </div>
+
+          <div v-if="manual.result" class="mp-card" style="margin-top:24px">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px">
+              <div>
+                <div class="mp-eyebrow" style="margin-bottom:6px">Uitslag</div>
+                <div style="font-size:15px;font-weight:500">{{ manual.result.productName || 'Naamloos product' }}</div>
+                <div class="mp-sub" style="font-size:12.5px">
+                  {{ manual.result.totaal }} ingrediënten ·
+                  {{ manual.result.counts.verboden }} verboden ·
+                  {{ manual.result.counts.beperkt }} beperkt ·
+                  {{ manual.result.counts.ok }} geen match
+                </div>
+              </div>
+              <span class="mp-badge" :class="badgeKlasse(manual.result.status)">{{ uitslagLabel(manual.result.status) }}</span>
+            </div>
+
+            <div v-for="(ing, i) in manual.result.ingredients" :key="i"
+                 style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--t-card2)">
+              <div style="min-width:0">
+                <div style="font-size:14px;font-weight:500">{{ ing.input }}</div>
+                <div v-if="ing.match" class="mp-sub" style="font-size:12px;margin-top:3px">
+                  Gevonden als <strong style="font-weight:500">{{ ing.match.inci }}</strong>
+                  <span v-if="ing.match.cas"> · CAS <code class="mp-mono">{{ ing.match.cas }}</code></span>
+                  · Annex {{ ing.match.annex }} · {{ ing.match.ref }}
+                </div>
+                <div v-if="ing.match && ing.match.note" style="font-size:12px;margin-top:3px">{{ ing.match.note }}</div>
+                <div v-if="ing.match" class="mp-sub" style="font-size:11px;margin-top:3px">Match via {{ ing.match.via }}</div>
+                <div v-else class="mp-sub" style="font-size:12px;margin-top:3px">Niet gevonden in de controlelijst</div>
+              </div>
+              <span class="mp-badge" :class="badgeKlasse(ing.status)">{{ ingLabel(ing.status) }}</span>
+            </div>
+
+            <div style="margin-top:18px">
+              <button class="mp-btn" :disabled="manual.saving" @click="slaOp">
+                {{ manual.saving ? 'Opslaan…' : 'Opslaan' }}
+              </button>
+            </div>
+
+            <div class="mp-card2" style="margin-top:18px;font-size:12px;color:var(--t-meta)">
+              De controlelijst telt {{ manual.result.listSize }} stoffen uit Annex II t/m VI.
+              <strong style="font-weight:500">"Geen match" betekent niet automatisch dat een ingrediënt is toegestaan</strong> —
+              de app kan geen concentraties of producttypes beoordelen. Controleer de INCI op het productlabel en verifieer op
+              <a href="https://ec.europa.eu/growth/tools-databases/cosing/" target="_blank" rel="noopener noreferrer">CosIng</a>
+              voordat u conclusies trekt of contact opneemt met de leverancier.
+            </div>
+          </div>
+
+          <p class="mp-sub" style="margin:28px 0 16px">
+            {{ manual.saved.length }} opgeslagen {{ manual.saved.length === 1 ? 'controle' : 'controles' }}
+          </p>
+
+          <div v-if="manual.saved.length === 0" class="mp-lege" style="text-align:center">
+            Nog geen controles opgeslagen. Doe hierboven een check en klik op "Opslaan".
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div v-for="c in manual.saved" :key="c.id" class="mp-card">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">
+                <div style="min-width:0">
+                  <div style="font-size:15px;font-weight:500">{{ c.productName }}</div>
+                  <div class="mp-sub" style="font-size:12.5px">
+                    {{ formatDatum(c.savedAt) }}
+                    <span v-if="c.savedBy && c.savedBy !== 'onbekend'"> · door {{ c.savedBy }}</span>
+                    · {{ c.totaal }} ingrediënten · {{ c.counts.verboden }} verboden · {{ c.counts.beperkt }} beperkt
+                  </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;flex:none">
+                  <span class="mp-badge" :class="badgeKlasse(c.status)">{{ uitslagLabel(c.status) }}</span>
+                  <button @click="verwijder(c)"
+                          style="background:none;border:0;padding:0;cursor:pointer;font-family:inherit;font-size:12.5px;color:var(--t-meta);border-bottom:1px solid var(--accent)">
+                    Verwijderen
+                  </button>
+                </div>
+              </div>
+
+              <div v-for="(ing, i) in c.ingredients.filter(x => x.match)" :key="i" class="mp-card2" style="margin-top:14px">
+                <div style="font-size:13.5px;font-weight:500;margin-bottom:6px">{{ ing.input }}</div>
+                <div class="mp-mono" style="color:var(--t-meta)">
+                  <span v-if="ing.match.cas">CAS: {{ ing.match.cas }} · </span>Annex {{ ing.match.annex }} · {{ ing.match.ref }}
+                </div>
+                <div v-if="ing.match.note" style="font-size:12.5px;margin-top:4px">{{ ing.match.note }}</div>
+              </div>
+
+              <details style="margin-top:14px">
+                <summary style="cursor:pointer;font-size:12.5px;color:var(--t-meta)">Volledige INCI-lijst</summary>
+                <div class="mp-mono" style="color:var(--t-meta);margin-top:8px;white-space:pre-wrap">{{ c.inci }}</div>
+              </details>
+            </div>
+          </div>
+        </template>
+
+        <!-- ============ Nog niet aangesloten schermen ============ -->
+        <template v-if="nogNietGebouwd">
+          <h1 class="mp-h1">{{ nogNietGebouwd.titel }}</h1>
+          <p class="mp-sub">{{ nogNietGebouwd.sub }}</p>
+
+          <div class="mp-lege" style="margin-top:24px">
+            <div class="mp-eyebrow" style="margin-bottom:12px">Nog niet aangesloten</div>
+            <p style="margin:0 0 14px;color:var(--t-fg)">{{ nogNietGebouwd.uitleg }}</p>
+            <div class="mp-eyebrow" style="margin-bottom:8px">Hiervoor nodig</div>
+            <ul style="margin:0;padding-left:18px;color:var(--t-meta)">
+              <li v-for="(p, i) in nogNietGebouwd.nodig" :key="i" style="margin-bottom:6px">{{ p }}</li>
+            </ul>
+          </div>
+        </template>
+
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const { createApp } = Vue;
+
+    // Schermen die nog geen databron hebben. Bewust géén voorbeeldcijfers:
+    // in een compliance-omgeving is een verzonnen getal dat er echt uitziet
+    // schadelijker dan een leeg scherm.
+    const NIET_AANGESLOTEN = {
+      overzicht: {
+        titel: 'Overzicht',
+        sub: 'Signalen en taken per merk',
+        uitleg: 'Het overzicht vat compliance, doorverkoop en contracten samen per merk. Twee van die drie bronnen bestaan nog niet, dus het scherm zou grotendeels uit placeholders bestaan.',
+        nodig: [
+          'Een takenmodel: wat genereert een taak, welke deadline hoort erbij, en waar worden afgevinkte taken bewaard',
+          'De doorverkoopkoppeling (zie Analyse per merk)',
+          'De contractanalyse (zie Contracten & signalen)'
+        ]
+      },
+      doorverkoop: {
+        titel: 'Analyse per merk',
+        sub: 'Doorverkoopcijfers uit de Retailer Console',
+        uitleg: 'De cijfers komen uit de Retailer Console (repo Data-analytics-internal). Dat endpoint bestaat nog niet en die repo is vanuit deze sessie alleen leesbaar, niet te wijzigen.',
+        nodig: [
+          'Endpoint GET /api/merken/{merk}/doorverkoop in console/backend/main.py — sellout_facts heeft al een merk-index',
+          'Server-side ophalen via 127.0.0.1 (beide apps draaien op deze droplet), zodat er geen CORS speelt en het token op de machine blijft',
+          'Een API-token voor de console, in te stellen bij Instellingen'
+        ]
+      },
+      contract: {
+        titel: 'Contracten & signalen',
+        sub: 'AI-analyse van merkcontracten',
+        uitleg: 'De contractagent leest looptijd, territorium, targets en bijdragen uit een geüpload contract via de Anthropic API.',
+        nodig: [
+          'Een Anthropic API-key, server-side opgeslagen en nooit terugleesbaar',
+          'Opslag voor contracten en geëxtraheerde afspraken (patroon: contract_documents in de console-repo)',
+          'Een besluit over waar de bestanden landen: op de droplet of in objectopslag'
+        ]
+      },
+      instellingen: {
+        titel: 'Instellingen',
+        sub: 'Koppelingen en sleutels',
+        uitleg: 'Hier komen de Claude API-key en de koppeling met de Retailer Console. Beide horen server-side te worden bewaard en nooit terugleesbaar te zijn.',
+        nodig: [
+          'Endpoints om sleutels op te slaan en te testen zonder ze terug te geven',
+          'Een plek om ze te bewaren die de deploy-webhook (git pull) niet overschrijft'
+        ]
+      }
+    };
+
+    const SCHERMEN = ['overzicht', 'catalogus', 'inci', 'doorverkoop', 'contract', 'instellingen'];
+    const PAGINA = 40; // productkaarten per keer — 2300 in één keer is te veel voor een telefoon
+
+    createApp({
+      data() {
+        return {
+          scherm: 'catalogus',
+          merk: 'alle',
+          thema: document.documentElement.getAttribute('data-theme') || 'light',
+          limiet: PAGINA,
+
+          data: null,
+          status: null,
+          lastScanDate: null,
+          filters: { status: '', brand: '', inci: '', sortBy: 'naam' },
+          workflowLoading: false, workflowError: '', workflowSuccess: false,
+
+          manual: {
+            productName: '', inci: '', result: null, saved: [],
+            loading: false, saving: false, error: '', savedNotice: ''
+          }
+        };
+      },
+
+      computed: {
+        nogNietGebouwd() { return NIET_AANGESLOTEN[this.scherm] || null; },
+
+        /** Merk-tabs uit de echte scandata, gesorteerd op aantal bevindingen. */
+        merkTabs() {
+          if (!this.data) return [];
+          const per = {};
+          (this.data.violations || []).forEach(v => {
+            const m = (v.brand || '').trim();
+            if (!m) return;
+            per[m] = per[m] || { naam: m, verboden: 0, beperkt: 0 };
+            if (v.status === 'verboden') per[m].verboden++;
+            else per[m].beperkt++;
+          });
+          return Object.values(per)
+            .sort((a, b) => (b.verboden - a.verboden) || (b.beperkt - a.beperkt))
+            .slice(0, 8)
+            .map(m => ({
+              naam: m.naam,
+              // Signaalkleur volgt de zwaarste bevinding van dat merk.
+              dotKleur: m.verboden ? 'var(--neg)' : m.beperkt ? 'var(--warn)' : 'var(--pos)',
+              meta: m.verboden ? `${m.verboden} verboden` : `${m.beperkt} beperkt`
+            }));
+        },
+
+        tellerKaarten() {
+          const c = this.data.counts || {};
+          return [
+            { status: '',          label: 'Totaal',        waarde: c.totaal || 0,      rand: 'var(--t-border)' },
+            { status: 'verboden',  label: 'Verboden (II)', waarde: c.verboden || 0,    rand: c.verboden ? 'var(--neg)' : 'var(--t-border)' },
+            { status: 'beperkt',   label: 'Beperkt (III+)',waarde: c.beperkt || 0,     rand: c.beperkt ? 'var(--accent)' : 'var(--t-border)' },
+            { status: 'geen-inci', label: 'Geen INCI',     waarde: c['geen-inci'] || 0,rand: 'var(--t-border)' }
+          ];
+        },
+
+        /** Volledige gefilterde lijst; het merk-tabblad filtert mee. */
+        gefilterd() {
+          if (!this.data) return [];
+          const bron = this.filters.status
+            ? (this.data.allProducts || []).filter(p => p.status === this.filters.status)
+            : (this.data.violations || []);
+
+          const merkFilter = this.merk !== 'alle' ? this.merk.toLowerCase() : '';
+          const zoekMerk = this.filters.brand.toLowerCase();
+          const zoekInci = this.filters.inci.toLowerCase();
+
+          const uit = bron.filter(v => {
+            const merk = (v.brand || '').toLowerCase();
+            if (merkFilter && merk !== merkFilter) return false;
+            if (zoekMerk && !merk.includes(zoekMerk)) return false;
+            if (zoekInci && !(v.hits || []).some(h => h.inci.toLowerCase().includes(zoekInci))) return false;
+            return true;
+          });
+
+          const ernst = { verboden: 0, beperkt: 1 };
+          return uit.slice().sort((a, b) => {
+            if (this.filters.sortBy === 'merk') return (a.brand || '').localeCompare(b.brand || '');
+            if (this.filters.sortBy === 'ernst') return (ernst[a.status] ?? 2) - (ernst[b.status] ?? 2);
+            return (a.title || '').localeCompare(b.title || '');
+          });
+        },
+
+        /** Alleen de eerste N renderen: 2300 kaarten tegelijk loopt vast op mobiel. */
+        zichtbaar() { return this.gefilterd.slice(0, this.limiet); },
+
+        shopifyOk()    { return this.status?.shopify?.state === 'ok'; },
+        shopifyLabel() {
+          const s = this.status?.shopify?.state;
+          if (s === 'ok') return 'Shopify verbonden';
+          if (s === 'fout') return 'Shopify niet verbonden';
+          return this.status?.shopify?.message || 'Shopify status onbekend';
+        },
+        runLabel() {
+          const r = this.status?.lastRun;
+          if (!r) return '';
+          return r.status !== 'completed' ? 'bezig…' : (r.conclusion === 'success' ? 'succesvol' : 'mislukt');
+        },
+        runDotKleur() {
+          const r = this.status?.lastRun;
+          if (!r || r.status !== 'completed') return 'var(--t-fg3)';
+          return r.conclusion === 'success' ? 'var(--pos)' : 'var(--neg)';
+        },
+        laatsteScanTekst() { return this.lastScanDate ? this.formatDatum(this.lastScanDate) : 'geen scans gevonden'; },
+
+        lijstGelijk() {
+          const scan = this.data?.prohibitedList?.hash;
+          const server = this.manual.result?.prohibitedList?.hash;
+          return !scan || !server ? true : scan === server;
+        },
+        lijstTitel() {
+          const scan = this.data?.prohibitedList, server = this.manual.result?.prohibitedList;
+          if (!scan) return '';
+          if (!server) return `Laatste scan gebruikte ${scan.count} stoffen (${scan.hash}).`;
+          return this.lijstGelijk
+            ? `Scan en handmatige check gebruiken dezelfde lijst (${scan.count} stoffen).`
+            : `LET OP — verschillende lijsten: scan ${scan.count} (${scan.hash}), server ${server.count} (${server.hash}).`;
+        }
+      },
+
+      methods: {
+        // --- navigatie: scherm en merk staan in de URL ---
+        ga(scherm) { this.scherm = scherm; this.limiet = PAGINA; this.schrijfUrl(); },
+        kiesMerk(m) { this.merk = m; this.limiet = PAGINA; this.schrijfUrl(); },
+        toonMeer() { this.limiet += PAGINA; },
+
+        schrijfUrl() {
+          const hash = `#/${encodeURIComponent(this.merk)}/${this.scherm}`;
+          if (location.hash !== hash) history.replaceState(null, '', hash);
+        },
+        leesUrl() {
+          const m = (location.hash || '').match(/^#\/([^/]*)\/([^/]*)/);
+          if (!m) return;
+          const merk = decodeURIComponent(m[1] || 'alle');
+          const scherm = m[2];
+          if (SCHERMEN.includes(scherm)) this.scherm = scherm;
+          if (merk) this.merk = merk;
+        },
+
+        wisselThema() {
+          this.thema = this.thema === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', this.thema);
+          try { localStorage.setItem('bl-theme', this.thema); } catch (e) {}
+        },
+
+        // --- weergavehulpjes ---
+        initiaal(p) { return (p.brand || p.title || '?').charAt(0).toUpperCase(); },
+        statusLabel(s) { return { verboden:'Verboden', beperkt:'Beperkt', 'geen-inci':'Geen INCI', ok:'Conform' }[s] || s; },
+        uitslagLabel(s) { return { verboden:'Verboden', beperkt:'Beperkt', ok:'Geen bevindingen', leeg:'Leeg' }[s] || s; },
+        ingLabel(s) { return { verboden:'Verboden', beperkt:'Beperkt', ok:'Geen match' }[s] || s; },
+        badgeKlasse(s) {
+          if (s === 'verboden') return 'mp-badge-verboden';
+          if (s === 'beperkt') return 'mp-badge-beperkt';
+          return 'mp-badge-neutraal';
+        },
+        shopifyUrl(p) {
+          if (!this.data?.storeDomain || !p?.id) return null;
+          const id = String(p.id).split('/').pop();
+          return id ? `https://${this.data.storeDomain}/admin/products/${id}` : null;
+        },
+        formatDatum(d) {
+          if (!d) return '';
+          return new Date(d).toLocaleDateString('nl-NL', {
+            year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit'
+          });
+        },
+
+        // --- data ---
+        async laadData() {
+          try {
+            const r = await fetch('./reports/violations-latest.json');
+            if (!r.ok) throw new Error('Bestand niet gevonden');
+            this.data = await r.json();
+            if (this.data.lastScan) this.lastScanDate = new Date(this.data.lastScan);
+          } catch (e) {
+            console.error('Fout bij laden data:', e);
+            this.data = { violations: [], allProducts: [], storeDomain: '', shopifyTotalCount: null,
+                          counts: { verboden:0, beperkt:0, 'geen-inci':0, totaal:0 } };
+          }
+        },
+        async laadStatus() {
+          try { this.status = await (await fetch('/api/status')).json(); }
+          catch (e) { console.error('Fout bij laden status:', e); }
+        },
+        async triggerWorkflow() {
+          this.workflowLoading = true; this.workflowError = ''; this.workflowSuccess = false;
+          try {
+            const r = await fetch('/api/trigger-workflow', { method:'POST', headers:{'Content-Type':'application/json'} });
+            const res = await r.json();
+            if (r.ok || res.status === 204) {
+              this.workflowSuccess = true;
+              setTimeout(() => { this.workflowSuccess = false; this.laadData(); this.laadStatus(); }, 3000);
+            } else {
+              let d = res.error || res.message || '';
+              try { d = JSON.parse(d).message || d; } catch (e) {}
+              this.workflowError = d ? `Fout ${r.status}: ${d}` : `Fout ${r.status}`;
+            }
+          } catch (e) { this.workflowError = `Fout: ${e.message}`; }
+          finally { this.workflowLoading = false; }
+        },
+
+        // --- handmatige check (hergebruikt de bestaande endpoints) ---
+        async doeCheck() {
+          this.manual.loading = true; this.manual.error = ''; this.manual.savedNotice = '';
+          try {
+            const r = await fetch('/api/inci-check', {
+              method:'POST', headers:{'Content-Type':'application/json'},
+              body: JSON.stringify({ productName:this.manual.productName, inci:this.manual.inci })
+            });
+            const res = await r.json();
+            if (!r.ok) throw new Error(res.error || `Fout ${r.status}`);
+            this.manual.result = res;
+          } catch (e) { this.manual.result = null; this.manual.error = e.message; }
+          finally { this.manual.loading = false; }
+        },
+        wisCheck() {
+          Object.assign(this.manual, { productName:'', inci:'', result:null, error:'', savedNotice:'' });
+        },
+        async slaOp() {
+          this.manual.saving = true; this.manual.error = ''; this.manual.savedNotice = '';
+          try {
+            const r = await fetch('/api/manual-checks', {
+              method:'POST', headers:{'Content-Type':'application/json'},
+              body: JSON.stringify({ productName:this.manual.productName, inci:this.manual.inci })
+            });
+            const res = await r.json();
+            if (!r.ok) throw new Error(res.error || `Fout ${r.status}`);
+            this.manual.savedNotice = 'Opgeslagen.';
+            await this.laadOpgeslagen();
+          } catch (e) { this.manual.error = e.message; }
+          finally { this.manual.saving = false; }
+        },
+        async laadOpgeslagen() {
+          try {
+            const res = await (await fetch('/api/manual-checks')).json();
+            this.manual.saved = res.checks || [];
+          } catch (e) { console.error('Fout bij laden opgeslagen checks:', e); }
+        },
+        async verwijder(c) {
+          if (!confirm(`"${c.productName}" verwijderen?`)) return;
+          this.manual.error = '';
+          try {
+            const r = await fetch(`/api/manual-checks?id=${encodeURIComponent(c.id)}`, { method:'DELETE' });
+            const res = await r.json();
+            if (!r.ok) throw new Error(res.error || `Fout ${r.status}`);
+            await this.laadOpgeslagen();
+          } catch (e) { this.manual.error = e.message; }
+        }
+      },
+
+      mounted() {
+        this.leesUrl();
+        window.addEventListener('hashchange', () => this.leesUrl());
+        this.laadData();
+        this.laadStatus();
+        this.laadOpgeslagen();
+        setInterval(() => { this.laadData(); this.laadStatus(); }, 5 * 60 * 1000);
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
