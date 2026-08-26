@@ -119,6 +119,15 @@ function leesBron(bron) {
       return r.text();
     });
   }
+  if (!fs.existsSync(bron)) {
+    throw new Error(
+      `Bestand niet gevonden: ${bron}\n\n` +
+      `De CSV's moeten eerst gedownload worden — ze zitten niet in de repository.\n` +
+      `Ga naar https://ec.europa.eu/growth/tools-databases/cosing/reference/annexes\n` +
+      `kies Annex II en Annex III, en download elk als CSV. Zet die bestanden\n` +
+      `vervolgens in ${process.cwd()} of geef het volledige pad op.`
+    );
+  }
   return Promise.resolve(fs.readFileSync(bron, "utf8"));
 }
 
