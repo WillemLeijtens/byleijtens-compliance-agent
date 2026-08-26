@@ -154,9 +154,19 @@ async function importeerAnnex(bron, annex) {
   const stoffen = [];
   const overgeslagen = [];
 
+  /**
+   * Splitst een cel met meerdere stofnamen.
+   *
+   * Uitsluitend op newline en puntkomma — NIET op "/". Een schuine streep zit
+   * middenin geldige INCI-namen: SACCHAROMYCES/GOLD FERMENT en
+   * SELENIUM/GLYCINE SOJA SPROUT EXTRACT zijn elk één ingrediënt. Splitsen op
+   * "/" maakte daar "SACCHAROMYCES" en "SELENIUM" van, waarmee doodgewoon
+   * gistferment als verboden stof in de lijst belandde — een vals alarm op
+   * honderden legale producten.
+   */
   const splitsNamen = (cel) =>
     String(cel || "")
-      .split(/\s*[;/]\s*|\s*\n\s*/)
+      .split(/\s*;\s*|\s*\n\s*/)
       .map((x) => x.trim())
       .filter((x) => x && x.toLowerCase() !== "n/a");
 
@@ -179,12 +189,24 @@ async function importeerAnnex(bron, annex) {
       idx.cond !== -1 ? String(rij[idx.cond] || "").trim() : "",
     ].filter((s) => s && s.toLowerCase() !== "n/a");
 
+    // De kolom met INCI-namen laat voorwaarden weg die in de chemische naam
+    // wél staan. "Styrene/Acrylates copolymer (nano)" wordt daar
+    // "STYRENE/ACRYLATES COPOLYMER" — terwijl alleen de nanovorm verboden is,
+    // en het gewone copolymeer volstrekt legaal in tientallen producten zit.
+    // Zulke regels als absoluut verbod importeren levert vals alarm op echte
+    // producten; markeer ze daarom als voorwaardelijk, zodat de app om
+    // controle vraagt in plaats van een verbod te melden.
+    const chemVolledig = idx.chem !== -1 ? String(rij[idx.chem] || "") : "";
+    const voorwaardelijk = /\b(except|unless|other than|with the exception)\b|\(nano\)/i.test(chemVolledig);
+    const voorwaarde = voorwaardelijk ? chemVolledig.replace(/\s+/g, " ").trim().slice(0, 220) : "";
+
     stoffen.push({
       inci: hoofdnaam,
       cas: idx.cas !== -1 ? String(rij[idx.cas] || "").trim() || null : null,
       annex,
       ref: idx.ref !== -1 ? String(rij[idx.ref] || "").trim() || `Annex ${annex}` : `Annex ${annex}`,
-      note: stukjes.join(" · ").slice(0, 300),
+      note: (voorwaardelijk ? `Alleen onder voorwaarde: ${voorwaarde}` : stukjes.join(" · ")).slice(0, 300),
+      ...(voorwaardelijk ? { conditional: true } : {}),
       ...(synoniemen.length ? { synonyms: synoniemen } : {}),
     });
   }
@@ -228,11 +250,20 @@ async function main() {
     alles.push(...r.stoffen);
   }
 
-  // Handmatig toegevoegde synoniemen uit de bestaande lijst behouden: die zijn
-  // met zorg gekozen en staan niet in de CosIng-export.
+  // Samenvoegen met de bestaande lijst. Twee dingen mogen niet verloren gaan:
+  // met zorg gekozen synoniemen, en stoffen die in deze import niet voorkomen.
+  //
+  // Dat laatste is geen theoretisch geval: importeer je alleen Annex II en III,
+  // dan ontbreken de conserveermiddelen (V) en UV-filters (VI). Zonder deze
+  // beveiliging zou een import de dekking stilzwijgend verkleinen — precies
+  // het soort stille achteruitgang dat je in een compliance-tool niet merkt
+  // tot een controle iets mist.
+  let behouden = [];
   if (!heeft("--no-merge") && fs.existsSync(uit)) {
     const oud = JSON.parse(fs.readFileSync(uit, "utf8"));
+    const nieuweNamen = new Set(alles.map((e) => e.inci.toLowerCase()));
     const oudeSyn = new Map(oud.filter((e) => e.synonyms).map((e) => [e.inci.toLowerCase(), e.synonyms]));
+
     let samengevoegd = 0;
     for (const stof of alles) {
       const bestaand = oudeSyn.get(stof.inci.toLowerCase());
@@ -242,7 +273,22 @@ async function main() {
       }
     }
     if (samengevoegd) console.log(`Bestaande synoniemen behouden voor ${samengevoegd} stoffen.`);
+
+    behouden = oud.filter((e) => !nieuweNamen.has(e.inci.toLowerCase()));
+    if (behouden.length) {
+      if (heeft("--drop-missing")) {
+        console.log(`\n⚠ ${behouden.length} stoffen uit de vorige lijst VERWIJDERD (--drop-missing):`);
+        behouden.forEach((e) => console.log(`    - ${e.inci} (Annex ${e.annex})`));
+        behouden = [];
+      } else {
+        console.log(`\n⚠ ${behouden.length} stoffen staan niet in deze import en zijn BEHOUDEN:`);
+        behouden.forEach((e) => console.log(`    · ${e.inci} (Annex ${e.annex})`));
+        console.log(`  Zitten ze in een annex die je nog niet hebt geïmporteerd (IV/V/VI)?`);
+        console.log(`  Importeer die er dan bij. Weggooien kan met --drop-missing.`);
+      }
+    }
   }
+  alles.push(...behouden);
 
   // Dubbele INCI-namen samenvoegen: dezelfde stof kan in meerdere annexen of
   // meerdere keren voorkomen. Annex II wint, want verboden gaat voor beperkt.

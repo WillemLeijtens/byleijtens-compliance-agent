@@ -98,8 +98,8 @@ function scanProduct(product, index) {
       if (!hits.some((h) => h.entry === e)) hits.push({ ingredient: cas, entry: e, via: "CAS" });
     }
   });
-  const banned = hits.filter((h) => h.entry.annex === "II");
-  const restricted = hits.filter((h) => h.entry.annex !== "II");
+  const banned = hits.filter((h) => h.entry.annex === "II" && !h.entry.conditional);
+  const restricted = hits.filter((h) => h.entry.annex !== "II" || h.entry.conditional);
   const status = banned.length ? "verboden" : restricted.length ? "beperkt" : product.inci ? "ok" : "geen-inci";
   return { status, banned, restricted };
 }
@@ -154,7 +154,14 @@ function checkInciList(rawInci, prohibitedList) {
     const entry = treffer ? treffer.entry : null;
     const via = treffer ? treffer.via : null;
 
-    const status = !entry ? "ok" : entry.annex === "II" ? "verboden" : "beperkt";
+    // Een voorwaardelijke Annex II-regel (alleen de nanovorm, of "except
+    // if…") is geen absoluut verbod. Als "verboden" tonen zou legale
+    // producten ten onrechte aanmerken; het hoort een controlepunt te zijn.
+    const status = !entry
+      ? "ok"
+      : entry.annex === "II" && !entry.conditional
+        ? "verboden"
+        : "beperkt";
 
     return {
       input: token,
