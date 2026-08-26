@@ -242,3 +242,21 @@ Ook mogelijk via GitHub Actions UI:
 - [Vue.js docs](https://vuejs.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [GitHub Pages](https://pages.github.com/)
+
+## 🔗 Eén gedeelde stoffenlijst
+
+De Shopify-scan en de handmatige check gebruiken dezelfde bron:
+`data/prohibited-list.json`, via dezelfde matchingcode in
+`src/compliance.js`. Er is bewust geen tweede lijst — anders zou hetzelfde
+ingrediënt op twee plekken een ander oordeel kunnen krijgen.
+
+Ze draaien wel op verschillende machines: de scan in GitHub Actions, de
+handmatige check op de Droplet, elk met een eigen kopie van de repository.
+Wordt er één bijgewerkt zonder de ander, dan lopen ze uiteen zonder dat je
+het merkt.
+
+Daarom rekent `listFingerprint()` een vingerafdruk uit (aantal + hash). De
+scan schrijft die in `violations-latest.json`, de server rapporteert de zijne
+bij elke check, en het dashboard toont ze naast elkaar — met de melding
+"wijkt af" zodra ze verschillen. Na een import hoort de lijst dus gecommit
+en op beide plekken uitgerold te worden.

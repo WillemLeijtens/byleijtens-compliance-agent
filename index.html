@@ -291,6 +291,15 @@
           </span>
         </template>
 
+        <template v-if="data && data.prohibitedList">
+          <span class="ca-divider"></span>
+          <span class="ca-pill" :title="lijstTitel">
+            <span class="ca-dot" :style="{ border: '1px solid ' + (lijstGelijk ? 'var(--bl-hoofdkleur)' : 'var(--bl-accent)'), background: 'transparent' }"></span>
+            Stoffenlijst: {{ data.prohibitedList.count }}
+            <template v-if="!lijstGelijk"> — wijkt af</template>
+          </span>
+        </template>
+
         <span v-if="workflowError" class="ca-meta" style="color:var(--bl-accent)">{{ workflowError }}</span>
         <span v-if="workflowSuccess" class="ca-meta">Workflow gestart.</span>
       </div>
@@ -399,6 +408,10 @@
             Controleer een losse INCI-lijst tegen dezelfde stoffenlijst als de automatische scan.
             Losstaand van de Shopify-catalogus — hier wordt niets uit de productdatabase gelezen of gewijzigd.
           </span>
+          <template v-if="manual.result && manual.result.prohibitedList">
+            <span class="ca-divider"></span>
+            <span class="ca-meta">Stoffenlijst: {{ manual.result.prohibitedList.count }} stoffen</span>
+          </template>
         </div>
 
         <!-- Invoer -->
@@ -594,6 +607,24 @@
           if (!this.data || this.data.shopifyTotalCount == null) return 'var(--bl-gray-400)';
           const scanned = this.data.counts.totaal || 0;
           return scanned >= this.data.shopifyTotalCount ? 'var(--bl-hoofdkleur)' : 'var(--bl-accent)';
+        },
+        lijstGelijk() {
+          // De scan draait in GitHub Actions, de handmatige check op deze
+          // server. Beide lezen data/prohibited-list.json, maar uit een eigen
+          // kopie van de repo — die kunnen uiteenlopen als er één is bijgewerkt.
+          const scan = this.data?.prohibitedList?.hash;
+          const server = this.manual.result?.prohibitedList?.hash;
+          if (!scan || !server) return true; // niets te vergelijken
+          return scan === server;
+        },
+        lijstTitel() {
+          const scan = this.data?.prohibitedList;
+          const server = this.manual.result?.prohibitedList;
+          if (!scan) return '';
+          if (!server) return `Laatste scan gebruikte ${scan.count} stoffen (${scan.hash}).`;
+          return this.lijstGelijk
+            ? `Scan en handmatige check gebruiken dezelfde lijst (${scan.count} stoffen, ${scan.hash}).`
+            : `LET OP — verschillende lijsten: scan ${scan.count} (${scan.hash}), server ${server.count} (${server.hash}). Draai een nieuwe scan of werk de server bij.`;
         },
         lastScanText() {
           return this.lastScanDate ? this.formatDate(this.lastScanDate) : 'geen scans gevonden';

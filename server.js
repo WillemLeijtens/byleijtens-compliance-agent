@@ -3,7 +3,7 @@ const https = require("https");
 const fs = require("fs");
 const path = require("path");
 const { exec } = require("child_process");
-const { checkInciList } = require("./src/compliance");
+const { checkInciList, listFingerprint } = require("./src/compliance");
 
 const PORT = process.env.PORT || 3000;
 
@@ -529,8 +529,9 @@ const server = http.createServer((req, res) => {
         if (!inci.trim()) return sendJson(res, 400, { error: "Plak eerst een INCI-lijst" });
         const lijst = readProhibitedList();
         const resultaat = checkInciList(inci, lijst);
+        const vinger = listFingerprint(lijst);
         // listSize maakt in de UI expliciet hoe breed de controle reikt.
-        sendJson(res, 200, { productName: String(body.productName || ""), inci, listSize: lijst.length, ...resultaat });
+        sendJson(res, 200, { productName: String(body.productName || ""), inci, listSize: lijst.length, prohibitedList: vinger, ...resultaat });
       })
       .catch((e) => sendJson(res, 400, { error: e.message }));
     return;

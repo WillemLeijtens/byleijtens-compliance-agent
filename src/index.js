@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const CONFIG = require("./config");
 const { fetchAllProducts } = require("./shopify");
-const { scanAll } = require("./compliance");
+const { scanAll, listFingerprint } = require("./compliance");
 const { buildMarkdownReport } = require("./report");
 const { openComplianceIssue } = require("./github-issue");
 
@@ -29,6 +29,9 @@ async function main() {
     counts: { ...counts, totaal: products.length },
     storeDomain: CONFIG.shopify.storeDomain,
     shopifyTotalCount,
+    // Vingerafdruk van de gebruikte stoffenlijst, zodat het dashboard kan
+    // laten zien of de scan en de handmatige check dezelfde lijst hanteren.
+    prohibitedList: listFingerprint(prohibitedList),
     violations,
     allProducts
   };

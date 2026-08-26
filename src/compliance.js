@@ -184,4 +184,33 @@ function checkInciList(rawInci, prohibitedList) {
   };
 }
 
-module.exports = { normalize, splitInci, buildIndex, scanProduct, scanAll, checkInciList };
+/**
+ * Vingerafdruk van de stoffenlijst: aantal + korte hash van de inhoud.
+ *
+ * De Shopify-scan draait in GitHub Actions en de handmatige check op de
+ * Droplet. Beide lezen data/prohibited-list.json, maar uit een eigen kopie van
+ * de repository. Wordt daar één van bijgewerkt zonder de ander, dan geven
+ * dezelfde ingrediënten stilletjes verschillende uitkomsten — precies het soort
+ * verschil dat je pas merkt als een controle iets mist.
+ *
+ * De scan schrijft zijn vingerafdruk in het rapport en de server rapporteert de
+ * zijne, zodat het dashboard kan laten zien of beide kanten dezelfde lijst
+ * gebruiken.
+ */
+function listFingerprint(list) {
+  const genormaliseerd = (list || [])
+    .map((e) => `${e.inci}|${e.annex}|${e.cas || ""}`)
+    .sort()
+    .join("\n");
+
+  // Kleine, stabiele hash (FNV-1a) — geen crypto nodig, alleen gelijkheid.
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < genormaliseerd.length; i++) {
+    hash ^= genormaliseerd.charCodeAt(i);
+    hash = Math.imul(hash, 0x01000193) >>> 0;
+  }
+
+  return { count: (list || []).length, hash: hash.toString(16).padStart(8, "0") };
+}
+
+module.exports = { normalize, splitInci, buildIndex, scanProduct, scanAll, checkInciList, listFingerprint };

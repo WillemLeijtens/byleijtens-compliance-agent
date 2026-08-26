@@ -157,18 +157,30 @@ async function importeerAnnex(bron, annex) {
   /**
    * Splitst een cel met meerdere stofnamen.
    *
-   * Uitsluitend op newline en puntkomma — NIET op "/". Een schuine streep zit
-   * middenin geldige INCI-namen: SACCHAROMYCES/GOLD FERMENT en
-   * SELENIUM/GLYCINE SOJA SPROUT EXTRACT zijn elk één ingrediënt. Splitsen op
-   * "/" maakte daar "SACCHAROMYCES" en "SELENIUM" van, waarmee doodgewoon
-   * gistferment als verboden stof in de lijst belandde — een vals alarm op
-   * honderden legale producten.
+   * De schuine streep is dubbelzinnig en dat is geen detail:
+   *
+   *   BUTYLPARABEN/PROPYLPARABEN/SODIUM BUTYLPARABEN  → drie aparte stoffen
+   *   SACCHAROMYCES/GOLD FERMENT                      → één INCI-naam
+   *
+   * Altijd splitsen maakte van gewoon gistferment een verboden stof; nooit
+   * splitsen liet de parabenen onvindbaar. Onderscheid: drie of meer delen
+   * leest als opsomming, twee als één naam. De volledige tekst blijft
+   * daarnaast altijd staan, zodat een naam mét streep ook heel matcht.
    */
-  const splitsNamen = (cel) =>
-    String(cel || "")
+  const splitsNamen = (cel) => {
+    const regels = String(cel || "")
       .split(/\s*;\s*|\s*\n\s*/)
       .map((x) => x.trim())
       .filter((x) => x && x.toLowerCase() !== "n/a");
+
+    const namen = [];
+    for (const regel of regels) {
+      namen.push(regel);
+      const delen = regel.split(/\s*\/\s*/).map((x) => x.trim()).filter(Boolean);
+      if (delen.length >= 3) namen.push(...delen);
+    }
+    return [...new Set(namen)];
+  };
 
   for (const rij of rijen.slice(1)) {
     const glossaryNamen = idx.glossary !== -1 ? splitsNamen(rij[idx.glossary]) : [];
@@ -258,9 +270,14 @@ async function main() {
   // beveiliging zou een import de dekking stilzwijgend verkleinen — precies
   // het soort stille achteruitgang dat je in een compliance-tool niet merkt
   // tot een controle iets mist.
+  // Samenvoegen gebeurt met de HUIDIGE lijst, niet met het uitvoerbestand.
+  // Schreef je naar een ander pad (--out, of een --dry-run-controle), dan
+  // vergeleek de vorige versie met een leeg of verouderd bestand en gingen de
+  // handmatige synoniemen stilletjes verloren.
+  const mergeBron = opt("--merge-with") || OUT_DEFAULT;
   let behouden = [];
-  if (!heeft("--no-merge") && fs.existsSync(uit)) {
-    const oud = JSON.parse(fs.readFileSync(uit, "utf8"));
+  if (!heeft("--no-merge") && fs.existsSync(mergeBron)) {
+    const oud = JSON.parse(fs.readFileSync(mergeBron, "utf8"));
     const nieuweNamen = new Set(alles.map((e) => e.inci.toLowerCase()));
     const oudeSyn = new Map(oud.filter((e) => e.synonyms).map((e) => [e.inci.toLowerCase(), e.synonyms]));
 
