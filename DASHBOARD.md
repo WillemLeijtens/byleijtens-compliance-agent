@@ -153,14 +153,31 @@ Twee dingen die het script bewust doet:
 De server cachet de lijst op mtime, dus een verse import is direct actief
 zonder herstart.
 
-### Belangrijke beperking
+### Wat de uitslag wel en niet zegt
 
-De controlelijst (`data/prohibited-list.json`) bevat een **selectie** van
-stoffen, niet de volledige EU-annexen (~1900 stoffen). **"Geen match" betekent
-dus niet dat een ingrediënt is toegestaan** — alleen dat het niet in deze lijst
-voorkomt. De UI zegt daarom "Geen match" en niet "Conform", en toont bij elke
-uitslag de verwijzing naar CosIng. Wil je de dekking vergroten, vul dan
-`data/prohibited-list.json` aan; beide controles profiteren daar direct van.
+De lijst bevat de volledige Annexen II tot en met VI (2346 stoffen, CosIng
+18-08-2026). Toch blijft **"Geen match" geen bewijs dat een ingrediënt is
+toegestaan** — alleen dat het niet in deze annexen staat. De UI zegt daarom
+"Geen match" en niet "Conform", en verwijst bij elke uitslag naar CosIng.
+
+Drie dingen die de app principieel niet kan beoordelen:
+
+- **Concentraties.** Annex III/V/VI stellen grenzen ("max 1,0 %"); een
+  INCI-lijst noemt geen percentages. De limiet staat in de toelichting, de
+  toetsing eraan blijft mensenwerk.
+- **Producttype.** Veel beperkingen gelden alleen voor rinse-off, alleen voor
+  professioneel gebruik, of niet voor kinderen onder de 3.
+- **Voorwaardelijke verboden.** Sommige Annex II-regels gelden alleen voor een
+  specifieke vorm — `Styrene/Acrylates copolymer (nano)`, of petrolatum
+  waarvan de raffinagehistorie onbekend is. Die staan als `conditional`
+  gemarkeerd en verschijnen als **beperkt**, niet als verbod, met de
+  voorwaarde erbij. Als absoluut verbod tonen zou tientallen legale producten
+  ten onrechte aanmerken.
+
+Geurallergenen (Limonene, Linalool, Citronellol …) staan als **beperkt**. Dat
+volgt Annex III letterlijk, maar de verplichting is daar een
+*etiketteringsplicht* boven een drempelwaarde — geen verbod. Dat verklaart
+waarom een groot deel van de catalogus als beperkt wordt gemarkeerd.
 
 ### Beveiliging
 
