@@ -3,6 +3,7 @@ const https = require("https");
 const fs = require("fs");
 const path = require("path");
 const { exec } = require("child_process");
+const zlib = require("zlib");
 const { checkInciList, listFingerprint } = require("./src/compliance");
 
 const PORT = process.env.PORT || 3000;
@@ -119,6 +120,11 @@ const STATIC_FILES = new Map([
   ["/assets/fonts/Montserrat-VariableFont_wght.ttf", "assets/fonts/Montserrat-VariableFont_wght.ttf"],
   ["/reports/violations-latest.json", "reports/violations-latest.json"]
 ]);
+
+// Alleen tekstformaten hebben baat bij compressie; fonts en SVG-plaatjes
+// nauwelijks, en onder een kilobyte kost het meer dan het oplevert.
+const GZIP_TYPES = new Set([".html", ".json", ".js", ".css", ".svg"]);
+const GZIP_DREMPEL = 1024;
 
 const MIME_TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -639,7 +645,31 @@ const server = http.createServer((req, res) => {
     }
 
     const contentType = MIME_TYPES[path.extname(bestand)] || "application/octet-stream";
-    res.writeHead(200, { "Content-Type": contentType });
+
+    // Het rapport is met de volledige annexen flink gegroeid — ruim 12 MB,
+    // en de browser haalt het op bij elke paginalading én elke vijf minuten.
+    // Over een mobiele verbinding is dat niet acceptabel. Deze JSON is sterk
+    // repetitief (31.000 treffers naar 199 unieke stoffen), dus gzip haalt er
+    // ongeveer een factor zeventien af.
+    const wilGzip = /\bgzip\b/.test(String(req.headers["accept-encoding"] || ""));
+    if (wilGzip && GZIP_TYPES.has(path.extname(bestand)) && content.length > GZIP_DREMPEL) {
+      zlib.gzip(content, (gzErr, gezipt) => {
+        if (gzErr) {
+          res.writeHead(200, { "Content-Type": contentType });
+          res.end(content);
+          return;
+        }
+        res.writeHead(200, {
+          "Content-Type": contentType,
+          "Content-Encoding": "gzip",
+          "Vary": "Accept-Encoding"
+        });
+        res.end(gezipt);
+      });
+      return;
+    }
+
+    res.writeHead(200, { "Content-Type": contentType, "Vary": "Accept-Encoding" });
     res.end(content);
   });
 });
