@@ -87,6 +87,53 @@ Dit komt van een nieuw `/api/status`-endpoint in `server.js`, dat de GitHub
 Actions API bevraagt met dezelfde `GITHUB_TOKEN` die ook de "Update"-knop
 gebruikt.
 
+## 🧪 Handmatige INCI-check (tabblad 2)
+
+Naast de Shopify-catalogus zit een tweede tabblad waarin je een losse
+INCI-lijst kunt controleren — bijvoorbeeld van een product dat nog niet in de
+webshop staat, of van een label dat je van een leverancier hebt gekregen.
+
+- Plak de INCI-lijst, vul optioneel een productnaam in, klik **Check**
+- Per ingrediënt volgt een oordeel: **Verboden** (Annex II), **Beperkt**
+  (Annex III) of **Geen match**
+- **Opslaan** bewaart de controle; opgeslagen controles kun je weer
+  **Verwijderen**
+
+Deze functie gebruikt dezelfde normalisatie, splitsing en stoffenlijst als de
+automatische scan (`checkInciList` in `src/compliance.js`), zodat handmatige
+en automatische controle nooit tegenstrijdige uitkomsten geven.
+
+### Gescheiden van de productdatabase
+
+Bewust volledig losgekoppeld van de Shopify-gegevens:
+
+| | Shopify-catalogus | Handmatige check |
+|---|---|---|
+| Bron | `reports/violations-latest.json` (workflow) | wat je zelf plakt |
+| Opslag | `reports/` (in git) | `data/manual-checks.json` (**buiten** git) |
+| Endpoints | `/api/status` | `/api/inci-check`, `/api/manual-checks` |
+
+`data/manual-checks.json` staat in `.gitignore`. Dat is bewust: de
+deploy-webhook doet `git pull`, en een lokaal gewijzigd, getrackt databestand
+zou die pull laten stuklopen.
+
+### Belangrijke beperking
+
+De controlelijst (`data/prohibited-list.json`) bevat een **selectie** van
+stoffen, niet de volledige EU-annexen (~1900 stoffen). **"Geen match" betekent
+dus niet dat een ingrediënt is toegestaan** — alleen dat het niet in deze lijst
+voorkomt. De UI zegt daarom "Geen match" en niet "Conform", en toont bij elke
+uitslag de verwijzing naar CosIng. Wil je de dekking vergroten, vul dan
+`data/prohibited-list.json` aan; beide controles profiteren daar direct van.
+
+### Beveiliging
+
+De endpoints volgen hetzelfde model als de rest van de app: oorsprongscontrole
+tegen CSRF, identiteit uit de gateway (wie een check opslaat wordt vastgelegd),
+een tempolimiet op opslaan en een plafond van 500 bewaarde controles. Checken
+en opslaan mag iedereen die door de gateway komt — dat is werk, geen beheer;
+alleen het starten van de Shopify-scan blijft beheerders voorbehouden.
+
 ## 📊 Data Structuur
 
 Dashboard leest uit: `reports/violations-latest.json`

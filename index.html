@@ -191,6 +191,51 @@
     .ca-disclaimer a:hover { opacity: 0.7; }
 
     .ca-footer { text-align: center; margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border-soft); font-size: 12px; color: var(--fg-4); }
+
+    /* --- Tabbladen --------------------------------------------------- */
+    .ca-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border-soft); margin: 28px 0 0; flex-wrap: wrap; }
+    .ca-tab {
+      font-family: var(--font-label); font-size: 11px; font-weight: 500;
+      letter-spacing: var(--tracking-label); text-transform: uppercase;
+      padding: 12px 18px; background: none; border: none; border-bottom: 2px solid transparent;
+      color: var(--fg-3); cursor: pointer; transition: color 160ms ease, border-color 160ms ease;
+      margin-bottom: -1px;
+    }
+    .ca-tab:hover { color: var(--fg-1); }
+    .ca-tab.is-active { color: var(--fg-1); border-bottom-color: var(--bl-accent); }
+
+    /* --- Handmatige check -------------------------------------------- */
+    .ca-textarea {
+      font-family: var(--font-mono); font-size: 13px; line-height: 1.6; color: var(--fg-1);
+      background: var(--bl-white); border: 1px solid var(--border-soft); border-radius: 6px;
+      padding: 12px 14px; outline: none; width: 100%; min-height: 130px; resize: vertical;
+    }
+    .ca-textarea:focus { border-color: var(--bl-hoofdkleur); }
+    .ca-btn-ghost {
+      font-family: var(--font-label); font-size: 12px; font-weight: 500;
+      letter-spacing: var(--tracking-label); text-transform: uppercase;
+      padding: 14px 22px; border-radius: 6px; border: 1px solid var(--bl-hoofdkleur);
+      background: transparent; color: var(--bl-hoofdkleur); cursor: pointer; transition: opacity 180ms ease;
+    }
+    .ca-btn-ghost:hover:not(:disabled) { opacity: 0.6; }
+    .ca-btn-ghost:disabled { opacity: 0.4; cursor: default; }
+    .ca-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 18px; }
+
+    .ca-ing-row {
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+      padding: 12px 0; border-bottom: 1px solid var(--bl-gray-200);
+    }
+    .ca-ing-row:last-child { border-bottom: none; }
+    .ca-ing-name { font-size: 14px; color: var(--fg-1); font-weight: 500; }
+    .ca-ing-detail { font-size: 12px; color: var(--fg-3); margin-top: 3px; }
+    .ca-ing-detail code { font-family: var(--font-mono); font-size: 11.5px; }
+
+    .ca-saved-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .ca-linkbtn {
+      background: none; border: none; padding: 0; cursor: pointer; font-family: var(--font-body);
+      font-size: 12.5px; color: var(--fg-3); border-bottom: 1px solid var(--bl-accent);
+    }
+    .ca-linkbtn:hover { color: var(--fg-1); }
   </style>
 </head>
 <body>
@@ -205,13 +250,24 @@
           <h1 class="ca-h1">Compliance Agent</h1>
           <div class="ca-sub">EU Verordening (EG) 1223/2009 · Annex II &amp; III</div>
         </div>
-        <button @click="triggerWorkflow" :disabled="workflowLoading" class="ca-btn-primary">
+        <button v-if="tab === 'catalogus'" @click="triggerWorkflow" :disabled="workflowLoading" class="ca-btn-primary">
           {{ workflowLoading ? 'Bijwerken…' : 'Update' }}
         </button>
       </div>
 
+      <!-- Tabbladen -->
+      <div class="ca-tabs">
+        <button type="button" class="ca-tab" :class="{ 'is-active': tab === 'catalogus' }" @click="tab = 'catalogus'">
+          Shopify-catalogus
+        </button>
+        <button type="button" class="ca-tab" :class="{ 'is-active': tab === 'handmatig' }" @click="tab = 'handmatig'">
+          Handmatige INCI-check
+        </button>
+      </div>
+
+      <!-- ============ TABBLAD 1: Shopify-catalogus ============ -->
       <!-- Status row -->
-      <div class="ca-statusrow">
+      <div class="ca-statusrow" v-show="tab === 'catalogus'">
         <span class="ca-connlabel" :style="{ color: connectionTextColor }">
           <span class="ca-dot" :style="{ background: connectionDotColor }"></span>
           {{ connectionLabel }}
@@ -240,7 +296,7 @@
       </div>
 
       <!-- Summary cards -->
-      <div v-if="data" class="ca-cards">
+      <div v-if="data && tab === 'catalogus'" class="ca-cards">
         <button type="button" @click="filters.status = ''" class="ca-card" :class="{ 'is-active': filters.status === '' }">
           <div class="ca-card-label">Totaal</div>
           <div class="ca-card-value">{{ data.counts.totaal || 0 }}</div>
@@ -260,7 +316,7 @@
       </div>
 
       <!-- Filters -->
-      <div class="ca-panel">
+      <div class="ca-panel" v-show="tab === 'catalogus'">
         <div class="ca-panel-title">Filters</div>
         <div class="ca-filters-grid">
           <label class="ca-field">
@@ -291,15 +347,15 @@
         </div>
       </div>
 
-      <div class="ca-resultcount">{{ filteredViolations.length }} van {{ totalForCurrentFilter }} producten getoond</div>
+      <div class="ca-resultcount" v-show="tab === 'catalogus'">{{ filteredViolations.length }} van {{ totalForCurrentFilter }} producten getoond</div>
 
       <!-- Empty state -->
-      <div v-if="filteredViolations.length === 0" class="ca-empty">
+      <div v-if="tab === 'catalogus' && filteredViolations.length === 0" class="ca-empty">
         Geen producten gevonden voor deze filters.
       </div>
 
       <!-- Results -->
-      <div class="ca-list">
+      <div class="ca-list" v-show="tab === 'catalogus'">
         <div v-for="(violation, idx) in filteredViolations" :key="idx" class="ca-row">
           <div class="ca-row-top">
             <div class="ca-row-main">
@@ -335,6 +391,138 @@
         </div>
       </div>
 
+      <!-- ============ TABBLAD 2: Handmatige INCI-check ============ -->
+      <div v-show="tab === 'handmatig'">
+
+        <div class="ca-statusrow">
+          <span class="ca-meta">
+            Controleer een losse INCI-lijst tegen dezelfde stoffenlijst als de automatische scan.
+            Losstaand van de Shopify-catalogus — hier wordt niets uit de productdatabase gelezen of gewijzigd.
+          </span>
+        </div>
+
+        <!-- Invoer -->
+        <div class="ca-panel">
+          <div class="ca-panel-title">Nieuwe controle</div>
+
+          <div class="ca-field" style="margin-bottom:18px">
+            <span class="ca-field-label">Productnaam <span style="text-transform:none;letter-spacing:0">(optioneel)</span></span>
+            <input v-model="manual.productName" type="text" placeholder="Bijv. Teaology Body Cream 260 ml" class="ca-input" />
+          </div>
+
+          <div class="ca-field">
+            <span class="ca-field-label">INCI-lijst</span>
+            <textarea
+              v-model="manual.inci"
+              class="ca-textarea"
+              placeholder="Plak hier de volledige INCI-lijst, bijvoorbeeld:&#10;Aqua, Glycerin, Butylphenyl Methylpropional, Salicylic Acid, Parfum"
+              @keydown.ctrl.enter="runInciCheck"
+              @keydown.meta.enter="runInciCheck"
+            ></textarea>
+          </div>
+
+          <div class="ca-actions">
+            <button class="ca-btn-primary" :disabled="manual.loading || !manual.inci.trim()" @click="runInciCheck">
+              {{ manual.loading ? 'Bezig…' : 'Check' }}
+            </button>
+            <button class="ca-btn-ghost" :disabled="manual.loading" @click="clearInciCheck">Wissen</button>
+            <span v-if="manual.error" class="ca-meta" style="color:var(--bl-accent)">{{ manual.error }}</span>
+            <span v-if="manual.savedNotice" class="ca-meta">{{ manual.savedNotice }}</span>
+          </div>
+        </div>
+
+        <!-- Uitslag -->
+        <div v-if="manual.result" class="ca-panel">
+          <div class="ca-saved-head" style="margin-bottom:18px">
+            <div>
+              <div class="ca-panel-title" style="margin-bottom:6px">Uitslag</div>
+              <div class="ca-row-title">{{ manual.result.productName || 'Naamloos product' }}</div>
+              <div class="ca-row-meta">
+                {{ manual.result.totaal }} ingrediënten ·
+                {{ manual.result.counts.verboden }} verboden ·
+                {{ manual.result.counts.beperkt }} beperkt ·
+                {{ manual.result.counts.ok }} geen match
+              </div>
+            </div>
+            <span class="ca-badge" :class="statusBadgeClass(manual.result.status)">{{ manualStatusLabel(manual.result.status) }}</span>
+          </div>
+
+          <div>
+            <div v-for="(ing, i) in manual.result.ingredients" :key="i" class="ca-ing-row">
+              <div style="min-width:0">
+                <div class="ca-ing-name">{{ ing.input }}</div>
+                <div v-if="ing.match" class="ca-ing-detail">
+                  Gevonden als <strong style="font-weight:500">{{ ing.match.inci }}</strong>
+                  <span v-if="ing.match.cas"> · CAS <code>{{ ing.match.cas }}</code></span>
+                  · Annex {{ ing.match.annex }} · {{ ing.match.ref }}
+                </div>
+                <div v-if="ing.match && ing.match.note" class="ca-ing-detail" style="color:var(--fg-1)">{{ ing.match.note }}</div>
+                <div v-if="ing.match" class="ca-ing-detail" style="font-size:11px">Match via {{ ing.match.via }}</div>
+                <div v-else class="ca-ing-detail">Niet gevonden in de controlelijst</div>
+              </div>
+              <span class="ca-badge" :class="statusBadgeClass(ing.status)">{{ ingLabel(ing.status) }}</span>
+            </div>
+          </div>
+
+          <div class="ca-actions">
+            <button class="ca-btn-primary" :disabled="manual.saving" @click="saveInciCheck">
+              {{ manual.saving ? 'Opslaan…' : 'Opslaan' }}
+            </button>
+          </div>
+
+          <div class="ca-disclaimer" style="margin-top:18px">
+            De controlelijst bevat een selectie van {{ manual.result.listSize }} stoffen, niet de volledige EU-annexen.
+            <strong style="font-weight:500">"Geen match" betekent dus niet automatisch dat een ingrediënt is toegestaan.</strong>
+            Controleer altijd de INCI op het productlabel en verifieer op
+            <a href="https://ec.europa.eu/growth/tools-databases/cosing/" target="_blank" rel="noopener noreferrer">CosIng</a>
+            voordat u conclusies trekt of contact opneemt met de leverancier.
+          </div>
+        </div>
+
+        <!-- Opgeslagen controles -->
+        <div class="ca-resultcount">{{ manual.saved.length }} opgeslagen {{ manual.saved.length === 1 ? 'controle' : 'controles' }}</div>
+
+        <div v-if="manual.saved.length === 0" class="ca-empty">
+          Nog geen controles opgeslagen. Doe hierboven een check en klik op "Opslaan".
+        </div>
+
+        <div class="ca-list">
+          <div v-for="check in manual.saved" :key="check.id" class="ca-row">
+            <div class="ca-saved-head">
+              <div style="min-width:0">
+                <div class="ca-row-title">{{ check.productName }}</div>
+                <div class="ca-row-meta">
+                  {{ formatDate(check.savedAt) }}
+                  <span v-if="check.savedBy && check.savedBy !== 'onbekend'"> · door {{ check.savedBy }}</span>
+                  · {{ check.totaal }} ingrediënten
+                  · {{ check.counts.verboden }} verboden
+                  · {{ check.counts.beperkt }} beperkt
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;flex:none">
+                <span class="ca-badge" :class="statusBadgeClass(check.status)">{{ manualStatusLabel(check.status) }}</span>
+                <button class="ca-linkbtn" @click="deleteInciCheck(check)">Verwijderen</button>
+              </div>
+            </div>
+
+            <div v-for="(ing, i) in check.ingredients.filter(x => x.match)" :key="i" class="ca-ingredient">
+              <div class="ca-ingredient-name">{{ ing.input }}</div>
+              <div class="ca-ingredient-meta">
+                <span v-if="ing.match.cas">CAS: {{ ing.match.cas }} · </span>Annex {{ ing.match.annex }} · {{ ing.match.ref }}
+              </div>
+              <div v-if="ing.match.note" class="ca-ingredient-note" style="color:var(--fg-1)">{{ ing.match.note }}</div>
+              <div class="ca-ingredient-via">Match via {{ ing.match.via }}</div>
+            </div>
+
+            <details style="margin-top:14px">
+              <summary style="cursor:pointer;font-size:12.5px;color:var(--fg-3)">Volledige INCI-lijst</summary>
+              <div style="font-family:var(--font-mono);font-size:12px;color:var(--fg-3);margin-top:8px;white-space:pre-wrap">{{ check.inci }}</div>
+            </details>
+          </div>
+        </div>
+
+      </div>
+
       <div class="ca-footer">Dit dashboard toont leesgegevens van de compliance-scans. Wijzigingen start u met de knop "Update".</div>
 
     </div>
@@ -357,7 +545,23 @@
           workflowError: '',
           workflowSuccess: false,
           lastScanDate: null,
-          status: null
+          status: null,
+
+          // Actief tabblad. De handmatige check staat bewust volledig los van
+          // de catalogusgegevens hierboven.
+          tab: 'catalogus',
+
+          manual: {
+            productName: '',
+            inci: '',
+            result: null,
+            saved: [],
+            loading: false,
+            saving: false,
+            error: '',
+            savedNotice: '',
+            listSize: null
+          }
         };
       },
       computed: {
@@ -425,6 +629,87 @@
         }
       },
       methods: {
+        // --- Handmatige INCI-check ---------------------------------------
+        manualStatusLabel(status) {
+          // Geen 'Conform': deze lijst dekt niet de volledige annexen, dus
+          // afwezigheid van een match is geen bewijs van toelaatbaarheid.
+          return { verboden: 'Verboden', beperkt: 'Beperkt', ok: 'Geen bevindingen', leeg: 'Leeg' }[status] || status;
+        },
+        ingLabel(status) {
+          // "ok" hier betekent alleen: niet gevonden in de controlelijst.
+          // Bewust niet "Toegestaan" — dat kan deze lijst niet bewijzen.
+          return { verboden: 'Verboden', beperkt: 'Beperkt', ok: 'Geen match' }[status] || status;
+        },
+        async runInciCheck() {
+          this.manual.loading = true;
+          this.manual.error = '';
+          this.manual.savedNotice = '';
+          try {
+            const response = await fetch('/api/inci-check', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ productName: this.manual.productName, inci: this.manual.inci })
+            });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.error || `Fout ${response.status}`);
+            this.manual.result = result;
+          } catch (e) {
+            this.manual.result = null;
+            this.manual.error = e.message;
+          } finally {
+            this.manual.loading = false;
+          }
+        },
+        clearInciCheck() {
+          this.manual.productName = '';
+          this.manual.inci = '';
+          this.manual.result = null;
+          this.manual.error = '';
+          this.manual.savedNotice = '';
+        },
+        async saveInciCheck() {
+          this.manual.saving = true;
+          this.manual.error = '';
+          this.manual.savedNotice = '';
+          try {
+            const response = await fetch('/api/manual-checks', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ productName: this.manual.productName, inci: this.manual.inci })
+            });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.error || `Fout ${response.status}`);
+            this.manual.savedNotice = 'Opgeslagen.';
+            await this.loadManualChecks();
+          } catch (e) {
+            this.manual.error = e.message;
+          } finally {
+            this.manual.saving = false;
+          }
+        },
+        async loadManualChecks() {
+          try {
+            const response = await fetch('/api/manual-checks');
+            const result = await response.json();
+            this.manual.saved = result.checks || [];
+          } catch (e) {
+            console.error('Fout bij laden opgeslagen checks:', e);
+          }
+        },
+        async deleteInciCheck(check) {
+          if (!confirm(`"${check.productName}" verwijderen?`)) return;
+          this.manual.error = '';
+          try {
+            const response = await fetch(`/api/manual-checks?id=${encodeURIComponent(check.id)}`, { method: 'DELETE' });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.error || `Fout ${response.status}`);
+            await this.loadManualChecks();
+          } catch (e) {
+            this.manual.error = e.message;
+          }
+        },
+
+
         async loadData() {
           try {
             // Probeer de meest recente violations bestand te laden
@@ -515,6 +800,7 @@
       mounted() {
         this.loadData();
         this.loadStatus();
+        this.loadManualChecks();
         // Refresh elke 5 minuten
         setInterval(() => {
           this.loadData();

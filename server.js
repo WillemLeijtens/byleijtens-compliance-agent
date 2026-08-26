@@ -3,8 +3,68 @@ const https = require("https");
 const fs = require("fs");
 const path = require("path");
 const { exec } = require("child_process");
+const { checkInciList } = require("./src/compliance");
 
 const PORT = process.env.PORT || 3000;
+
+const PROHIBITED_LIST_FILE = path.join(__dirname, "data", "prohibited-list.json");
+// Handmatige checks staan bewust los van reports/ (de Shopify-scan) en buiten
+// git — anders zou de git pull van de deploy-webhook stukloopt op lokaal
+// gewijzigde data.
+const MANUAL_CHECKS_FILE = path.join(__dirname, "data", "manual-checks.json");
+
+function readProhibitedList() {
+  return JSON.parse(fs.readFileSync(PROHIBITED_LIST_FILE, "utf8"));
+}
+
+function readManualChecks() {
+  try {
+    const parsed = JSON.parse(fs.readFileSync(MANUAL_CHECKS_FILE, "utf8"));
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return []; // bestand bestaat nog niet of is leeg
+  }
+}
+
+function writeManualChecks(checks) {
+  fs.mkdirSync(path.dirname(MANUAL_CHECKS_FILE), { recursive: true });
+  // Eerst naar een tijdelijk bestand, dan hernoemen: een onderbroken schrijf
+  // laat zo nooit een half bestand achter.
+  const tmp = `${MANUAL_CHECKS_FILE}.tmp`;
+  fs.writeFileSync(tmp, JSON.stringify(checks, null, 2));
+  fs.renameSync(tmp, MANUAL_CHECKS_FILE);
+}
+
+/** Leest een JSON-body, met een limiet zodat een grote POST het geheugen niet opvreet. */
+function readJsonBody(req, maxBytes = 1_000_000) {
+  return new Promise((resolve, reject) => {
+    let body = "";
+    let size = 0;
+    req.on("data", (chunk) => {
+      size += chunk.length;
+      if (size > maxBytes) {
+        reject(new Error("Verzoek te groot"));
+        req.destroy();
+        return;
+      }
+      body += chunk;
+    });
+    req.on("end", () => {
+      if (!body) return resolve({});
+      try {
+        resolve(JSON.parse(body));
+      } catch {
+        reject(new Error("Ongeldige JSON in verzoek"));
+      }
+    });
+    req.on("error", reject);
+  });
+}
+
+function sendJson(res, status, payload) {
+  res.writeHead(status, { "Content-Type": "application/json" });
+  res.end(JSON.stringify(payload));
+}
 
 /**
  * Het adres waarop de server luistert. Standaard alleen loopback.
@@ -184,6 +244,28 @@ function binnenTempolimiet(gebruiker) {
   }
   recent.push(nu);
   triggerHistorie.set(gebruiker, recent);
+  return true;
+}
+
+/**
+ * Opslaan is goedkoop maar schrijft naar schijf, dus ruimer begrensd dan de
+ * scanstart. Het harde plafond hieronder voorkomt dat het bestand ongemerkt
+ * blijft groeien.
+ */
+const OPSLAG_VENSTER_MS = 60_000;
+const OPSLAG_MAX = 20;
+const MAX_BEWAARDE_CHECKS = 500;
+const opslagHistorie = new Map();
+
+function binnenOpslaglimiet(gebruiker) {
+  const nu = Date.now();
+  const recent = (opslagHistorie.get(gebruiker) || []).filter((t) => nu - t < OPSLAG_VENSTER_MS);
+  if (recent.length >= OPSLAG_MAX) {
+    opslagHistorie.set(gebruiker, recent);
+    return false;
+  }
+  recent.push(nu);
+  opslagHistorie.set(gebruiker, recent);
   return true;
 }
 
@@ -415,6 +497,108 @@ const server = http.createServer((req, res) => {
         else console.log("Webhook-deploy geslaagd:\n", stdout);
       }
     );
+    return;
+  }
+
+  // ---- Handmatige INCI-check --------------------------------------------
+  // Staat los van de Shopify-scan: eigen endpoints, eigen opslagbestand.
+  // Iedereen die door de gateway komt mag checken en opslaan; dat is werk,
+  // geen beheer. De oorsprongscontrole geldt wel, net als bij de scanstart.
+
+  if (req.method === "POST" && req.url === "/api/inci-check") {
+    if (!zelfdeOorsprong(req)) {
+      return sendJson(res, 403, { error: "Verzoek van een andere site geweigerd" });
+    }
+    readJsonBody(req)
+      .then((body) => {
+        const inci = typeof body.inci === "string" ? body.inci : "";
+        if (!inci.trim()) return sendJson(res, 400, { error: "Plak eerst een INCI-lijst" });
+        const lijst = readProhibitedList();
+        const resultaat = checkInciList(inci, lijst);
+        // listSize maakt in de UI expliciet hoe breed de controle reikt.
+        sendJson(res, 200, { productName: String(body.productName || ""), inci, listSize: lijst.length, ...resultaat });
+      })
+      .catch((e) => sendJson(res, 400, { error: e.message }));
+    return;
+  }
+
+  if (req.method === "GET" && req.url === "/api/manual-checks") {
+    try {
+      sendJson(res, 200, { checks: readManualChecks() });
+    } catch (e) {
+      sendJson(res, 500, { error: e.message });
+    }
+    return;
+  }
+
+  if (req.method === "POST" && req.url === "/api/manual-checks") {
+    const wie = identiteit(req);
+
+    if (!zelfdeOorsprong(req)) {
+      console.warn(`[audit] check opslaan GEWEIGERD (vreemde oorsprong) door ${wie.gebruiker}`);
+      return sendJson(res, 403, { error: "Verzoek van een andere site geweigerd" });
+    }
+    if (!binnenOpslaglimiet(wie.gebruiker)) {
+      return sendJson(res, 429, { error: "Te veel opgeslagen in korte tijd — probeer het zo opnieuw" });
+    }
+
+    readJsonBody(req)
+      .then((body) => {
+        const inci = typeof body.inci === "string" ? body.inci : "";
+        if (!inci.trim()) return sendJson(res, 400, { error: "Plak eerst een INCI-lijst" });
+
+        const checks = readManualChecks();
+        if (checks.length >= MAX_BEWAARDE_CHECKS) {
+          return sendJson(res, 409, {
+            error: `Maximum van ${MAX_BEWAARDE_CHECKS} opgeslagen checks bereikt — verwijder er eerst een paar.`
+          });
+        }
+
+        // Opnieuw berekenen in plaats van de uitslag uit de body overnemen:
+        // wat je opslaat klopt zo gegarandeerd met de huidige stoffenlijst,
+        // en de client kan geen verzonnen oordeel laten bewaren.
+        const resultaat = checkInciList(inci, readProhibitedList());
+        const entry = {
+          id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+          productName: String(body.productName || "").trim() || "Naamloos product",
+          inci,
+          savedAt: new Date().toISOString(),
+          savedBy: wie.gebruiker,
+          ...resultaat
+        };
+
+        checks.unshift(entry); // nieuwste bovenaan
+        writeManualChecks(checks);
+        console.log(`[audit] check opgeslagen "${entry.productName}" (${entry.status}) door ${wie.gebruiker}`);
+        sendJson(res, 200, { saved: entry, total: checks.length });
+      })
+      .catch((e) => sendJson(res, 400, { error: e.message }));
+    return;
+  }
+
+  if (req.method === "DELETE" && req.url.startsWith("/api/manual-checks")) {
+    const wie = identiteit(req);
+
+    if (!zelfdeOorsprong(req)) {
+      console.warn(`[audit] check verwijderen GEWEIGERD (vreemde oorsprong) door ${wie.gebruiker}`);
+      return sendJson(res, 403, { error: "Verzoek van een andere site geweigerd" });
+    }
+
+    try {
+      const id = new URL(req.url, `http://${req.headers.host || "localhost"}`).searchParams.get("id");
+      if (!id) return sendJson(res, 400, { error: "Geen id meegegeven" });
+
+      const checks = readManualChecks();
+      const resterend = checks.filter((c) => c.id !== id);
+      if (resterend.length === checks.length) {
+        return sendJson(res, 404, { error: "Check niet gevonden" });
+      }
+      writeManualChecks(resterend);
+      console.log(`[audit] check verwijderd ${id} door ${wie.gebruiker}`);
+      sendJson(res, 200, { deleted: id, total: resterend.length });
+    } catch (e) {
+      sendJson(res, 500, { error: e.message });
+    }
     return;
   }
 

@@ -1,3 +1,5 @@
 node_modules/
 .env
 reports/.checkpoint.json
+data/manual-checks.json
+data/manual-checks.json.tmp

@@ -79,4 +79,53 @@ function scanAll(products, prohibitedList) {
   return { results, counts, violations, allProducts };
 }
 
-module.exports = { normalize, splitInci, buildIndex, scanProduct, scanAll };
+/**
+ * Controleert een losse, geplakte INCI-lijst ingrediënt voor ingrediënt.
+ *
+ * Anders dan scanProduct, dat één status per product teruggeeft, levert dit
+ * per ingrediënt een oordeel — dat is wat een handmatige controle nodig heeft.
+ * Gebruikt bewust dezelfde normalisatie, splitsing en index als de
+ * automatische scan, zodat een handmatige check en de Shopify-scan nooit
+ * tegenstrijdige uitkomsten kunnen geven voor hetzelfde ingrediënt.
+ */
+function checkInciList(rawInci, prohibitedList) {
+  const index = buildIndex(prohibitedList);
+
+  const ingredients = splitInci(rawInci).map((token) => {
+    const n = normalize(token);
+    let entry = index.byName.get(n) || null;
+    let via = entry ? "INCI" : null;
+
+    // Staat er een CAS-nummer in het ingrediënt zelf, dan telt die ook mee.
+    if (!entry) {
+      const cas = (token.match(CAS_RE) || [])[0];
+      if (cas && index.byCas.has(cas)) {
+        entry = index.byCas.get(cas);
+        via = "CAS";
+      }
+    }
+
+    const status = !entry ? "ok" : entry.annex === "II" ? "verboden" : "beperkt";
+
+    return {
+      input: token,
+      status,
+      match: entry
+        ? { inci: entry.inci, cas: entry.cas || null, annex: entry.annex, ref: entry.ref, note: entry.note || "", via }
+        : null,
+    };
+  });
+
+  const counts = { verboden: 0, beperkt: 0, ok: 0 };
+  ingredients.forEach((i) => counts[i.status]++);
+
+  return {
+    ingredients,
+    counts,
+    totaal: ingredients.length,
+    // Het zwaarste oordeel bepaalt de status van het geheel.
+    status: counts.verboden ? "verboden" : counts.beperkt ? "beperkt" : ingredients.length ? "ok" : "leeg",
+  };
+}
+
+module.exports = { normalize, splitInci, buildIndex, scanProduct, scanAll, checkInciList };
