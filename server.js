@@ -13,8 +13,22 @@ const PROHIBITED_LIST_FILE = path.join(__dirname, "data", "prohibited-list.json"
 // gewijzigde data.
 const MANUAL_CHECKS_FILE = path.join(__dirname, "data", "manual-checks.json");
 
+/**
+ * De stoffenlijst wordt bij elke check gelezen. Met de volledige annexen erin
+ * is dat een bestand van formaat, dus cachen we het en verversen alleen als de
+ * mtime verandert — een geïmporteerde lijst is dan meteen actief, zonder
+ * herstart en zonder elke aanvraag opnieuw te parsen.
+ */
+let prohibitedCache = { mtimeMs: 0, lijst: null };
+
 function readProhibitedList() {
-  return JSON.parse(fs.readFileSync(PROHIBITED_LIST_FILE, "utf8"));
+  const { mtimeMs } = fs.statSync(PROHIBITED_LIST_FILE);
+  if (prohibitedCache.lijst && prohibitedCache.mtimeMs === mtimeMs) {
+    return prohibitedCache.lijst;
+  }
+  const lijst = JSON.parse(fs.readFileSync(PROHIBITED_LIST_FILE, "utf8"));
+  prohibitedCache = { mtimeMs, lijst };
+  return lijst;
 }
 
 function readManualChecks() {

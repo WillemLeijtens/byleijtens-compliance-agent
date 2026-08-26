@@ -117,6 +117,42 @@ Bewust volledig losgekoppeld van de Shopify-gegevens:
 deploy-webhook doet `git pull`, en een lokaal gewijzigd, getrackt databestand
 zou die pull laten stuklopen.
 
+### Stoffenlijst importeren uit CosIng
+
+`data/prohibited-list.json` is te vullen vanuit de officiële annexen in plaats
+van met de hand. De annexen worden regelmatig gewijzigd (Omnibus-verordeningen),
+dus dit is bewust een herhaalbare import en geen eenmalige momentopname.
+
+1. Download op https://ec.europa.eu/growth/tools-databases/cosing/ via
+   **menu → Reference data → Annexes** de lijsten als **CSV** (Annex II =
+   verboden, Annex III = beperkt; Annex IV/V/VI zijn kleurstoffen,
+   conserveermiddelen en UV-filters).
+2. Draai de import:
+
+   ```bash
+   node scripts/import-cosing.js --annex2 annex2.csv --annex3 annex3.csv
+   ```
+
+   Een bron mag ook een URL zijn. Met `--dry-run` zie je eerst wat eruit komt
+   zonder iets weg te schrijven.
+
+Het script raadt niets: herkent het een kolom niet, dan meldt het dat expliciet
+in plaats van stilzwijgend lege velden op te slaan. Bestaande handmatig
+toegevoegde synoniemen blijven behouden (`--no-merge` schakelt dat uit).
+
+Twee dingen die het script bewust doet:
+
+- **De glossary-naam wordt de hoofdnaam.** CosIng geeft per stof zowel
+  `Name of Common Ingredients Glossary` ("Benzophenone-3") als
+  `Chemical name / INN` ("2-hydroxy-4-methoxybenzophenone"). Op een etiket
+  staat de eerste; die moet dus de hoofdnaam zijn, met de chemische naam als
+  synoniem. Andersom matcht de lijst juist niet op echte etiketten.
+- **Annex II wint van Annex III** als een stof in beide voorkomt — verboden
+  gaat voor beperkt.
+
+De server cachet de lijst op mtime, dus een verse import is direct actief
+zonder herstart.
+
 ### Belangrijke beperking
 
 De controlelijst (`data/prohibited-list.json`) bevat een **selectie** van
