@@ -43,6 +43,7 @@
       --c-y1:#6B7F8C; --c-y2:#1E88C7; --c-y3:#17A184;
       --pos:#178F73; --neg:#C7563B; --warn:#B4690E;
       --pos-text:#147D65; --neg-text:#B94E35; --warn-text:#A15E0D;
+      --verbod-fg:#FFFFFF;
     }
     html[data-theme="dark"] {
       --t-bg:#0E323B; --t-card:#12404C; --t-card2:#0B2A32; --t-border:rgba(248,245,245,0.10);
@@ -54,6 +55,7 @@
       --c-y1:#5E7684; --c-y2:#3FB0E8; --c-y3:#55D6B8;
       --pos:#2FBF9B; --neg:#DB6E52; --warn:#D9A03F;
       --pos-text:#2FBF9B; --neg-text:#E38E78; --warn-text:#D9A03F;
+      --verbod-fg:#0E323B;
     }
     /* Accent uitsluitend voor haarlijnen, markers en kleine labels —
        nooit knoppen of vlakken. */
@@ -142,11 +144,14 @@
     .mp-label { font-weight:500; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--t-meta); }
     .mp-field { display:flex; flex-direction:column; gap:8px; }
 
-    .mp-badge { font-weight:500; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; padding:6px 12px; border-radius:999px; flex:none; }
-    .mp-badge-verboden { background:var(--t-fg); color:var(--t-bg); border:1px solid var(--t-fg); }
-    .mp-badge-beperkt { background:transparent; color:var(--t-fg); border:1px solid var(--accent); }
-    .mp-badge-etikettering { background:transparent; color:var(--t-meta); border:1px solid var(--t-border); }
-    .mp-badge-toegestaan { background:transparent; color:var(--pos-text); border:1px solid var(--pos); }
+    .mp-badge { display:inline-flex; align-items:center; gap:6px; font-weight:500; font-size:10px;
+                letter-spacing:0.15em; text-transform:uppercase; padding:6px 12px; border-radius:999px; flex:none; }
+    .mp-badge svg { flex:none; }
+    /* Een label draagt de hele annextitel in zijn title-attribuut; de tekst
+       ernaast blijft kort genoeg om in een rij kaarten te passen. */
+    .mp-badge[title] { cursor:help; }
+    .mp-badge-verbod { background:var(--neg); color:var(--verbod-fg,#fff); border:1px solid var(--neg); }
+    .mp-badge-beperking { background:transparent; color:var(--accent-text, var(--t-fg)); border:1px solid var(--accent); }
     .mp-badge-neutraal { background:var(--t-card2); color:var(--t-fg); border:1px solid transparent; }
 
     .mp-pill { display:inline-flex; align-items:center; gap:8px; font-size:12px; color:var(--t-fg); border:1px solid var(--t-border); border-radius:999px; padding:6px 14px; }
@@ -282,8 +287,6 @@
                 <select v-model="filters.status" class="mp-select">
                   <option value="">Alles (bevindingen)</option>
                   <option value="verboden">Verboden</option>
-                  <option value="beperkt">Beperkt</option>
-                  <option value="toegestaan">Alleen toegestane stoffen</option>
                   <option value="ok">Conform</option>
                   <option value="geen-inci">Geen INCI</option>
                 </select>
@@ -334,13 +337,16 @@
                        style="font-size:12.5px;display:inline-block;margin-top:6px">Bekijk in Shopify ↗</a>
                   </div>
                 </div>
-                <span class="mp-badge" :class="badgeKlasse(v.status)">{{ statusLabel(v.status) }}</span>
+                <oordeel-label v-if="v.status !== 'ok' && v.status !== 'geen-inci'" soort="verboden"
+                              label="Verboden" :titel="productTitel(v)"></oordeel-label>
+                <span v-else class="mp-badge mp-badge-neutraal">{{ statusLabel(v.status) }}</span>
               </div>
 
-              <div v-for="(h, hi) in v.hits" :key="hi" class="mp-card2" style="margin-top:14px">
+              <div v-for="(h, hi) in meldingen(v)" :key="hi" class="mp-card2" style="margin-top:14px">
                 <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px">
                   <div style="font-size:13.5px;font-weight:500">{{ h.inci }}</div>
-                  <span v-if="h.soort" class="mp-badge" :class="badgeKlasse(h.soort)">{{ ingLabel(h.soort) }}</span>
+                  <oordeel-label :soort="h.annex === 'II' ? 'verboden' : 'beperkt'" :annex="h.annex"
+                                :titel="h.annexTitel || ANNEX_TITELS[h.annex]"></oordeel-label>
                 </div>
                 <div class="mp-mono" style="color:var(--t-meta);margin-bottom:4px">
                   <span v-if="h.cas">CAS: {{ h.cas }} · </span>Annex {{ h.annex }} · {{ h.ref }}
@@ -406,12 +412,12 @@
                   {{ manual.result.totaal }} ingrediënten ·
                   {{ manual.result.counts.verboden }} verboden ·
                   {{ manual.result.counts.beperkt }} beperkt ·
-                  {{ manual.result.counts.etikettering }} aangegeven ·
-                  {{ manual.result.counts.toegestaan }} toegestaan ·
-                  {{ manual.result.counts.ok }} geen match
+                  {{ manual.result.counts.ok }} zonder bevinding
                 </div>
               </div>
-              <span class="mp-badge" :class="badgeKlasse(manual.result.status)">{{ uitslagLabel(manual.result.status) }}</span>
+              <oordeel-label v-if="manual.result.status !== 'ok' && manual.result.status !== 'leeg'"
+                            soort="verboden" label="Verboden" :titel="uitslagTitel(manual.result)"></oordeel-label>
+              <span v-else class="mp-badge mp-badge-neutraal">{{ uitslagLabel(manual.result.status) }}</span>
             </div>
 
             <div v-for="(ing, i) in manual.result.ingredients" :key="i"
@@ -426,8 +432,12 @@
                 <div v-if="ing.match && ing.match.note" style="font-size:12px;margin-top:3px">{{ ing.match.note }}</div>
                 <div v-if="ing.match" class="mp-sub" style="font-size:11px;margin-top:3px">Match via {{ ing.match.via }}</div>
                 <div v-else class="mp-sub" style="font-size:12px;margin-top:3px">Niet gevonden in de controlelijst</div>
+                <div v-if="ing.status === 'ok' && ing.match" class="mp-sub" style="font-size:12px;margin-top:3px">
+                  Staat op een toelatingslijst — geen bevinding.
+                </div>
               </div>
-              <span class="mp-badge" :class="badgeKlasse(ing.status)">{{ ingLabel(ing.status) }}</span>
+              <oordeel-label v-if="ing.status !== 'ok'" :soort="ing.status"
+                            :annex="ing.match && ing.match.annex" :titel="ing.match && ing.match.annexTitel"></oordeel-label>
             </div>
 
             <div style="margin-top:18px">
@@ -437,18 +447,19 @@
             </div>
 
             <div class="mp-card2" style="margin-top:18px;font-size:12px;color:var(--t-meta)">
-              <div class="mp-eyebrow" style="margin-bottom:8px">Wat de oordelen betekenen</div>
+              <div class="mp-eyebrow" style="margin-bottom:8px">Wat de labels betekenen</div>
               <ul style="margin:0;padding-left:16px;line-height:1.7">
-                <li><strong style="font-weight:500">Verboden</strong> — Annex II. Mag niet in een cosmetisch product.</li>
-                <li><strong style="font-weight:500">Beperkt</strong> — Annex III, of een Annex II-verbod dat alleen voor een
-                    bepaalde vorm of producttype geldt (nano, haarverf). De voorwaarde staat erbij; de app kan niet zien of
-                    eraan is voldaan, want een INCI-lijst bevat geen concentraties.</li>
-                <li><strong style="font-weight:500">Aangegeven</strong> — geurallergeen uit Annex III waarvan de enige
-                    voorwaarde de vermelding op het etiket is. Doordat de stof in de INCI-lijst staat, is daaraan voldaan.</li>
-                <li><strong style="font-weight:500">Toegestaan</strong> — Annex IV, V of VI. Dat zijn toelatingslijsten:
-                    artikel 14 verbiedt juist de kleurstoffen, conserveermiddelen en UV-filters die er <em>niet</em> op
-                    staan. Een treffer is dus een bevestiging, geen bevinding — met de voorwaarden uit de annex erbij.</li>
+                <li><strong style="font-weight:500">Prohibited</strong> — Annex II: <em>List of substances prohibited in
+                    cosmetic products</em>. Mag niet in een cosmetisch product.</li>
+                <li><strong style="font-weight:500">Restricted</strong> — Annex III: <em>List of substances which cosmetic
+                    products must not contain except subject to the restrictions laid down</em>. De voorwaarde staat erbij;
+                    of eraan is voldaan kan de app niet zien, want een INCI-lijst noemt geen concentraties.</li>
               </ul>
+              <p style="margin:10px 0 0">
+                Beweeg over een label voor het volledige kopje van de annex.
+                Annex IV, V en VI leveren geen melding op: dat zijn toelatingslijsten — artikel 14 verbiedt juist de
+                kleurstoffen, conserveermiddelen en UV-filters die er <em>niet</em> op staan.
+              </p>
             </div>
 
             <div class="mp-card2" style="margin-top:12px;font-size:12px;color:var(--t-meta)">
@@ -480,7 +491,8 @@
                   </div>
                 </div>
                 <div style="display:flex;align-items:center;gap:12px;flex:none">
-                  <span class="mp-badge" :class="badgeKlasse(c.status)">{{ uitslagLabel(c.status) }}</span>
+                  <oordeel-label v-if="c.status !== 'ok' && c.status !== 'leeg'" soort="verboden" label="Verboden"></oordeel-label>
+              <span v-else class="mp-badge mp-badge-neutraal">{{ uitslagLabel(c.status) }}</span>
                   <button @click="verwijder(c)"
                           style="background:none;border:0;padding:0;cursor:pointer;font-family:inherit;font-size:12.5px;color:var(--t-meta);border-bottom:1px solid var(--accent)">
                     Verwijderen
@@ -572,11 +584,49 @@
     };
 
     const SCHERMEN = ['overzicht', 'catalogus', 'inci', 'doorverkoop', 'contract', 'instellingen'];
+
+    // Dezelfde kopjes als in src/compliance.js; nodig voor rapporten die van
+    // vóór het meesturen van annexTitel dateren.
+    const ANNEX_TITELS = {
+      II: 'List of substances prohibited in cosmetic products',
+      III: 'List of substances which cosmetic products must not contain except subject to the restrictions laid down',
+    };
     const PAGINA = 40; // productkaarten per keer — 2300 in één keer is te veel voor een telefoon
 
+    const OordeelLabel = {
+      props: { soort: String, annex: String, titel: String, label: String },
+      computed: {
+        tekst() {
+          if (this.label) return this.label;
+          return this.soort === 'verboden' ? 'Prohibited' : 'Restricted';
+        },
+        // De volledige melding: het officiële kopje van de annex.
+        hover() {
+          if (!this.titel) return '';
+          return this.annex ? 'Annex ' + this.annex + ' — ' + this.titel : this.titel;
+        },
+      },
+      template: `
+        <span class="mp-badge" :class="soort === 'verboden' ? 'mp-badge-verbod' : 'mp-badge-beperking'" :title="hover">
+          <svg viewBox="0 0 16 16" width="11" height="11" fill="none" stroke="currentColor"
+               stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+            <template v-if="soort === 'verboden'">
+              <circle cx="8" cy="8" r="6" /><line x1="3.8" y1="12.2" x2="12.2" y2="3.8" />
+            </template>
+            <template v-else>
+              <path d="M8 2.6 14.4 13.4H1.6z" stroke-linejoin="round" />
+              <line x1="8" y1="6.4" x2="8" y2="9.4" /><line x1="8" y1="11.5" x2="8" y2="11.6" />
+            </template>
+          </svg>
+          <span>{{ tekst }}</span>
+        </span>`,
+    };
+
     createApp({
+      components: { 'oordeel-label': OordeelLabel },
       data() {
         return {
+          ANNEX_TITELS,
           scherm: 'catalogus',
           merk: 'alle',
           thema: document.documentElement.getAttribute('data-theme') || 'light',
@@ -606,8 +656,7 @@
             const m = (v.brand || '').trim();
             if (!m) return;
             per[m] = per[m] || { naam: m, verboden: 0, beperkt: 0 };
-            if (v.status === 'verboden') per[m].verboden++;
-            else per[m].beperkt++;
+            per[m].verboden++;
           });
           return Object.values(per)
             .sort((a, b) => (b.verboden - a.verboden) || (b.beperkt - a.beperkt))
@@ -624,10 +673,9 @@
           const c = this.data.counts || {};
           return [
             { status: '',          label: 'Totaal',        waarde: c.totaal || 0,      rand: 'var(--t-border)' },
-            { status: 'verboden',  label: 'Verboden (II)',  waarde: c.verboden || 0,    rand: c.verboden ? 'var(--neg)' : 'var(--t-border)' },
-            { status: 'beperkt',   label: 'Beperkt (III)',  waarde: c.beperkt || 0,     rand: c.beperkt ? 'var(--accent)' : 'var(--t-border)' },
-            { status: 'toegestaan',label: 'Toegestaan (IV–VI)', waarde: c.toegestaan || 0, rand: 'var(--t-border)' },
-            { status: 'geen-inci', label: 'Geen INCI',      waarde: c['geen-inci'] || 0,rand: 'var(--t-border)' }
+            { status: 'verboden',  label: 'Verboden (II/III)', waarde: c.verboden || 0,    rand: c.verboden ? 'var(--neg)' : 'var(--t-border)' },
+            { status: 'ok',        label: 'Conform',           waarde: c.ok || 0,          rand: 'var(--t-border)' },
+            { status: 'geen-inci', label: 'Geen INCI',         waarde: c['geen-inci'] || 0,rand: 'var(--t-border)' }
           ];
         },
 
@@ -650,7 +698,7 @@
             return true;
           });
 
-          const ernst = { verboden: 0, beperkt: 1, toegestaan: 2, ok: 3 };
+          const ernst = { verboden: 0, ok: 1 };
           return uit.slice().sort((a, b) => {
             if (this.filters.sortBy === 'merk') return (a.brand || '').localeCompare(b.brand || '');
             if (this.filters.sortBy === 'ernst') return (ernst[a.status] ?? 2) - (ernst[b.status] ?? 2);
@@ -722,15 +770,28 @@
 
         // --- weergavehulpjes ---
         initiaal(p) { return (p.brand || p.title || '?').charAt(0).toUpperCase(); },
-        statusLabel(s) { return { verboden:'Verboden', beperkt:'Beperkt', toegestaan:'Toegestaan', 'geen-inci':'Geen INCI', ok:'Conform' }[s] || s; },
-        uitslagLabel(s) { return { verboden:'Verboden', beperkt:'Beperkt', toegestaan:'Toegestaan', ok:'Geen bevindingen', leeg:'Leeg' }[s] || s; },
-        ingLabel(s) { return { verboden:'Verboden', beperkt:'Beperkt', etikettering:'Aangegeven', toegestaan:'Toegestaan', ok:'Geen match' }[s] || s; },
-        badgeKlasse(s) {
-          if (s === 'verboden') return 'mp-badge-verboden';
-          if (s === 'beperkt') return 'mp-badge-beperkt';
-          if (s === 'etikettering') return 'mp-badge-etikettering';
-          if (s === 'toegestaan') return 'mp-badge-toegestaan';
-          return 'mp-badge-neutraal';
+        statusLabel(s) { return { verboden:'Verboden', 'geen-inci':'Geen INCI', ok:'Conform' }[s] || s; },
+        uitslagLabel(s) { return { verboden:'Verboden', ok:'Geen bevindingen', leeg:'Leeg' }[s] || s; },
+
+        // De hovertekst van een productlabel noemt de annexen die geraakt zijn;
+        // per ingrediënt staat het officiële kopje er daaronder bij.
+        // Alleen Annex II en III leveren een melding op. Deze filter vangt ook
+        // een rapport op dat nog van vóór die regel dateert.
+        meldingen(v) {
+          return (v.hits || []).filter(h => h.annex === 'II' || h.annex === 'III');
+        },
+        annexenIn(hits) {
+          return [...new Set((hits || []).map(h => h.annex))].sort().join(' en ');
+        },
+        productTitel(v) {
+          const a = this.annexenIn(this.meldingen(v));
+          return a ? `Bevat een ingrediënt uit Annex ${a}` : '';
+        },
+        uitslagTitel(r) {
+          const a = [...new Set((r.ingredients || [])
+            .filter(i => i.status !== 'ok' && i.match)
+            .map(i => i.match.annex))].sort().join(' en ');
+          return a ? `Bevat een ingrediënt uit Annex ${a}` : '';
         },
         shopifyUrl(p) {
           if (!this.data?.storeDomain || !p?.id) return null;

@@ -44,8 +44,8 @@ async function main() {
   console.log(`\nKlaar in ${((Date.now() - started) / 1000).toFixed(1)}s`);
   console.log(`  ${products.length} producten gescand (Shopify telt ${shopifyTotalCount ?? "onbekend"})`);
   console.log(
-    `  ${counts.verboden} verboden (Annex II), ${counts.beperkt} beperkt (Annex III), ` +
-      `${counts.toegestaan} alleen toegestane stoffen (Annex IV–VI), ${counts["geen-inci"]} zonder INCI`
+    `  ${counts.verboden} met een ingrediënt uit Annex II of III, ` +
+      `${counts.ok} conform, ${counts["geen-inci"]} zonder INCI`
   );
 
   if (violations.length && CONFIG.github.openIssueOnViolation) {

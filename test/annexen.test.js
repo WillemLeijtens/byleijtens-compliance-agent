@@ -9,10 +9,18 @@ const oordeel = (inci) => checkInciList(inci, lijst).ingredients[0].status;
 // lijst. II verbiedt, III beperkt, en IV/V/VI zijn juist TOEGESTAAN-lijsten:
 // artikel 14 verbiedt alles wat daar NIET op staat. Deze test legt vast dat
 // de app ze uit elkaar houdt.
-test("Annex IV/V/VI zijn toelatingen, geen bevindingen", () => {
-  assert.equal(oordeel("CI 10006"), "toegestaan", "Annex IV: toegelaten kleurstof");
-  assert.equal(oordeel("Sodium Benzoate"), "toegestaan", "Annex V: toegelaten conserveermiddel");
-  assert.equal(oordeel("Homosalate"), "toegestaan", "Annex VI: toegelaten UV-filter");
+test("Annex IV/V/VI leveren geen melding op", () => {
+  // Toelatingslijsten. Een treffer melden zou een product ten onrechte in een
+  // kwaad daglicht zetten, dus er komt geen oordeel uit.
+  assert.equal(oordeel("CI 10006"), "ok", "Annex IV: toegelaten kleurstof");
+  assert.equal(oordeel("Sodium Benzoate"), "ok", "Annex V: toegelaten conserveermiddel");
+  assert.equal(oordeel("Homosalate"), "ok", "Annex VI: toegelaten UV-filter");
+});
+
+test("Een toelating blijft wel herkend, alleen zonder oordeel", () => {
+  const ing = checkInciList("Sodium Benzoate", lijst).ingredients[0];
+  assert.equal(ing.status, "ok");
+  assert.equal(ing.match.annex, "V", "de herkenning zelf gaat niet verloren");
 });
 
 test("Annex II verbiedt absoluut waar geen uitzondering geldt", () => {
@@ -54,13 +62,19 @@ test("Een naam in twee annexen levert het zwaarste oordeel", () => {
   assert.notEqual(oordeel("CI 14270"), "toegestaan", "de Annex IV-regel mag het verbod niet maskeren");
 });
 
-// De geurallergenen uit Annex III kennen als enige voorwaarde een
-// aangifteplicht. Staan ze in de INCI-lijst, dan is daaraan voldaan.
-test("Geurallergenen met alleen een aangifteplicht zijn geen beperking", () => {
-  assert.equal(oordeel("Amyl Cinnamal"), "etikettering");
-  assert.equal(oordeel("Eugenol"), "etikettering");
-  // Hydroxycitronellal heeft naast de aangifteplicht een echte grens (1,0 %).
-  assert.equal(oordeel("Hydroxycitronellal"), "beperkt");
+// Alles uit Annex III draagt hetzelfde label: het kopje van die annex.
+test("Annex III levert één oordeel op, ongeacht het soort voorwaarde", () => {
+  for (const stof of ["Amyl Cinnamal", "Eugenol", "Hydroxycitronellal"]) {
+    assert.equal(oordeel(stof), "beperkt", stof);
+  }
+});
+
+test("Elke treffer draagt het officiële kopje van zijn annex", () => {
+  const { ANNEX_TITELS } = require("../src/compliance.js");
+  assert.match(ANNEX_TITELS.II, /prohibited in cosmetic products/i);
+  assert.match(ANNEX_TITELS.III, /must not contain except subject to the restrictions laid down/i);
+  const ing = checkInciList("Talc", lijst).ingredients[0];
+  assert.equal(ing.match.annexTitel, ANNEX_TITELS.III);
 });
 
 test("Annex III met een echte grens blijft beperkt", () => {

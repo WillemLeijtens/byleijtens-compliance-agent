@@ -12,7 +12,7 @@ const normalize = (s) =>
 
 // Van zwaar naar licht. Bepaalt welke regel wint als een naam er meerdere
 // raakt, en welk oordeel de status van een heel product zet.
-const ERNST = { verboden: 0, beperkt: 1, etikettering: 2, toegestaan: 3 };
+const ERNST = { verboden: 0, beperkt: 1, toegestaan: 2 };
 
 const CAS_RE = /\b\d{2,7}-\d{2}-\d\b/g;
 // Kleurstoffen staan op etiketten meestal als CI-nummer, niet als INCI-naam.
@@ -162,20 +162,17 @@ const UITZONDERING =
 // natuurlijk gehalte.
 const VERWIJST_NAAR_ANNEX = /\bannex\s+(iii|iv|v|vi)\b/i;
 
-// De 26+ geurallergenen in Annex III kennen als enige voorwaarde een
-// AANGIFTEPLICHT: de stof moet in de ingredientenlijst staan. Vinden we hem
-// daar, dan is daarmee voldaan. Zulke entries als "beperkt" tonen zou de
-// vervulling van de plicht als overtreding presenteren.
-const ETIKETCLAUSULE = /the presence of the substance (?:must|shall) be indicated in the list of ingredients/i;
-
-function alleenEtiketplicht(entry) {
-  const note = entry.note || "";
-  if (!ETIKETCLAUSULE.test(note)) return false;
-  // Staat er BUITEN de etiketzin nog een concentratiegrens, dan is het een
-  // echte beperking en niet slechts een aangifteplicht.
-  const rest = note.replace(/the presence of the substance[\s\S]*/i, "");
-  return !/\d\s*[,.]?\d*\s*%/.test(rest);
-}
+// De officiële kopjes uit Verordening (EG) 1223/2009. Ze staan hier zodat de
+// scan, het markdown-rapport en de interface dezelfde tekst tonen.
+const ANNEX_TITELS = {
+  II: "List of substances prohibited in cosmetic products",
+  III:
+    "List of substances which cosmetic products must not contain except subject to " +
+    "the restrictions laid down",
+  IV: "List of colorants allowed in cosmetic products",
+  V: "List of preservatives allowed in cosmetic products",
+  VI: "List of UV filters allowed in cosmetic products",
+};
 
 const SOORT_CACHE = new WeakMap();
 
@@ -189,7 +186,7 @@ function classifyEntry(entry) {
     const voorwaardelijk = entry.conditional || UITZONDERING.test(tekst);
     soort = voorwaardelijk && !VERWIJST_NAAR_ANNEX.test(tekst) ? "beperkt" : "verboden";
   } else if (entry.annex === "III") {
-    soort = alleenEtiketplicht(entry) ? "etikettering" : "beperkt";
+    soort = "beperkt";
   } else {
     soort = "toegestaan";
   }
@@ -227,20 +224,10 @@ function scanProduct(product, index) {
 
   const banned = hits.filter((h) => classifyEntry(h.entry) === "verboden");
   const restricted = hits.filter((h) => classifyEntry(h.entry) === "beperkt");
-  // Toegestane stoffen (Annex IV/V/VI) en aangegeven geurallergenen zijn geen
-  // bevindingen. Ze blijven zichtbaar op de kaart, maar bepalen niet of een
-  // product opvalt — anders verdrinkt een echt verbod in de ruis.
-  const allowed = hits.filter((h) => ERNST[classifyEntry(h.entry)] >= ERNST.etikettering);
-  const status = banned.length
-    ? "verboden"
-    : restricted.length
-      ? "beperkt"
-      : allowed.length
-        ? "toegestaan"
-        : product.inci
-          ? "ok"
-          : "geen-inci";
-  return { status, banned, restricted, allowed };
+  // Annex IV, V en VI zijn toelatingslijsten. Een treffer daar melden zet een
+  // product ten onrechte in een kwaad daglicht, dus die verdwijnen hier.
+  const status = banned.length || restricted.length ? "verboden" : product.inci ? "ok" : "geen-inci";
+  return { status, banned, restricted };
 }
 
 function toDashboardEntry(r) {
@@ -254,7 +241,7 @@ function toDashboardEntry(r) {
     // Elke treffer draagt zijn eigen oordeel: een product met een verboden
     // stof kan daarnaast een keurig toegelaten kleurstof bevatten, en die
     // twee horen niet als hetzelfde te worden getoond.
-    hits: [...r.banned, ...r.restricted, ...(r.allowed || [])].map((h) => ({
+    hits: [...r.banned, ...r.restricted].map((h) => ({
       inci: h.entry.inci,
       cas: h.entry.cas || null,
       annex: h.entry.annex,
@@ -262,6 +249,7 @@ function toDashboardEntry(r) {
       note: h.entry.note || "",
       via: h.via,
       soort: classifyEntry(h.entry),
+      annexTitel: ANNEX_TITELS[h.entry.annex] || "",
       ookIn: h.ookIn && h.ookIn.length ? h.ookIn : null,
     })),
   };
@@ -271,10 +259,10 @@ function toDashboardEntry(r) {
 function scanAll(products, prohibitedList) {
   const index = buildIndex(prohibitedList);
   const results = products.map((p) => ({ product: p, ...scanProduct(p, index) }));
-  const counts = { verboden: 0, beperkt: 0, toegestaan: 0, ok: 0, "geen-inci": 0 };
+  const counts = { verboden: 0, ok: 0, "geen-inci": 0 };
   results.forEach((r) => counts[r.status]++);
   const violations = results
-    .filter((r) => r.status === "verboden" || r.status === "beperkt")
+    .filter((r) => r.status === "verboden")
     .map(toDashboardEntry);
   // Alle producten (incl. conform/geen-inci) — voor dashboardfilters op elke categorie.
   const allProducts = results.map(toDashboardEntry);
@@ -298,27 +286,35 @@ function checkInciList(rawInci, prohibitedList) {
     const entry = treffer ? zwaarste(treffer.entries) : null;
     const via = treffer ? treffer.via : null;
 
-    const status = entry ? classifyEntry(entry) : "ok";
+    const soort = entry ? classifyEntry(entry) : null;
+    // Annex IV/V/VI blijft zichtbaar als herkenning, maar zonder oordeel.
+    const status = soort === "verboden" || soort === "beperkt" ? soort : "ok";
 
     return {
       input: token,
       status,
       match: entry
-        ? { inci: entry.inci, cas: entry.cas || null, annex: entry.annex, ref: entry.ref, note: entry.note || "", via }
+        ? {
+            inci: entry.inci,
+            cas: entry.cas || null,
+            annex: entry.annex,
+            annexTitel: ANNEX_TITELS[entry.annex] || "",
+            ref: entry.ref,
+            note: entry.note || "",
+            via,
+          }
         : null,
     };
   });
 
-  const counts = { verboden: 0, beperkt: 0, etikettering: 0, toegestaan: 0, ok: 0 };
+  const counts = { verboden: 0, beperkt: 0, ok: 0 };
   ingredients.forEach((i) => counts[i.status]++);
 
   return {
     ingredients,
     counts,
     totaal: ingredients.length,
-    // Het zwaarste oordeel bepaalt de status van het geheel. Een treffer op
-    // een toegestaan-lijst (IV/V/VI) telt daarin niet mee: dat is geen
-    // bevinding, dus een lijst met alleen zulke treffers is "ok".
+    // Het zwaarste oordeel bepaalt de status van het geheel.
     status: counts.verboden ? "verboden" : counts.beperkt ? "beperkt" : ingredients.length ? "ok" : "leeg",
   };
 }
@@ -356,4 +352,14 @@ function listFingerprint(list) {
   return { count: (list || []).length, hash: hash.toString(16).padStart(8, "0") };
 }
 
-module.exports = { normalize, splitInci, buildIndex, classifyEntry, scanProduct, scanAll, checkInciList, listFingerprint };
+module.exports = {
+  normalize,
+  splitInci,
+  buildIndex,
+  classifyEntry,
+  scanProduct,
+  scanAll,
+  checkInciList,
+  listFingerprint,
+  ANNEX_TITELS,
+};

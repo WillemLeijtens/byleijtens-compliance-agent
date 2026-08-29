@@ -27,10 +27,8 @@ Dashboard: `http://<droplet-ip>` (via Nginx-reverse-proxy naar poort 3000, zie `
 
 - **Responsive design**: Werkt perfect op iPhone, tablet en desktop
 - **Real-time data**: Laadt automatisch `violations-latest.json` van de reports
-- **Filtering**: Zoeken op status (verboden/beperkt/toegestaan/conform), merk,
-  ingrediënt
-- **Summary cards**: Totaal, verboden (II), beperkt (III), toegestaan (IV–VI),
-  zonder INCI
+- **Filtering**: Zoeken op status (verboden/conform/geen INCI), merk, ingrediënt
+- **Summary cards**: Totaal, verboden (II/III), conform, zonder INCI
 - **Timestamp**: Toont wanneer de scan is gedraaid (ISO datetime)
 - **Update knop**: Start workflow handmatig (vereist GitHub token)
 
@@ -96,9 +94,9 @@ INCI-lijst kunt controleren — bijvoorbeeld van een product dat nog niet in de
 webshop staat, of van een label dat je van een leverancier hebt gekregen.
 
 - Plak de INCI-lijst, vul optioneel een productnaam in, klik **Check**
-- Per ingrediënt volgt een oordeel: **Verboden** (Annex II), **Beperkt**
-  (Annex III), **Aangegeven** (geurallergeen met alleen een aangifteplicht),
-  **Toegestaan** (Annex IV/V/VI) of **Geen match**
+- Per ingrediënt volgt een label: **Prohibited** (Annex II) of **Restricted**
+  (Annex III). Annex IV/V/VI levert geen melding op; die stof wordt wel
+  herkend getoond
 - **Opslaan** bewaart de controle; opgeslagen controles kun je weer
   **Verwijderen**
 
@@ -183,23 +181,30 @@ Drie dingen die de app principieel niet kan beoordelen:
   (nano)`, of `CI 26100 … when used as a substance in hair dye products`. Die
   verschijnen als **beperkt**, met de voorwaarde erbij.
 
-### De vier oordelen
+### De labels
 
-De vijf annexen zijn niet hetzelfde soort lijst, en de app houdt ze uit
-elkaar. II verbiedt, III beperkt, maar **IV, V en VI zijn toelatingslijsten**:
-artikel 14 verbiedt juist de kleurstoffen, conserveermiddelen en UV-filters
-die er *niet* op staan. Een treffer daar is dus een bevestiging, geen
-bevinding.
+De vijf annexen zijn niet hetzelfde soort lijst. II verbiedt, III beperkt,
+maar **IV, V en VI zijn toelatingslijsten**: artikel 14 verbiedt juist de
+kleurstoffen, conserveermiddelen en UV-filters die er *niet* op staan. Een
+treffer daar is een bevestiging, geen bevinding — en levert dus **geen
+melding** op. Wel blijft de stof herkend: de handmatige check toont hem met
+de voorwaarden uit de annex, zonder oordeel.
 
-| Oordeel | Waar het vandaan komt |
-|---|---|
-| **Verboden** | Annex II, zonder uitzondering die op deze stof slaat |
-| **Beperkt** | Annex III met een echte grens, of een Annex II-verbod dat alleen voor een vorm of producttype geldt |
-| **Aangegeven** | Annex III-geurallergeen waarvan de enige voorwaarde de vermelding op het etiket is — daaraan is voldaan doordat de stof in de INCI-lijst staat |
-| **Toegestaan** | Annex IV, V of VI, met de voorwaarden uit de annex erbij |
+Per ingrediënt draagt het label het officiële kopje van zijn annex. Het label
+toont een icoon met een korte term; de volledige tekst staat in de hovertitel.
 
-Alleen **verboden** en **beperkt** zijn bevindingen. Aangegeven en toegestaan
-bepalen niet of een product opvalt; anders verdrinkt een echt verbod erin.
+| Label | Annex | Volledige melding (hover) |
+|---|---|---|
+| **Prohibited** | II | List of substances prohibited in cosmetic products |
+| **Restricted** | III | List of substances which cosmetic products must not contain except subject to the restrictions laid down |
+
+Op productniveau krijgt elk product met een ingrediënt uit Annex II **of** III
+één rood label **Verboden**. Dat is een bewuste vereenvoudiging: een Annex
+III-stof binnen de gestelde grens is op zichzelf toegestaan, dus dit label
+overdrijft dat geval. Het onderscheid blijft zichtbaar op het ingrediënt.
+
+De kopjes staan in `ANNEX_TITELS` in `src/compliance.js`, zodat scan, rapport
+en interface dezelfde tekst tonen.
 
 Een uitzondering die naar een **andere annex** verwijst ("kwik en zijn
 verbindingen, behalve de gevallen in Annex V") heft het verbod niet op: die
